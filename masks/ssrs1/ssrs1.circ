@@ -1,0 +1,8 @@
+SSRS1 mask in equatorial B1950 frame.
+
+Angular units are degrees:
+unit d
+
+Dec(B1950) < -17.5 deg, b2 < -30 deg
+circle 0 2
+0 90 -107.5  192.25 27.4 -120
