@@ -1,0 +1,17 @@
+At the command line, type
+2qz
+or 
+2qz_pixel
+and find out what happens.
+
+You should be aware that Intel and Sun chips have different endianness.
+If your system is having a problem reading unformatted fortran files
+ngc_obscomp.dat
+sgc_obscomp.dat
+it's probably an endianness problem.
+Read HELP.unformatted in the mangle directory.
+
+Alternatively, you can use the formatted versions of these files
+ngc_obscomp.txt
+sgc_obscomp.txt
+which are available in the "masks" section of the mangle website.
