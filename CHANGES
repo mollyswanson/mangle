@@ -1,0 +1,209 @@
+--------------------------------------------------------------------------------
+mangle1.5
+20 Oct 2006
+
+Changes from Colin Hill:
+Added SDSSpix pixelization scheme
+Added capability to import and export healpix files
+
+New commands: healpix2poly, rasterize
+New functions: get_healpix_poly, get_nside, healpix_verts,cmrpirpj
+
+healpix functions: healpix_ang2pix_nest, pix2vec_nest
+
+sdsspix functions: pix2ang, ang2pix, pix2ang_radec, ang2pix_radec, 
+csurvey2eq,eq2csurvey,superpix,subpix,pix_bound,pix_area,pix2xyz,area_index,
+area_index_stripe,assign_parameters
+
+Put balkanize function in separate balkanizepolys.c file
+Made various other minor edits
+
+--------------------------------------------------------------------------------
+
+Changes from Molly Swanson:
+Fixed bug in polyid created by pixelization stuff
+Added pixelmap function
+Added option to set polygon ids to their pixel numbers
+
+--------------------------------------------------------------------------------
+
+Changes from Andrew Hamilton: 
+14 Sep 2006
+
+Thanks to Colin Hill, working with Max Tegmark and Molly Swanson at MIT,
+for finding a polygon that defeated mangle.
+
+1. The problem was numerical round-off,
+and the immediate fix was to replace line 71 in split_poly.c
+	if (area != area_tot) {			/* boundary intersects poly1 */
+with
+	if (area > area_tot) {			/* boundary intersects poly1 */
+It should never happen that area < area_tot, since removing a boundary
+of a polygon should never decrease its area, but thanks to numerical round-off
+the area did decrease.  Once that happened, mangle span its wheels.
+
+2. The killer polygon that was responsible for the numerical failure of item 1
+is discussed below.  To improve mangle's defence against such polygons,
+I changed the strategy for modifying the tolerance angle to multiple
+intersections.  Originally, if mangle detected an inconsistency in the
+topology of the distribution of vertices around multiple intersections,
+then mangle would double the tolerance angle and try again.
+The new strategy is to try tightening as well as loosening the tolerance angle.
+Mangle now see-saws between and tighter and looser tolerance angles
+successive factors of 2 away from the original input tolerance angle.
+
+3. There was also a bug on line 182 of balkanize.c.
+    for (i = npoly; i < npolys; i++) {
+should have been
+    for (i = 0; i < npolys; i++) {
+This bug became evident as a result of a compiler change.
+When tripped, the bug produces a segmentation violation, so if you never
+experienced this bug before, it should never have caused an error.
+
+This is Colin Hill's killer polygon:
+polygon 6 ( 5 caps, 1.0 weight, 0.000003265281337 str):
+ -0.2972995896945569 -0.5791945044073898 -0.7590432662449000 0.5786075961488696
+ -0.1092635942528740  0.6422417176858356 -0.7586745303718128 0.5279437897883537
+ -0.3927631897959760 -0.5199166454922474 -0.7585669110114012 -0.4794583692304901
+ -0.0457867636138749  0.6498588533234551 -0.7586745303718132 -0.5279437897887224
+ -0.3467216633109536 -0.5515406106135746 -0.7586745303718130 0.5279437897887302
+It is a long (4.3 degrees) thin (36 arcsec) rectangle, split by a diagonal
+which is almost, but not quite, tangent at each end to the long direction.
+Each near tangent end is both almost multiply intersecting, and almost kissing.
+
+If you balkanize the killer polygon with the default tolerance angle
+for multiple intersections of 10^-5 arsec, then mangle1.4.1 will discard the
+polygon as having zero area:
+
+% balkanize killer.poly -
+---------------- balkanize ----------------
+snap angles: axis 2s latitude 2s edge 2s
+multiple intersections closer than 1e-05s will be treated as coincident
+...
+1 polygons read from j6
+warning from balkanize: following polygons have zero area & are being discarded:
+ 0
+...
+ 0 polygons written to output
+
+Well, the polygon is thin, 36 arcsec wide, so maybe you don't mind losing
+the polygon.  But with snap tolerance angles of 2 arcsec, you'd think mangle
+should keep it.  It turns out that the multiple intersections at each end
+of the polygon have separations that vary from 10^-8 arcsec in the thin
+direction to 80 arcsec in the long direction, and this distribution of
+separations conspires so that mangle finds no consistent topology
+(satisfying the 64-bit check number) for tolerance angles to multiple
+intersections anywhere between 10^-8 arcsec and 40 arcsec.  But 40 arcsec
+exceeds the 36 arcsec width of the polygon, so mangle concludes that the
+area is zero.
+
+If the tolerance angle for multiple intersections is tightened to
+5 x 10^-9 arcsec:
+
+% balkanize -m5e-9s killer.poly -
+
+then mangle does find the correct solution.  That is, since the polygon
+is already a valid polygon, balkanize spits back the killer polygon
+unchanged.
+
+Thus the solution to dealing with this polygon is not to loosen the
+tolerance, but to tighten it.  The new mangle strategy does this.
+
+Max Tegmark suggests switching the entire mangle code from double (64-bit)
+to quadruple (128-bit) precision.  This may be a sensible thing to do
+at some point.  The need for high precision was always evident.
+Inevitably, people are messing with masks that have arcsecond precision.
+A 1 x 1 arcsec rectangle has an area of 2 x 10^-11 str, which is 2 x 10^-12
+of the whole sky.  This is a factor of 10^4 larger than the effective
+precision 2 x 10^-16 of 64-bit floats.  The factor of 10^4 is ok,
+but with ever more complicated masks appearing, it may no longer be
+providing a sufficient safety margin.
+
+--------------------------------------------------------------------------------
+5 Sep 2005
+
+Added '\r' to characters considered blank, so polygon files are dos-compatible.
+
+--------------------------------------------------------------------------------
+
+mangle1.4.3
+9 Jan 2006
+Molly Swanson
+
+Added "pixel 0" to the polygon files in masks/allsky
+Commented out self-snapping step in balkanize to avoid creating problematic
+long skinny polygons when running on the sdss mask
+Added "list" output format to be read by matlab script
+Changed defaults snap angles from 2 to .2 arcseconds
+
+
+--------------------------------------------------------------------------------
+mangle1.4.2
+4 Mar 2005
+Molly Swanson
+
+Added pixelization functions to speed up snap, balkanize, unify, and polyid.
+New command: pixelize
+New functions: get_pixel, which_pixel, get_child_pixels, get_parent_pixels, 
+get_res, pixel_list, pixel_start, poly_sort
+Modified polygon format to include pixel number
+Made a variety of other small, minor changes
+
+--------------------------------------------------------------------------------
+
+mangle1.4.1
+30 Mar 2004
+
+Many thanks to Michael Blanton, who is working on the SDSS mask,
+for bringing these two problems to light.
+
+1. In some cases, balkanize creates long, extremely thin polygons that mangle
+cannot subsequently deal with, because the polygons are simply too thin for
+the numerics.  The solution is to add to the balkanization routine a
+penultimate step that snaps the edges of each polygon to each other.
+This is not a bad idea anyway, since polygons produced by balkanization
+should never need additional snapping.
+
+2. Connected with the above problem, in some cases and on some platforms
+vmid fails to find a midpoint of a polygon.  The problematic polygons
+are precisely the long extremely thin polygons mentioned in 1.
+In these cases the barycentre of the polygon provides a satisfactory midpoint.
+Therefore the barycentre is now included as one of the points to test
+as a possible midpoint of a polygon.
+
+In addition to the above, I added "intrinsic" declarations of abs max and min
+to the fortran routines that use those functions, as required by some
+fortran compilers.
+
+--------------------------------------------------------------------------------
+mangle1.4
+3 Sep 2003
+
+Several minor improvements.
+The mangle code has gotten a pretty good workout on the 2dF 230k sample,
+released on 30 June 2003, and there have been no changes in mangle for about
+a month now, so I'm getting pretty happy that the code has converged,
+at least for the time being.
+
+In the future, if demand warrants, there may be an accelerated version of
+mangle that replaces double do loops over polygons with code that is a little
+more intelligent about deciding whether 2 polygons are close to each other.
+
+--------------------------------------------------------------------------------
+mangle1.3.3
+24 June 2003
+
+Implemented spolygon format.
+
+--------------------------------------------------------------------------------
+mangle1.3.2
+17 June 2003
+
+First general public release.
+Major upgrade from mangle1.2; much more robust.
+
+--------------------------------------------------------------------------------
+mangle1.2
+8 Sep 2001
+
+First limited public release.
