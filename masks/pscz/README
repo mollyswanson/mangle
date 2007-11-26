@@ -1,0 +1,15 @@
+PSCz_hib holes
+--------------
+
+hibpscz.exclude.long		original pixelized holes,
+				interpreted from Will Saunders' hibpsczmask.dat
+hibpscz.exclude.long.rect	original pixelized holes in rectangle format
+
+hibpscz.exclude.orig		original holes unify'd by hand in ancient times
+hibpscz.excludes		hibpscz.exclude.orig with comments
+hibpscz.exclude.rect		hibpscz.exclude.orig in rectangle format
+
+PSCz_hib mask
+-------------
+
+hibpscz.pol			balkanized polygon file.

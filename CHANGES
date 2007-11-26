@@ -1,0 +1,57 @@
+--------------------------------------------------------------------------------
+mangle1.4.1
+30 Sep 2004
+
+Many thanks to Michael Blanton, who is working on the SDSS mask,
+for bringing these two problems to light.
+
+1. In some cases, balkanize creates long, extremely thin polygons that mangle
+cannot subsequently deal with, because the polygons are simply too thin for
+the numerics.  The solution is to add to the balkanization routine a
+penultimate step that snaps the edges of each polygon to each other.
+This is not a bad idea anyway, since polygons produced by balkanization
+should never need additional snapping.
+
+2. Connected with the above problem, in some cases and on some platforms
+vmid fails to find a midpoint of a polygon.  The problematic polygons
+are precisely the long extremely thin polygons mentioned in 1.
+In these cases the barycentre of the polygon provides a satisfactory midpoint.
+Therefore the barycentre is now included as one of the points to test
+as a possible midpoint of a polygon.
+
+In addition to the above, I added "intrinsic" declarations of abs max and min
+to the fortran routines that use those functions, as required by some
+fortran compilers.
+
+--------------------------------------------------------------------------------
+mangle1.4
+3 Sep 2003
+
+Several minor improvements.
+The mangle code has gotten a pretty good workout on the 2dF 230k sample,
+released on 30 June 2003, and there have been no changes in mangle for about
+a month now, so I'm getting pretty happy that the code has converged,
+at least for the time being.
+
+In the future, if demand warrants, there may be an accelerated version of
+mangle that replaces double do loops over polygons with code that is a little
+more intelligent about deciding whether 2 polygons are close to each other.
+
+--------------------------------------------------------------------------------
+mangle1.3.3
+24 June 2003
+
+Implemented spolygon format.
+
+--------------------------------------------------------------------------------
+mangle1.3.2
+17 June 2003
+
+First general public release.
+Major upgrade from mangle1.2; much more robust.
+
+--------------------------------------------------------------------------------
+mangle1.2
+8 Sep 2001
+
+First limited public release.
