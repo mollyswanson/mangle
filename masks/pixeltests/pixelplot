@@ -1,0 +1,5 @@
+#! /bin/sh
+ ../../bin/test $1 s res$1.pol
+ ../../bin/poly2poly -og2 res$1.pol res$1.grph
+#../../../graphics_sm/plot res$1.grph res$1.ps "pixelization for resolution $1"
+../../../graphics_sm/plot res$1.grph res$1.ps $1

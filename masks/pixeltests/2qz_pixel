@@ -1,0 +1,75 @@
+#! /bin/sh
+
+user=`whoami`
+names=`finger $user | fgrep "ame:" | sed 's/.*: *\([^ ]*\)[^:]*/\1/'`
+for name in ${names}; do break; done
+echo "Hello $name, watch me make harmonics for the 2QZ 10k survey."
+echo "If this works, I will be impressed.  Please wait a minute or two."
+
+# to make verbose
+quiet=
+# to make quiet
+#quiet=-q
+
+# maximum harmonic number
+lmax=20
+
+mangledir=../../bin/
+
+# North
+
+if [ -z "$quiet" ]; then
+    echo "===========================================";
+    echo "                 THE NORTH                 ";
+fi
+
+# name of output file to contain 2QZ 10k North polygons
+npol=2qz_pixel_north.pol
+limits=ngp_ukstfld.lims.txt
+fields=ngp_field_coords.txt
+holes=ngp.used.rahole.txt
+
+#echo "${mangledir}snap $quiet ngp_ukstfld.lims.txt jnu"
+#${mangledir}snap $quiet ngp_ukstfld.lims.txt jnu || exit
+#echo "${mangledir}snap $quiet ngp_field_coords.txt jnf"
+#${mangledir}snap $quiet ngp_field_coords.txt jnf || exit
+#echo "${mangledir}snap $quiet ngp.used.rahole.txt jnh"
+#${mangledir}snap $quiet ngp.used.rahole.txt jnh || exit
+#echo "${mangledir}snap $quiet jnu jnf jnh jnufh"
+#${mangledir}snap $quiet jnu jnf jnh jnufh || exit
+#echo "${mangledir}pixelize $quiet jnufh jnufh2"
+#${mangledir}pixelize -P10,10 $quiet jnufh jnufh2 || exit
+echo "${mangledir}pixelize $quiet $limits $fields $holes jnufh1"
+${mangledir}pixelize -P10,10 $quiet $limits $fields $holes jnufh1 || exit
+echo "${mangledir}snap $quiet jnufh1 jnufh2"
+${mangledir}snap $quiet jnufh1 jnufh2 || exit
+echo "${mangledir}balkanize $quiet jnufh2 jnb"
+${mangledir}balkanize $quiet jnufh2 jnb || exit
+echo "${mangledir}weight $quiet -z2QZ10k jnb jnw"
+${mangledir}weight $quiet -z2QZ10k jnb jnw || exit
+echo "${mangledir}unify $quiet jnw $npol"
+${mangledir}unify $quiet jnw $npol || exit
+#echo "${mangledir}pixelize $quiet jnun $npol"
+#${mangledir}pixelize $quiet jnun $npol || exit
+
+
+echo "Polygons for 2QZ 10k North are in $npol"
+
+# Graphics
+
+# name of output file to contain graphics
+grph=2qzpixel.grph
+
+# number of points per (2 pi) along each edge of a polygon
+pts_per_twopi=30
+
+echo "${mangledir}poly2poly -og$pts_per_twopi $quiet $npol $grph"
+${mangledir}poly2poly -og$pts_per_twopi $quiet $npol $grph || exit
+echo "Data suitable for plotting polygons of the 2QZ 10k mask are in $grph:"
+echo "each line is a sequence of az, el points delineating the perimeter of a polygon."
+
+# remove temporary files
+# rm j[ns]*
+
+ps=2qzpixel.ps
+~/mangle/graphics_sm/plot $grph $ps "2qz North - without balkanize stage 2"

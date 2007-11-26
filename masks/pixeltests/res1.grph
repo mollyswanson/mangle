@@ -1,0 +1,10 @@
+4 polygons
+unit d
+graphics 0 ( 2 points, 2 edges, 0 weight,   90.000000   45.000000 mid):
+  180.000000    0.000000    0.000000    0.000000
+graphics 1 ( 2 points, 2 edges, 1 weight,  270.000000   45.000000 mid):
+  360.000000    0.000000  540.000000    0.000000
+graphics 2 ( 2 points, 2 edges, 1 weight,   90.000000  -45.000000 mid):
+    0.000000    0.000000  180.000000    0.000000
+graphics 3 ( 2 points, 2 edges, 0 weight,  270.000000  -45.000000 mid):
+  180.000000    0.000000   -0.000000    0.000000

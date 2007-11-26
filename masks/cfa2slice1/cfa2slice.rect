@@ -1,0 +1,10 @@
+CfA2 Slice 1 mask in equatorial B1950 frame.
+(de Lapparent et al's 1986 famous Slice of the Universe)
+
+Specify degrees:
+unit d
+
+rectangle
+
+RA_min	RA_max	Dec_min	Dec_max
+120	255	26.499	32.5

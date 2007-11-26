@@ -1,0 +1,59 @@
+
+
+
+---------------- poly2poly ----------------
+multiple intersections closer than 1e-05s will be treated as coincident
+output data format will be graphics
+units of angles in output polygon files will be d (degrees)
+7894 polygons read from 2qz_pixel_north.pol
+ *** from gvlim: total failure at tol =  3.75013494
+                      x                       y                       z                     1-c
+  1  0.4496113296546067     -0.8932243011955153       0.000000000000000       1.000000000000000
+  2   0.000000000000000       0.000000000000000       1.000000000000000       1.023437500000000
+  3   0.000000000000000       0.000000000000000       1.000000000000000      -1.019531250000000
+  4  0.4602478427671535     -0.8877904725937205       0.000000000000000      -1.000000000000000
+  5 -0.8891665223348058     -0.4558208483872173     -0.4012791714735520E-01 -0.1523048436087608E-03
+  6 -0.8830818331617645     -0.4689261268986557     -0.1657599021124630E-01 -0.1523048436087608E-03
+
+
+
+********************
+
+---------------- balkanize ----------------
+snap angles: axis 2s latitude 2s edge 2s
+multiple intersections closer than 1e-05s will be treated as coincident
+output data format will be polygon
+494664 polygons read from jnufh2
+warning from balkanize: following polygons have zero area & are being discarded:
+ 15 55 122 137 630 750 997 1925 ... more
+balkanize: 48181 polygons with zero area are being discarded;
+balkanizing 446483 polygons ...
+balkanize stage 1 (fragment into non-overlapping polygons):
+added 11918 polygons to make 458401
+balkanize stage 2 (partition disconnected polygons into connected parts):
+partition_poly: group 1 does not intersect part 1 of polygon with input id 17658
+8; should not happen; continuing ...
+partition_poly: group 2 does not intersect part 1 of polygon with input id 17658
+8; should not happen; continuing ...
+partition_poly: group 3 does not intersect part 1 of polygon with input id 17658
+8; should not happen; continuing ...
+partition_poly: group 4 does not intersect part 1 of polygon with input id 17658
+8; should not happen; continuing ...
+partition_poly: group 5 does not intersect part 1 of polygon with input id 17658
+8; should not happen; continuing ...
+partition_poly: group 1 does not intersect part 1 of polygon with input id 43001
+6; should not happen; continuing ...
+partition_poly: group 2 does not intersect part 1 of polygon with input id 43001
+6; should not happen; continuing ...
+partition_poly: group 3 does not intersect part 1 of polygon with input id 43001
+6; should not happen; continuing ...
+partition_poly: group 4 does not intersect part 1 of polygon with input id 43001
+6; should not happen; continuing ...
+partition_poly: group 5 does not intersect part 1 of polygon with input id 43001
+6; should not happen; continuing ...
+partition_poly: group 6 does not intersect part 1 of polygon with input id 43001
+6; should not happen; continuing ...
+partition_poly: group 7 does not intersect part 1 of polygon with input id 43001
+6; should not happen; continuing ...
+added 12819 polygons to make 471220
+balkanize: 6 balkanized polygons have zero area, and are being discarded

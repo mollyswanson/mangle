@@ -1,0 +1,8 @@
+quit
+macro read "~/mangle/graphics_sm/graphmask.sm"
+macro read "/home/molly/mangle/graphics_sm/graphmask.sm"
+graphmask 2qzpixel.grph 2qzpixel.ps title
+macro read "/home/molly/mangle/graphics_sm/graphmask.sm"
+graphmask 2qzpixel.grph 2qzpixel.ps "part of 2qz north"
+macro read "/home/molly/mangle/graphics_sm/graphmask.sm"
+graphmask 2qzpixel.grph 2qzpixel.ps "part of 2qz north" 147 160
