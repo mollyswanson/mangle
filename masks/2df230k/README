@@ -1,0 +1,23 @@
+At the command line, type
+2df230k
+and find out what happens.
+
+You should be aware that Intel and Sun chips have different endianness.
+If your system is having a problem reading unformatted fortran files
+maglim.ngp.dat
+maglim.ran.dat
+maglim.sgp.dat
+mask.ngp.dat
+mask.ran.dat
+mask.sgp.dat
+it's probably an endianness problem.
+Read HELP.unformatted in the mangle directory.
+
+Alternatively, you can use the formatted versions of these files
+maglim.ngp.dat.fmt
+maglim.ran.dat.fmt
+maglim.sgp.dat.fmt
+mask.ngp.dat.fmt
+mask.ran.dat.fmt
+mask.sgp.dat.fmt
+which are available in the "masks" section of the mangle website.
