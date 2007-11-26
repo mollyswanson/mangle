@@ -1,0 +1,140 @@
+#! /bin/sh
+
+user=`whoami`
+names=`finger $user | fgrep "ame:" | sed 's/.*: *\([^ ]*\)[^:]*/\1/'`
+for name in ${names}; do break; done
+echo "Hello $name, watch me make harmonics for the 2QZ 10k survey."
+echo "If this works, I will be impressed.  Please wait a minute or two."
+
+# to make verbose
+quiet=
+# to make quiet
+#quiet=-q
+
+# maximum harmonic number
+lmax=20
+
+mangledir=../../bin/
+
+# North
+
+if [ -z "$quiet" ]; then
+    echo "===========================================";
+    echo "                 THE NORTH                 ";
+fi
+
+# name of output file to contain 2QZ 10k North polygons
+npol=2qz_north_pixel.pol
+
+echo "${mangledir}pixelize -P0 $quiet ngp_ukstfld.lims.txt jnup"
+${mangledir}pixelize -P0 $quiet ngp_ukstfld.lims.txt jnup || exit
+echo "${mangledir}pixelize -P0 $quiet ngp_field_coords.txt jnfp"
+${mangledir}pixelize -P0 $quiet ngp_field_coords.txt jnfp || exit
+echo "${mangledir}pixelize -P0 $quiet ngp.used.rahole.txt jnhp"
+${mangledir}pixelize -P0 $quiet ngp.used.rahole.txt jnhp || exit
+echo "${mangledir}snap $quiet jnup jnu"
+${mangledir}snap $quiet jnup jnu || exit
+echo "${mangledir}snap $quiet jnfp jnf"
+${mangledir}snap $quiet jnfp jnf || exit
+echo "${mangledir}snap $quiet jnhp jnh"
+${mangledir}snap $quiet jnhp jnh || exit
+echo "${mangledir}snap $quiet jnu jnf jnh jnufh"
+${mangledir}snap $quiet jnu jnf jnh jnufh || exit
+echo "${mangledir}balkanize $quiet jnufh jnb"
+${mangledir}balkanize $quiet jnufh jnb || exit
+echo "${mangledir}weight $quiet -z2QZ10k jnb jnw"
+${mangledir}weight $quiet -z2QZ10k jnb jnw || exit
+echo "${mangledir}unify $quiet jnw $npol"
+${mangledir}unify $quiet jnw $npol || exit
+echo "Polygons for 2QZ 10k North are in $npol"
+
+# South
+
+if [ -z "$quiet" ]; then
+    echo "===========================================";
+    echo "                 THE SOUTH                 ";
+fi
+
+# name of output file to contain 2QZ 10k South polygons
+spol=2qz_south_pixel.pol
+
+echo "${mangledir}pixelize -P0 $quiet sgp_ukstfld.lims.txt jsup"
+${mangledir}pixelize -P0 $quiet sgp_ukstfld.lims.txt jsup || exit
+echo "${mangledir}pixelize -P0 $quiet sgp_field_coords.txt jsfp"
+${mangledir}pixelize -P0 $quiet sgp_field_coords.txt jsfp || exit
+echo "${mangledir}pixelize -P0 $quiet sgp.used.rahole.txt jshp"
+${mangledir}pixelize -P0 $quiet sgp.used.rahole.txt jshp || exit
+echo "${mangledir}snap $quiet jsup jsu"
+${mangledir}snap $quiet jsup jsu || exit
+echo "${mangledir}snap $quiet jsfp jsf"
+${mangledir}snap $quiet jsfp jsf || exit
+echo "${mangledir}snap $quiet jshp jsh"
+${mangledir}snap $quiet jshp jsh || exit
+echo "${mangledir}snap $quiet jsu jsf jsh jsufh"
+${mangledir}snap $quiet jsu jsf jsh jsufh || exit
+echo "${mangledir}balkanize $quiet jsufh jsb"
+${mangledir}balkanize $quiet jsufh jsb || exit
+echo "${mangledir}weight $quiet -z2QZ10k jsb jsw"
+${mangledir}weight $quiet -z2QZ10k jsb jsw || exit
+echo "${mangledir}unify $quiet jsw $spol"
+${mangledir}unify $quiet jsw $spol || exit
+echo "Polygons for 2QZ 10k South are in $spol"
+
+# Harmonics
+
+if [ -z "$quiet" ]; then
+    echo "===========================================";
+    echo "                 THE WORLD                 ";
+fi
+
+# name of output file to contain harmonics
+wlm=2qz_pixel.wlm
+
+echo "${mangledir}harmonize $quiet -l$lmax $npol $spol $wlm"
+${mangledir}harmonize $quiet -l$lmax $npol $spol $wlm || exit
+echo "Harmonics for 2QZ 10k mask up to l = $lmax are in $wlm"
+
+# Map
+
+# name of output file to contain map
+map=2qz_pixel.map
+
+echo "${mangledir}map $quiet -w$wlm azel.dat $map"
+${mangledir}map $quiet -w$wlm azel.dat $map || exit
+echo "Map of 2QZ 10k mask up to l = $lmax is in $map"
+
+# Vertices
+
+# name of output file to contain vertices
+vert=2qz_pixel.vrt
+
+echo "${mangledir}poly2poly -ov $quiet $npol $spol $vert"
+${mangledir}poly2poly -ov $quiet $npol $spol $vert || exit
+echo "Vertices of 2QZ 10k mask are in $vert"
+
+# Graphics
+
+# name of output file to contain graphics
+grph=2qzpixel.grph
+
+# number of points per (2 pi) along each edge of a polygon
+pts_per_twopi=30
+
+echo "${mangledir}poly2poly -og$pts_per_twopi $quiet $npol $spol $grph"
+${mangledir}poly2poly -og$pts_per_twopi $quiet $npol $spol $grph || exit
+echo "Data suitable for plotting polygons of the 2QZ 10k mask are in $grph:"
+echo "each line is a sequence of az, el points delineating the perimeter of a polygon."
+
+# remove temporary files
+rm j[ns]*
+
+if [ -z "$quiet" ]; then
+    echo "===========================================";
+    echo "the universe?"
+fi
+
+if [ "$quiet" ]; then
+    echo ""
+    echo "If you'd like to repeat that with the sound on,"
+    echo "please turn off the quiet button in 2qz_pixel and try again."
+fi

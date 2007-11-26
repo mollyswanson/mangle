@@ -1,0 +1,73 @@
+unit d
+skip 0
+RA & Dec (B1950) limits of NGP fields
+rectangle id number is the UKST field number
+RAmin	RAmax	Decmin	Decmax
+rectangle 780
+142.5	147.5	-7.5	-2.5
+rectangle 781
+147.5	152.5	-7.5	-2.5
+rectangle 782
+152.5	157.5	-7.5	-2.5
+rectangle 783
+157.5	162.5	-7.5	-2.5
+rectangle 784
+162.5	167.5	-7.5	-2.5
+rectangle 785
+167.5	172.5	-7.5	-2.5
+rectangle 786
+172.5	177.5	-7.5	-2.5
+rectangle 787
+177.5	182.5	-7.5	-2.5
+rectangle 788
+182.5	187.5	-7.5	-2.5
+rectangle 789
+187.5	192.5	-7.5	-2.5
+rectangle 790
+192.5	197.5	-7.5	-2.5
+rectangle 791
+197.5	202.5	-7.5	-2.5
+rectangle 792
+202.5	207.5	-7.5	-2.5
+rectangle 793
+207.5	212.5	-7.5	-2.5
+rectangle 794
+212.5	217.5	-7.5	-2.5
+rectangle 795
+217.5	222.5	-7.5	-2.5
+rectangle 796
+222.5	227.5	-7.5	-2.5
+rectangle 852
+142.5	147.5	-2.5	2.5
+rectangle 853
+147.5	152.5	-2.5	2.5
+rectangle 854
+152.5	157.5	-2.5	2.5
+rectangle 855
+157.5	162.5	-2.5	2.5
+rectangle 856
+162.5	167.5	-2.5	2.5
+rectangle 857
+167.5	172.5	-2.5	2.5
+rectangle 858
+172.5	177.5	-2.5	2.5
+rectangle 859
+177.5	182.5	-2.5	2.5
+rectangle 860
+182.5	187.5	-2.5	2.5
+rectangle 861
+187.5	192.5	-2.5	2.5
+rectangle 862
+192.5	197.5	-2.5	2.5
+rectangle 863
+197.5	202.5	-2.5	2.5
+rectangle 864
+202.5	207.5	-2.5	2.5
+rectangle 865
+207.5	212.5	-2.5	2.5
+rectangle 866
+212.5	217.5	-2.5	2.5
+rectangle 867
+217.5	222.5	-2.5	2.5
+rectangle 868
+222.5	227.5	-2.5	2.5
