@@ -244,25 +244,25 @@ int rasterize(int nhealpix_poly, int npoly, polygon *polys[/*npoly*/], int nweig
 
   /* allocate memory for pixel info arrays start_r, start_m, total_r, and total_m */
   min_pixel = polys[0]->pixel;
-  max_pixel = polys[nhealpix_poly-1]->pixel+1;
+  max_pixel = (polys[nhealpix_poly-1]->pixel+1>polys[npoly-1]->pixel+1)?(polys[nhealpix_poly-1]->pixel+1):(polys[npoly-1]->pixel+1);
   start_r = (int *) malloc(sizeof(int) * max_pixel);
   if (!start_r) {
-    fprintf(stderr, "balkanize: failed to allocate memory for %d integers\n", max_pixel);
+    fprintf(stderr, "rasterize: failed to allocate memory for %d integers\n", max_pixel);
     return(-1);
   }
   start_m = (int *) malloc(sizeof(int) * max_pixel);
   if (!start_m) {
-    fprintf(stderr, "balkanize: failed to allocate memory for %d integers\n", max_pixel);
+    fprintf(stderr, "rasterize: failed to allocate memory for %d integers\n", max_pixel);
     return(-1);
   }
   total_r = (int *) malloc(sizeof(int) * max_pixel);
   if (!total_r) {
-    fprintf(stderr, "balkanize: failed to allocate memory for %d integers\n", max_pixel);
+    fprintf(stderr, "rasterize: failed to allocate memory for %d integers\n", max_pixel);
     return(-1);
   }
   total_m = (int *) malloc(sizeof(int) * max_pixel);
   if (!total_m) {
-    fprintf(stderr, "balkanize: failed to allocate memory for %d integers\n", max_pixel);
+    fprintf(stderr, "rasterize: failed to allocate memory for %d integers\n", max_pixel);
     return(-1);
   }
 
@@ -329,7 +329,13 @@ int rasterize(int nhealpix_poly, int npoly, polygon *polys[/*npoly*/], int nweig
   }
 
   for (i=0; i<nweights; i++) {
-    weights[i] = weights[i]/areas[i];
+    if(areas[i]!=0){
+      weights[i] = weights[i]/areas[i];
+    }
+    else{
+      weights[i]=0;
+      fprintf(stderr,"WARNING: rasterize: area of rasterizer polygon %d is zero.  Assigning zero weight.\n",i);
+    }
   }
 
   return(i+1);
