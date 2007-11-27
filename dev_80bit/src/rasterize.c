@@ -14,7 +14,7 @@
 #define DNP             4
 
 /* getopt options */
-const char *optstr = "dqa:b:t:y:m:s:e:p:i:";
+const char *optstr = "dqa:b:t:y:m:s:e:p:i:o:";
 
 /* allocate polygons as a global array */
 polygon *polys_global[NPOLYSMAX];
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
   /* at least two input and one output filenames required as arguments */
   if (argc - optind < 3) {
       if (optind > 1 || argc - optind == 1 || argc - optind == 2) {
-         fprintf(stderr, "%s requires at least 3 arguments: polygon_infile1, polygon_infile2, and healpix_weight_outfile\n", argv[0]);
+         fprintf(stderr, "%s requires at least 3 arguments: polygon_infile1, polygon_infile2, and polygon_outfile\n", argv[0]);
          usage();
          exit(1);
      } else {
@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
 void usage(void)
 {
      printf("usage:\n");
-     printf("rasterize [-d] [-q] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] polygon_infile1 polygon_infile2 [polygon_infile3 ...] polygon_outfile\n");
+     printf("rasterize [-d] [-q] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] polygon_infile1 polygon_infile2 [polygon_infile3 ...] polygon_outfile\n");
 #include "usage.h"
 }
 
