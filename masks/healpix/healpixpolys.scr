@@ -1,6 +1,8 @@
 #! /bin/bash
 # USAGE: healpixpolys.scr <Nside> <scheme> <p> <r> <polygon_outfile>
 
+mangledir=../../bin/
+
 if [ "$1" != 0 ]; then
  for ((  I = 1 ;  I < 8192 ;  I = `expr 2 \* $I`  ))
  do
@@ -29,14 +31,14 @@ do
   echo 0 >> jhw
 done
 
-poly2poly jhw jp
+${mangledir}poly2poly jhw jp
 rm jhw
 #note that -vo switch is needed in order to keep the correct id numbers (the HEALPix NESTED pixel numbers)
 
-pixelize -P$2$3,$4 -vo jp jpx
+${mangledir}pixelize -P$2$3,$4 -vo jp jpx
 rm jp
 
-snap -vo jpx $5
+${mangledir}snap -vo jpx $5
 rm jpx
 
 echo "HEALPix pixels at Nside=$1 written to $5"

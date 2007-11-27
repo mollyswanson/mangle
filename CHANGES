@@ -1,3 +1,8 @@
+26 Nov 2007
+Fixed rasterize so that it outputs polygon files, updated parse_args.c, added pixelized and snapped versions of HEALPix polygons at Nside=1 through 512 to the /masks/healpix/ directory.
+--Colin Hill
+--------------------------------------------------------------------------------
+
 19 Nov 2007
 Assorted minor updates: fixed issue with SDSSPix pixel boundaries, added 2dF230k weight function, added rounding tolerances in rect_to_poly function
 --Molly Swanson

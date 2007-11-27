@@ -464,7 +464,7 @@ void parse_args(int argc, char *argv[])
 		fmt.outper = 1;	/* outnve interpreted as number of points/(2 pi) */
 		break;
 	    case 'h':
-	        fprintf(stderr, "-%c%s: sorry, healpix_weight format is currently implemented only as input; to generate output file in healpix_weight format, use rasterize\n", opt, optarg);
+	        fprintf(stderr, "-%c%s: sorry, healpix_weight format is implemented only as input; to output a file containing the weights of your polygons, use -ow\n", opt, optarg);
 		exit(1);
 	    case 'l':
 		fmt.out = keywords[LIST];
