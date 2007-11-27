@@ -1,0 +1,16 @@
+#!/bin/tcsh
+# USAGE:   plotmap.scr <prefix>
+# EXAMPLE: plotmap.scr qaz     converts qaz.fits to qaz.gif
+echo THIS SCRIPT REQUIRES A HEALPIX INSTALLATION
+echo Creating $1.gif...
+#echo 'WARNING: plotmap disabled'
+#exit
+ud_grade.scr 512 $1.fits qaz_plotmap.fits
+if -f $1.gif /bin/rm $1.gif
+
+# SDSS and 2dF parameters (weights range from 0 to 1)
+map2gif -inp qaz_plotmap.fits -out $1.gif -bar .true. -add 0 -min 0 -max 1
+
+# wiener3yr_map and cleaned3yr_map parameters
+#map2gif -inp qaz_plotmap.fits -out $1.gif -bar .true. -add 0.2 -min 0 -max 0.4
+
