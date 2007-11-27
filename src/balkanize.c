@@ -162,7 +162,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
   int *start;
   int *total;
   int begin, end, p, max_pixel;
-  long double tol;
+  double tol;
 
   poly_sort(npoly, poly, 'p');
 
