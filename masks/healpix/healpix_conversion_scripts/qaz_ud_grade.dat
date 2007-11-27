@@ -1,0 +1,3 @@
+nside_out = 512
+infile = .fits
+outfile = qaz_plotmap.fits
