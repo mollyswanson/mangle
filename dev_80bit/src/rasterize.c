@@ -32,7 +32,7 @@ int     rasterize(int nhealpix_poly, int npoly, polygon *[/*npoly*/], int nweigh
 */
 int main(int argc, char *argv[])
 {
-  int ifile, nfiles, npoly, npolys, nhealpix_poly, nhealpix_polys, k, nside, nweights, nweight;
+  int ifile, nfiles, npoly, npolys, nhealpix_poly, nhealpix_polys, j, k, nweights, nweight;
   long double *weights;
   
   polygon **polys;
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
     if (polys[k]->id > nweights) nweights = polys[k]->id;
   }
 
-  nside = get_nside(nweights);
+  // nside = get_nside(nweights);
   fmt.nweights = nweights;
 
   /* read polygons from polygon_infile2, polygon_infile3, etc. */
@@ -140,10 +140,24 @@ int main(int argc, char *argv[])
   nweight = rasterize(nhealpix_poly, npoly, polys, nweights, weights);
   if (nweight == -1) exit(1);
 
-  /* write weights */
+  /* copy new weights to original rasterizer polygons */
+  for (k = 0; k < nhealpix_poly; k++) {
+    for (j = 0; j < nweights; j++) {
+      if (polys[k]->id == j) {
+	polys[k]->weight = weights[j];
+	break;
+      }
+    }
+  }
+
+
   ifile = argc - 1;
-  nweight = wr_healpix_weight(argv[ifile], &fmt, nweights, weights);
+  //nweight = wr_healpix_weight(argv[ifile], &fmt, nweights, weights);
+  //if (nweight == -1) exit(1);
+
+  nweight = wrmask(argv[ifile], &fmt, nhealpix_poly, polys);
   if (nweight == -1) exit(1);
+
 
   /* free array */
   for(k = 0; k < npoly; k++){
@@ -159,7 +173,7 @@ int main(int argc, char *argv[])
 void usage(void)
 {
      printf("usage:\n");
-     printf("rasterize [-d] [-q] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] polygon_infile1 polygon_infile2 [polygon_infile3 ...] weight_outfile\n");
+     printf("rasterize [-d] [-q] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] polygon_infile1 polygon_infile2 [polygon_infile3 ...] polygon_outfile\n");
 #include "usage.h"
 }
 
