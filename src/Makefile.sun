@@ -63,12 +63,12 @@ BIN=../bin
 ILIB = -L.
 LLIB = -lmangle
 
-PROGS = balkanize drangle harmonize healpix2poly map pixelize pixelmap polyid poly2poly ransack rasterize snap unify weight test
+PROGS = balkanize drangle harmonize map pixelize pixelmap polyid poly2poly ransack rasterize snap unify weight test
 #ddcount rotate rrcoeffs
 
-COBJ = advise_fmt.o braktop_.o cmminf.o convert.o copy_format.o copy_poly.o drandom.o drangle_polys.o dranglepolys_.o dump_poly.o findtop_.o get_pixel.o garea.o gcmlim.o gphbv.o gphi.o gptin.o gspher.o gsphr.o gvert.o gvlim.o gvphi.o harmonize_polys.o harmonizepolys_.o healpix_ang2pix_nest.o healpix2poly.o healpixpolys.o ikrand.o msg.o new_poly.o new_vert.o partition_poly.o places.o poly_id.o poly_sort.o prune_poly.o rasterize.o rdangle.o rdline.o rdmask.o rdmask_.o rdspher.o rrcoeffs.o scale.o sdsspix.o search.o snap_poly.o split_poly.o strcmpl.o strdict.o vmid.o weight_fn.o which_pixel.o wrangle.o wrho.o wrmask.o wrrrcoeffs.o wrspher.o
+COBJ = advise_fmt.o braktop_.o cmminf.o convert.o copy_format.o copy_poly.o drandom.o drangle_polys.o dranglepolys_.o dump_poly.o findtop_.o get_pixel.o garea.o gcmlim.o gphbv.o gphi.o gptin.o gspher.o gsphr.o gvert.o gvlim.o gvphi.o harmonize_polys.o harmonizepolys_.o healpix_ang2pix_nest.o healpixpolys.o ikrand.o msg.o new_poly.o new_vert.o partition_poly.o places.o poly_id.o poly_sort.o prune_poly.o rasterize.o rdangle.o rdline.o rdmask.o rdmask_.o rdspher.o rrcoeffs.o scale.o sdsspix.o search.o snap_poly.o split_poly.o strcmpl.o strdict.o vmid.o weight_fn.o which_pixel.o wrangle.o wrho.o wrmask.o wrrrcoeffs.o wrspher.o
 
-FOBJ = azel.s.o azell.s.o braktop.s.o felp.s.o fframe.s.o findtop.s.o garea.s.o gaream.s.o gcmlim.s.o gphi.s.o gphim.s.o gphbv.s.o gptin.s.o gsphera.s.o gspher.s.o gsubs.s.o gvert.s.o gvlim.s.o gvphi.s.o iylm.s.o pix2vec_nest.s.o twodf.o twoqz.o wlm.s.o wrho.s.o
+FOBJ = azel.s.o azell.s.o braktop.s.o felp.s.o fframe.s.o findtop.s.o garea.s.o gaream.s.o gcmlim.s.o gphi.s.o gphim.s.o gphbv.s.o gptin.s.o gsphera.s.o gspher.s.o gsubs.s.o gvert.s.o gvlim.s.o gvphi.s.o iylm.s.o pix2vec_nest.s.o twodf100k.o twodf230k.o twoqz.o wlm.s.o wrho.s.o
 
 mangler:
 	$(MAKE) libmangle.a $(PROGS)
@@ -103,9 +103,6 @@ drangle: drangle.o libmangle.a Makefile
 
 harmonize: harmonize.o libmangle.a Makefile
 	$(F77) $(FFLAGS) -o harmonize harmonize.o $(ILIB) $(LLIB)
-
-healpix2poly: healpix2poly.o libmangle.a Makefile
-	$(F77) $(FFLAGS) -o healpix2poly healpix2poly.o $(ILIB) $(LLIB)
 
 map: map.o libmangle.a Makefile
 	$(F77) $(FFLAGS) -o map map.o $(ILIB) $(LLIB)
@@ -205,8 +202,6 @@ harmonizepolys_.o: manglefn.h harmonizepolys_.c
 	$(CC) $(CFLAGS) -c harmonizepolys_.c
 healpix_ang2pix_nest.o: manglefn.h pi.h  healpix_ang2pix_nest.c
 	$(CC) $(CFLAGS) -c healpix_ang2pix_nest.c
-healpix2poly.o: parse_args.c defaults.h manglefn.h pi.h usage.h healpix2poly.c
-	$(CC) $(CFLAGS) -c healpix2poly.c
 healpixpolys.o:  manglefn.h pi.h healpixpolys.c
 	$(CC) $(CFLAGS) -c healpixpolys.c
 ikrand.o: manglefn.h ikrand.c
@@ -336,8 +331,10 @@ iylm.s.o: pi.par iylm.s.f
 	$(F77) $(FFLAGS) -c iylm.s.f
 pix2vec_nest.s.o: pix2vec_nest.s.f
 	$(F77) $(FFLAGS) -c pix2vec_nest.s.f
-twodf.o: pi.par twodf.f
-	$(F77) $(FFLAGS) -c twodf.f
+twodf100k.o: pi.par twodf100k.f
+	$(F77) $(FFLAGS) -c twodf100k.f
+twodf230k.o: pi.par twodf230k.f
+        $(F77) $(FFLAGS) -c twodf230k.f
 twoqz.o: mangdir.data mangdir.inc twoqz.f
 	$(F77) $(FFLAGS) -c twoqz.f
 wlm.s.o: pi.par wlm.s.f
