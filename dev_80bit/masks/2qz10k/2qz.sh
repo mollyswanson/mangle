@@ -1,12 +1,19 @@
 #! /bin/sh
 
-pix=$1
-echo $pix
+#script to create the angular mask for the 10k releast of the 2dF QSO Redshift Survey
+#see http://www.2dfquasar.org/ for more about the survey.
+#USAGE: 2qz.sh
+
+
 user=`whoami`
 names=`finger $user | fgrep "ame:" | sed 's/.*: *\([^ ]*\)[^:]*/\1/'`
 for name in ${names}; do break; done
-echo "Hello $name, watch me make harmonics for the 2QZ 10k survey."
-echo "If this works, I will be impressed.  Please wait a minute or two."
+echo "Hello $name, watch me make the angular mask and harmonics for the 2QZ 10k survey."
+
+#to pixelize dynamically
+#pix=-Pd
+#to pixelize everything to maximum resolution
+pix=-Ps0,6
 
 # to make verbose
 quiet=
@@ -34,26 +41,26 @@ fi
 # name of output file to contain 2QZ 10k North polygons
 npol=2qz_north_pixel.pol
 
-echo "${mangledir}pixelize -P0 $quiet $mtol ngp_ukstfld.lims.txt jnup"
-${mangledir}pixelize $pix $quiet $mtol ngp_ukstfld.lims.txt jnup || exit
-echo "${mangledir}pixelize -P0 $quiet $mtol ngp_field_coords.txt jnfp"
-${mangledir}pixelize $pix $quiet $mtol ngp_field_coords.txt jnfp || exit
-echo "${mangledir}pixelize -P0 $quiet $mtol ngp.used.rahole.txt jnhp"
-${mangledir}pixelize $pix $quiet $mtol ngp.used.rahole.txt jnhp || exit
+echo "${mangledir}pixelize $pix $quiet $mtol ngp_ukstfld.lims.txt jnup"
+#${mangledir}pixelize $pix $quiet $mtol ngp_ukstfld.lims.txt jnup || exit
+echo "${mangledir}pixelize $pix $quiet $mtol ngp_field_coords.txt jnfp"
+#${mangledir}pixelize $pix $quiet $mtol ngp_field_coords.txt jnfp || exit
+echo "${mangledir}pixelize $pix $quiet $mtol ngp.used.rahole.txt jnhp"
+#${mangledir}pixelize $pix $quiet $mtol ngp.used.rahole.txt jnhp || exit
 echo "${mangledir}snap $quiet $snaptols $mtol jnup jnu"
-${mangledir}snap $quiet $snaptols $mtol jnup jnu || exit
+#${mangledir}snap $quiet $snaptols $mtol jnup jnu || exit
 echo "${mangledir}snap $quiet $snaptols $mtol jnfp jnf"
-${mangledir}snap $quiet $snaptols $mtol jnfp jnf || exit
+#${mangledir}snap $quiet $snaptols $mtol jnfp jnf || exit
 echo "${mangledir}snap $quiet $snaptols $mtol jnhp jnh"
-${mangledir}snap $quiet $snaptols $mtol jnhp jnh || exit
+#${mangledir}snap $quiet $snaptols $mtol jnhp jnh || exit
 echo "${mangledir}snap $quiet $snaptols $mtol jnu jnf jnh jnufh"
-${mangledir}snap $quiet $snaptols $mtol jnu jnf jnh jnufh || exit
+#${mangledir}snap $quiet $snaptols $mtol jnu jnf jnh jnufh || exit
 echo "${mangledir}balkanize $quiet $mtol jnufh jnb"
-${mangledir}balkanize $quiet $mtol jnufh jnb || exit
+#${mangledir}balkanize $quiet $mtol jnufh jnb || exit
 echo "${mangledir}weight $quiet $mtol -z2QZ10k jnb jnw"
-${mangledir}weight $quiet $mtol -z2QZ10k jnb jnw || exit
+#${mangledir}weight $quiet $mtol -z2QZ10k jnb jnw || exit
 echo "${mangledir}unify $quiet $mtol jnw $npol"
-${mangledir}unify $quiet $mtol jnw $npol || exit
+#${mangledir}unify $quiet $mtol jnw $npol || exit
 echo "Polygons for 2QZ 10k North are in $npol"
 
 # South
