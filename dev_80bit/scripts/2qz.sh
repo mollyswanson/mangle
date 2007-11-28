@@ -1,0 +1,1 @@
+../masks/2qz10k/2qz.sh
