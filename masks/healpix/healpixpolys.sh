@@ -1,7 +1,9 @@
-#! /bin/bash
-# USAGE: healpixpolys.scr <Nside> <scheme> <p> <r> <polygon_outfile>
+#! /bin/sh
+# (C) J C Hill 2007
 
-mangledir=../../bin/
+# script to construct, pixelize, and snap the approximate healpix polygons in mangle
+# USAGE: healpixpolys.sh <Nside> <scheme> <p> <r> <polygon_outfile>
+# EXAMPLE: healpixpolys.sh 16 s 0 3 nside16p3s.pol
 
 if [ "$1" != 0 ]; then
  for ((  I = 1 ;  I < 8192 ;  I = `expr 2 \* $I`  ))
@@ -12,7 +14,7 @@ if [ "$1" != 0 ]; then
  done
 
  if [ "$FLAG" != 1 ]; then
-  echo "USAGE: healpixpolys.scr <Nside> <scheme> <p> <r> <polygon_outfile>"
+  echo "USAGE: healpixpolys.sh <Nside> <scheme> <p> <r> <polygon_outfile>"
   echo "<Nside> must be a power of 2."
   echo "<scheme> is the pixelization scheme to use; <p> is the number of polygons allowed in each pixel; <r> is the maximum pixelization resolution."
   exit 1
@@ -31,14 +33,14 @@ do
   echo 0 >> jhw
 done
 
-${mangledir}poly2poly jhw jp
+$MANGLEBINDIR/poly2poly jhw jp
 rm jhw
 #note that -vo switch is needed in order to keep the correct id numbers (the HEALPix NESTED pixel numbers)
 
-${mangledir}pixelize -P$2$3,$4 -vo jp jpx
+$MANGLEBINDIR/pixelize -P$2$3,$4 -vo jp jpx
 rm jp
 
-${mangledir}snap -vo jpx $5
+$MANGLEBINDIR/snap -vo jpx $5
 rm jpx
 
-echo "HEALPix pixels at Nside=$1 written to $5"
+echo "HEALPix pixels at Nside=$1 written to $5."
