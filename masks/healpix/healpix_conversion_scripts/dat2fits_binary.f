@@ -4,7 +4,7 @@
 
 	subroutine usage
 	implicit none
-	print *, 'Converts a CMBfast test file into a fits file'
+	print *, 'Converts a CMBfast test file (or mangle healpix_weight file) into a fits file'
 c	print *, 'COMPILE: a f 'f77  dat2fits_binary.f -o dat2fits_binary.x libcfitsio.a'  
 	print *, 'USAGE:   call dat2fits_binary.x <ptype> <nside> <in> <out>'
 	print *, 'EXAMPLE: call dat2fits_binary.x 1 512 qaz_map_data.dat mytest.fits'

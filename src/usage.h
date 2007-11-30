@@ -78,6 +78,9 @@
     if (strchr(optstr, 'o')) {
 	printf("             \toutput only: a area, g<i> graphics, i id, m midpoint, w weight\n");
     }
+    if (strchr(optstr, 'H')) {
+      printf("  -H\t\twrite outfile in healpix_weight format (rasterize only)\n");
+    }
 
     if (strchr(optstr, 'a') || strchr(optstr, 'b') || strchr(optstr, 't') || strchr(optstr, 'i') || strchr(optstr, 'o'))
 	printf("  unit u:\tr radians, d degrees, m arcmin, s arcsec, h hms(RA) & dms(Dec)\n");
@@ -86,4 +89,4 @@
 
     printf("  - for outfile\tmeans write to stdout\n");
 
-    printf("mangle documentation is at http://casa.colorado.edu/~ajsh/mangle/\n");
+    printf("mangle documentation is at http://space.mit.edu/home/tegmark/mangle/\n");

@@ -63,7 +63,6 @@ static format fmt = {
 	AZP,		/* 		between angular frames */
 	TRUNIT,		/* unit of transformation angles */
 	0,              /* default number of weights in healpix_weight input file */
-        0              /* by default, output file not formatted for later use in rasterize */
 };
 
 /* GLOBAL VARIABLES */
