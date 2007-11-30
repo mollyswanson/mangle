@@ -464,7 +464,7 @@ void parse_args(int argc, char *argv[])
 		fmt.outper = 1;	/* outnve interpreted as number of points/(2 pi) */
 		break;
 	    case 'h':
-	        fprintf(stderr, "-%c%s: sorry, healpix_weight format is implemented only as input; to output a file containing the weights of your polygons, use -ow\n", opt, optarg);
+	        fprintf(stderr, "-%c%s: sorry, healpix_weight format is implemented only as input, except for rasterize (use -H); to output a file containing the weights of your polygons, use -ow\n", opt, optarg);
 		exit(1);
 	    case 'l':
 		fmt.out = keywords[LIST];
@@ -508,13 +508,8 @@ void parse_args(int argc, char *argv[])
 		exit(1);
 	    }
 	    break;
-        case 'H':               /* whether polygon_outfile is to be formatted for later use in rasterize */
-	    if (fmt.out == keywords[CIRCLE] || fmt.out == keywords[EDGES] || fmt.out == keywords[VERTICES] || fmt.out == keywords[RECTANGLE] || 
-		fmt.out == keywords[POLYGON] || fmt.out == keywords[SPOLYGON] || fmt.out == keywords[REGION])  fmt.healpix_out = 1;
-            else {
-	        msg("the outfile format you have chosen is not a valid input format for rasterize\n");
-		msg("the -H argument will thus be ignored\n");
-	    }
+        case 'H':               /* write output of rasterize in healpix_weight file instead of polygon file */
+	    fmt.out = keywords[HEALPIX_WEIGHT];
             break;
 	case ':':
 	case '?':

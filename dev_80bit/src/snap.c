@@ -28,7 +28,7 @@ int snap(int npoly, polygon *poly[/*npoly*/]);
 */
 int main(int argc, char *argv[])
 {
-    int ifile, nadj, nfiles, npoly, npolys, i, flag;
+    int ifile, nadj, nfiles, npoly, npolys, i;
     polygon **polys;
     polys=polys_global;
 
@@ -95,28 +95,6 @@ int main(int argc, char *argv[])
     if (npoly == 0) {
 	msg("STOP\n");
 	exit(0);
-    }
-
-    if (fmt.healpix_out == 1) {
-      if (fmt.nweights == 0) fmt.nweights = npoly/nfiles;
-      /* check whether fmt.nweights is a valid number based on the HEALPix pixelization scheme */
-      for (i = 1; i <= 8192; i = 2*i) {
-	if (12*powl(i,2) == fmt.nweights) {
-	  flag = 1;
-	  break;
-	}
-	else {
-	  flag = 0;
-	  continue;
-	}
-      }
-      if (flag == 0) {
-	fprintf(stderr, "error: %d is not a valid number of HEALPix polygons\n", fmt.nweights);
-	fprintf(stderr, "see the HEALPix website at http://healpix.jpl.nasa.gov for more information\n");
-	fprintf(stderr, "the -H argument will thus be ignored\n");
-	fmt.healpix_out = 0;
-      }
-      else msg("polygon_outfile will be formatted for subsequent use as polygon_infile1 in rasterize, with nweights = %d\n", fmt.nweights);
     }
 
     /* adjust boundaries of polygons */

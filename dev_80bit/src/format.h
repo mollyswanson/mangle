@@ -41,7 +41,6 @@ typedef struct {
     long double azp;		/* azimuth of original pole wrt new frame */
     char trunit;	/* angular units of transformation angles */
     int nweights;       /* the total number of weights/polygons, for use with healpix_weight input files and rasterize */
-    int healpix_out;    /* 0 by default; 1 if user wants output file to be formatted for later use in rasterize */
 } format;
 
 #endif	/* FORMAT_H */

@@ -14,7 +14,7 @@
 #define DNP             4
 
 /* getopt options */
-const char *optstr = "dqa:b:t:y:m:s:e:p:i:o:";
+const char *optstr = "dqa:b:t:y:m:s:e:p:i:o:H";
 
 /* allocate polygons as a global array */
 polygon *polys_global[NPOLYSMAX];
@@ -107,9 +107,6 @@ int main(int argc, char *argv[])
     if (polys[k]->id > nweights) nweights = polys[k]->id;
   }
 
-  // nside = get_nside(nweights);
-  fmt.nweights = nweights;
-
   /* read polygons from polygon_infile2, polygon_infile3, etc. */
   npoly = nhealpix_poly;
   nfiles = argc - 2 - optind;
@@ -152,12 +149,14 @@ int main(int argc, char *argv[])
 
 
   ifile = argc - 1;
-  //nweight = wr_healpix_weight(argv[ifile], &fmt, nweights, weights);
-  //if (nweight == -1) exit(1);
-
-  nweight = wrmask(argv[ifile], &fmt, nhealpix_poly, polys);
-  if (nweight == -1) exit(1);
-
+  if (strcmp(fmt.out, "healpix_weight") == 0) {
+    nweight = wr_healpix_weight(argv[ifile], &fmt, nweights, weights);
+    if (nweight == -1) exit(1);
+  }
+  else {
+    nweight = wrmask(argv[ifile], &fmt, nhealpix_poly, polys);
+    if (nweight == -1) exit(1);
+  }
 
   /* free array */
   for(k = 0; k < npoly; k++){
@@ -173,7 +172,7 @@ int main(int argc, char *argv[])
 void usage(void)
 {
      printf("usage:\n");
-     printf("rasterize [-d] [-q] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] polygon_infile1 polygon_infile2 [polygon_infile3 ...] polygon_outfile\n");
+     printf("rasterize [-d] [-q] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] [-H] polygon_infile1 polygon_infile2 [polygon_infile3 ...] polygon_outfile\n");
 #include "usage.h"
 }
 
