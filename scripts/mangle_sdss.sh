@@ -1,1 +1,1 @@
-../masks/sdss/mangle_sdss.sh
+link ../masks/sdss/mangle_sdss.sh
