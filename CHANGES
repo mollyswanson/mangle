@@ -1,3 +1,25 @@
+28 Nov 2007
+MANGLE 2.0 RELEASE
+Upgrades from mangle1.4.1:
+-pixelize functions for very speedy processing of masks
+-HEALPix import and export capabilities
+-loads of other new features
+
+Mangle 2.0 website:
+http://space.mit.edu/home/tegmark/mangle/ 
+
+--Molly Swanson, Colin Hill, Max Tegmark
+--------------------------------------------------------------------------------
+26 Nov 2007
+Fixed rasterize so that it outputs polygon files, updated parse_args.c, added pixelized and snapped versions of HEALPix polygons at Nside=1 through 512 to the /masks/healpix/ directory.
+--Colin Hill
+--------------------------------------------------------------------------------
+
+19 Nov 2007
+Assorted minor updates: fixed issue with SDSSPix pixel boundaries, added 2dF230k weight function, added rounding tolerances in rect_to_poly function
+--Molly Swanson
+--------------------------------------------------------------------------------
+
 8 Sept 2007
 Fixed segmentation fault issue when NPOLYSMAX >~ 3000000 by allocating the main polygon arrays globally rather than locally.  Also added calls to free_poly to clean up memory at the end of all programs.
 --Molly Swanson

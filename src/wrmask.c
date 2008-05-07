@@ -141,11 +141,8 @@ int wr_circ(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 	}
     }
 
-    if (fmt->healpix_out) fprintf(file, "healpix_weight %d\n\n", fmt->nweights);
-    else {
-      /* write number of polygons */
-      fprintf(file, "%d polygons\n", npolyw);
-    }
+    /* write number of polygons */
+    fprintf(file, "%d polygons\n", npolyw);
 
     /* write angular unit */
     fprintf(file, "unit %c\n", fmt->outunitp);
@@ -249,11 +246,8 @@ int wr_edge(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 	do_vcirc = 1;
     }
 
-    if (fmt->healpix_out) fprintf(file, "healpix_weight %d\n\n", fmt->nweights);
-    else {
-      /* write number of polygons */
-      fprintf(file, "%d polygons\n", npolyw);
-    }
+    /* write number of polygons */
+    fprintf(file, "%d polygons\n", npolyw);
     
     /* write angular unit */
     fprintf(file, "unit %c\n", fmt->outunitp);
@@ -642,11 +636,8 @@ int wr_rect(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 	}
     }
 
-    if (fmt->healpix_out) fprintf(file, "healpix_weight %d\n\n", fmt->nweights);
-    else {
-      /* write number of rectangles */
-      fprintf(file, "%d rectangles\n", nrect);
-    }
+    /* write number of rectangles */
+    fprintf(file, "%d rectangles\n", nrect);
     
     /* write angular unit */
     fprintf(file, "unit %c\n", fmt->outunitp);
@@ -756,11 +747,8 @@ int wr_poly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 	poly_fmt = polygon_fmt;
     }
 
-    if (fmt && fmt->healpix_out) fprintf(file, "healpix_weight %d\n\n", fmt->nweights);
-    else {
-      /* write number of polygons */
-      fprintf(file, "%d polygons\n", npolyw);
-    }
+    /* write number of polygons */
+    fprintf(file, "%d polygons\n", npolyw);
 
     if(pixelized>0){
       fprintf(file, "pixelization %d%c\n", res_max, scheme);
@@ -841,11 +829,8 @@ int wr_Reg(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/], 
 	}
     }
 
-    if (fmt->healpix_out) fprintf(file, "healpix_weight %d\n\n", fmt->nweights);
-    else {
-      /* write number of polygons */
-      fprintf(file, " %d\n", npolyw);
-    }
+    /* write number of polygons */
+    fprintf(file, " %d\n", npolyw);
 
     /* write number of caps */
     for (ipoly = 0; ipoly < npolys; ipoly++) {

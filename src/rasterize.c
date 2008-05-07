@@ -14,7 +14,7 @@
 #define DNP             4
 
 /* getopt options */
-const char *optstr = "dqa:b:t:y:m:s:e:p:i:";
+const char *optstr = "dqa:b:t:y:m:s:e:p:i:o:H";
 
 /* allocate polygons as a global array */
 polygon *polys_global[NPOLYSMAX];
@@ -32,7 +32,7 @@ int     rasterize(int nhealpix_poly, int npoly, polygon *[/*npoly*/], int nweigh
 */
 int main(int argc, char *argv[])
 {
-  int ifile, nfiles, npoly, npolys, nhealpix_poly, nhealpix_polys, k, nside, nweights, nweight;
+  int ifile, nfiles, npoly, npolys, nhealpix_poly, nhealpix_polys, j, k, nweights, nweight;
   double *weights;
   
   polygon **polys;
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
   /* at least two input and one output filenames required as arguments */
   if (argc - optind < 3) {
       if (optind > 1 || argc - optind == 1 || argc - optind == 2) {
-         fprintf(stderr, "%s requires at least 3 arguments: polygon_infile1, polygon_infile2, and healpix_weight_outfile\n", argv[0]);
+         fprintf(stderr, "%s requires at least 3 arguments: polygon_infile1, polygon_infile2, and polygon_outfile\n", argv[0]);
          usage();
          exit(1);
      } else {
@@ -107,9 +107,6 @@ int main(int argc, char *argv[])
     if (polys[k]->id > nweights) nweights = polys[k]->id;
   }
 
-  nside = get_nside(nweights);
-  fmt.nweights = nweights;
-
   /* read polygons from polygon_infile2, polygon_infile3, etc. */
   npoly = nhealpix_poly;
   nfiles = argc - 2 - optind;
@@ -140,10 +137,26 @@ int main(int argc, char *argv[])
   nweight = rasterize(nhealpix_poly, npoly, polys, nweights, weights);
   if (nweight == -1) exit(1);
 
-  /* write weights */
+  /* copy new weights to original rasterizer polygons */
+  for (k = 0; k < nhealpix_poly; k++) {
+    for (j = 0; j < nweights; j++) {
+      if (polys[k]->id == j) {
+	polys[k]->weight = weights[j];
+	break;
+      }
+    }
+  }
+
+
   ifile = argc - 1;
-  nweight = wr_healpix_weight(argv[ifile], &fmt, nweights, weights);
-  if (nweight == -1) exit(1);
+  if (strcmp(fmt.out, "healpix_weight") == 0) {
+    nweight = wr_healpix_weight(argv[ifile], &fmt, nweights, weights);
+    if (nweight == -1) exit(1);
+  }
+  else {
+    nweight = wrmask(argv[ifile], &fmt, nhealpix_poly, polys);
+    if (nweight == -1) exit(1);
+  }
 
   /* free array */
   for(k = 0; k < npoly; k++){
@@ -159,7 +172,7 @@ int main(int argc, char *argv[])
 void usage(void)
 {
      printf("usage:\n");
-     printf("rasterize [-d] [-q] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] polygon_infile1 polygon_infile2 [polygon_infile3 ...] weight_outfile\n");
+     printf("rasterize [-d] [-q] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] [-H] polygon_infile1 polygon_infile2 [polygon_infile3 ...] polygon_outfile\n");
 #include "usage.h"
 }
 
@@ -230,25 +243,25 @@ int rasterize(int nhealpix_poly, int npoly, polygon *polys[/*npoly*/], int nweig
 
   /* allocate memory for pixel info arrays start_r, start_m, total_r, and total_m */
   min_pixel = polys[0]->pixel;
-  max_pixel = polys[nhealpix_poly-1]->pixel+1;
+  max_pixel = (polys[nhealpix_poly-1]->pixel+1>polys[npoly-1]->pixel+1)?(polys[nhealpix_poly-1]->pixel+1):(polys[npoly-1]->pixel+1);
   start_r = (int *) malloc(sizeof(int) * max_pixel);
   if (!start_r) {
-    fprintf(stderr, "balkanize: failed to allocate memory for %d integers\n", max_pixel);
+    fprintf(stderr, "rasterize: failed to allocate memory for %d integers\n", max_pixel);
     return(-1);
   }
   start_m = (int *) malloc(sizeof(int) * max_pixel);
   if (!start_m) {
-    fprintf(stderr, "balkanize: failed to allocate memory for %d integers\n", max_pixel);
+    fprintf(stderr, "rasterize: failed to allocate memory for %d integers\n", max_pixel);
     return(-1);
   }
   total_r = (int *) malloc(sizeof(int) * max_pixel);
   if (!total_r) {
-    fprintf(stderr, "balkanize: failed to allocate memory for %d integers\n", max_pixel);
+    fprintf(stderr, "rasterize: failed to allocate memory for %d integers\n", max_pixel);
     return(-1);
   }
   total_m = (int *) malloc(sizeof(int) * max_pixel);
   if (!total_m) {
-    fprintf(stderr, "balkanize: failed to allocate memory for %d integers\n", max_pixel);
+    fprintf(stderr, "rasterize: failed to allocate memory for %d integers\n", max_pixel);
     return(-1);
   }
 
@@ -315,7 +328,13 @@ int rasterize(int nhealpix_poly, int npoly, polygon *polys[/*npoly*/], int nweig
   }
 
   for (i=0; i<nweights; i++) {
-    weights[i] = weights[i]/areas[i];
+    if(areas[i]!=0){
+      weights[i] = weights[i]/areas[i];
+    }
+    else{
+      weights[i]=0;
+      fprintf(stderr,"WARNING: rasterize: area of rasterizer polygon %d is zero.  Assigning zero weight.\n",i);
+    }
   }
 
   return(i+1);

@@ -7,7 +7,20 @@ Diagnosis
 ---------
 Your computer stores bytes with opposite endianness.
 
-A Solution
+OR
+
+Your version of mangle was compiled using the gfortran fortran compiler, 
+but you are trying to read unformatted fortran files produced with g77 
+fortran code.
+
+Solution
+--------
+Download the formatted version of the masks available in the "data" section
+of the mangle website http://space.mit.edu/home/tegmark/mangle/
+and use these instead.
+
+
+Another Solution
 ----------
 WARNING: The following hack works only if each number in the unformatted
 fortran file is a single word, i.e. an INTEGER or REAL (not DOUBLE PRECISION).
@@ -35,13 +48,4 @@ cpio -i -b < files.cpio
 The -b switch is the thing that does the byte-swapping in each word.
 
 
-Alternative diagnosis
----------------------
-Your version of mangle was compiled using the gfortran fortran compiler, 
-but you are trying to read unformatted fortran files produced with g77 
-fortran code.
 
-Solution
---------
-Download the formatted version of the masks available in the "masks" section
-of the mangle website and use these instead.

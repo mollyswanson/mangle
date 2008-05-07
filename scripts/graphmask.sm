@@ -1,0 +1,153 @@
+graphmask 25	#An sm script to plot mangle graphics files
+		#first argument: mangle graphics file to read: *.grph
+		#second argument: postscript file for output graph: *.ps
+		#third argument: title of graph: "I am a title"
+		#fourth and fifth arguments: optional range for right ascension to plot
+		data $1
+		device postfilecolour $2
+		#location $gx1 $gx2 $gy1 $(.77*($gx2-$gx1))
+		if($?3) { define title $3 }
+		if($?4) { define azmin $4 }
+		if($?5) { define azmax $5 }
+
+		define i 0 			# i = current line to read in file
+		define in_header 1		# in_header = 1 if reading header of file
+	
+		#process header information
+		while{$in_header} {
+			define i ($i+1)
+			read row header $i.s
+			if (header[1]=='polygons'){
+				define npoly (ATOF((header[0])))
+			} else { if (header[0]=='unit'){
+				define unit (header[1])
+			} else { if (header[0]=='graphics'){	
+				#we've reached the body of the data file, so move on
+				define in_header 0
+			} else {
+				write standard Unrecognized format in line $i of $1.
+				write standard Please fix the data file and try again.
+				quit
+			}}}
+							
+		}
+		
+		define i_start $i		#i_start = first line of data
+		define polycount 0
+		define first_poly 1
+
+		#process polygon data
+		define numlines ($i_start+2*$npoly-1)
+		while { $i < $numlines } {
+			read row specs $i.s	
+			if(specs[0]!='graphics' || dimen(specs)!=12){
+				write standard Formatting error in line $i of $1
+				write standard Please fix the data file and try again.
+				quit
+			}				
+			set id = ATOF(specs[1])
+			set n_tot = ATOF(specs[3])
+			set edges = ATOF(specs[5])
+			set w = ATOF(specs[7])
+			set midx = ATOF(specs[9])
+			set midy = ATOF(specs[10])
+                        
+			define numpoints (n_tot[0])				
+	
+			while{$numpoints>0}{
+				read row polypoints $($i+1)
+				set n = (dimen(polypoints)/2)
+				define numpoints ( $numpoints - n[0])
+				
+				#if there are still points to read in for this polygon,
+				#we need to read in another line
+				if($numpoints>0){
+					write standard "extra line for disconnected polygon"
+					define numlines ($numlines+1)
+				}	 
+		              
+				#separate list of points in x y x y x y ... format into x and y vectors
+				set ix = 0,2*n[0]-2,2		#even numbers
+				set iy = 1,2*n[0]-1,2		#odd numbers
+				# x = numbers with even list indices (indices start at 0)
+				# y = numbers with odd list indices
+				# tack first point on at end to close the polygon
+				set x=polypoints[ix] CONCAT polypoints[0] 
+				set y=polypoints[iy] CONCAT polypoints[1]
+						
+				# if polygon is in range to be plotted, add it to plot list
+				if($first_poly){
+					#if this is the first polygon in list, start the list
+					set x_all = x
+					set y_all = y	
+					set numpoints = n+1
+					set weight = w
+					define first_poly 0	
+				} else {	
+					#otherwise, tack this one on to the list
+					set x_all = x_all CONCAT x
+					set y_all =  y_all CONCAT y	
+					set numpoints = numpoints CONCAT (n+1)
+					set weight = weight CONCAT w
+				}
+				define i ($i+1)
+				define polycount ($polycount+1)
+			}
+			define i ($i+1)		
+		}	
+
+		limits x_all y_all		
+		#adjust limits so the axes have equal scaling
+		if( ($fx2-$fx1)/$nx > ($fy2-$fy1)/$ny ) {
+			define ymid (($fy1+$fy2)/2)
+			define ymin ($ymid - .5*($fx2-$fx1)*$ny/$nx)
+			define ymax ($ymid + .5*($fx2-$fx1)*$ny/$nx)
+			define xmin $fx1
+			define xmax $fx2
+		} else { if( ($fx2-$fx1)/$nx < ($fy2-$fy1)/$ny ) {
+			define xmid (($fx1+$fx2)/2)
+			define xmin ($xmid - .5*($fy2-$fy1)*$nx/$ny)
+			define xmax ($xmid + .5*($fy2-$fy1)*$nx/$ny)
+			define ymin $fy1
+			define ymax $fy2
+		}}
+		limits $xmin $xmax $ymin $ymax 
+
+		#if limits have been specified as arguments, use them
+		if($?azmin && $?azmax) {
+			write standard using user-defined limits
+			define scale (($azmax-$azmin)/($xmax-$xmin))
+			define ymid (($fy1+$fy2)/2)
+			define ymin ($ymid - .5*($fy2-$fy1)*$scale)
+			define ymax ($ymid + .5*($fy2-$fy1)*$scale)
+			define xmin $azmin
+			define xmax $azmax
+		}
+		limits $xmin $xmax $ymin $ymax
+
+		expand 1.00001
+		box
+		xlabel Right Ascension ($unit)
+		ylabel Declination ($unit)	
+		identification
+		if ($?title) {
+			define titlepos ($gy2+100)
+			relocate ($gx1 $titlepos)
+			putlabel 9 $title
+		}
+
+		define j 0
+		do i=0,$polycount-1 {
+			set k = $j, $j+numpoints[$i]-1
+			set x=x_all[k]
+			set y=y_all[k]		
+			define j ($j+numpoints[$i])
+			define gray (int(50+ 200*(1-weight[$i])))
+			ctype = <0 $gray> + 256*<0 $gray> + 256*256*<0 $gray>
+			ctype 0 
+			connect x y
+			ctype 1
+			shade 0 x y
+		}
+		quit
+		#end 

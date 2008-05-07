@@ -1,0 +1,1 @@
+../masks/healpix/healpixrast.sh
