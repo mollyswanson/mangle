@@ -23,7 +23,7 @@ extern double weight_min, weight_max;
 extern int is_area_min, is_area_max;
 extern double area_min, area_max;
 
-/* min, max areas to keep */
+/* min, max ids to keep */
 extern int is_id_min, is_id_max;
 extern int id_min, id_max;
 
