@@ -36,7 +36,11 @@
 
     if (strchr(optstr, 'j')) printf("  -j[min][,max]\tkeep only polygons with weight in [min, max]\n");
 
+    if (strchr(optstr, 'J')) printf("  -J[min][,max]\tkeep only polygons with id numbers in [min, max]\n");
+
     if (strchr(optstr, 'k')) printf("  -k[min][,max]\tkeep only polygons with area in [min, max] str\n");
+
+    if (strchr(optstr, 'K')) printf("  -K[min][,max]\tkeep only polygons with pixel numbers in [min, max]\n");
 
     if (strchr(optstr, 'n')) printf("  -n\t\tintersect polygons of infile1 with those of same id in infile2\n");
 
@@ -44,8 +48,10 @@
 
     if (strchr(optstr, 'e')) printf("  -e<n>\t\tread only to <n>'th character of each line (0 = no limit)\n");
 
-    if (strchr(optstr, 'v')) printf("  -vo|-vn\tassign old (o) or new (n) polygon id numbers to output polygons\n");
-
+    if (strchr(optstr, 'v')) {
+      printf("  -vo|-vn|-vp\tassign old (o) or new (n) id numbers for output polygons\n");
+      printf("             \tor use pixel (p) numbers as id numbers\n");
+    }
     if (strchr(optstr, 'f')) {
 	printf("  -f\t\tlist frames\n");
 	printf("  -f<in>[,<ou>]\tinput, output angular frames\n");
@@ -79,7 +85,7 @@
 	printf("             \toutput only: a area, g<i> graphics, i id, m midpoint, w weight\n");
     }
     if (strchr(optstr, 'H')) {
-      printf("  -H\t\twrite outfile in healpix_weight format (rasterize only)\n");
+      printf("  -H\t\twrite output file in healpix_weight format\n");
     }
 
     if (strchr(optstr, 'a') || strchr(optstr, 'b') || strchr(optstr, 't') || strchr(optstr, 'i') || strchr(optstr, 'o'))

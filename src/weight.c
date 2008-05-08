@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 void usage(void)
 {
     printf("usage:\n");
-    printf("weight [-d] [-q] -z<survey> [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] polygon_infile1 [polygon_infile2 ...] polygon_outfile\n");
+    printf("weight [-d] [-q] -z<survey> [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn|-vp] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] polygon_infile1 [polygon_infile2 ...] polygon_outfile\n");
 #include "usage.h"
 }
 
