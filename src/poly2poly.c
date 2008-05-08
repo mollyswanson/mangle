@@ -90,6 +90,36 @@ int main(int argc, char *argv[])
     } else if (is_area_max) {
 	msg("will keep only polygons with areas <= %Lg\n", area_max);
     }
+    /* id limits */
+    if (is_id_min && is_id_max) {
+	/* min <= max */
+	if (id_min < id_max) {
+	    msg("will keep only polygons with ids inside [%d, %d]\n", id_min, id_max);
+	/* min > max */
+	} else {
+	    msg("will keep only polygons with ids >= %d or <= %d\n", id_min, id_max);
+	    msg("         (only polygons with ids outside (%d, %d))\n", id_max, id_min);
+	}
+    } else if (is_id_min) {
+	msg("will keep only polygons with areas >= %d\n", id_min);
+    } else if (is_id_max) {
+	msg("will keep only polygons with areas <= %d\n", id_max);
+    }
+    /* pixel limits */
+    if (is_pixel_min && is_pixel_max) {
+	/* min <= max */
+	if (pixel_min < pixel_max) {
+	    msg("will keep only polygons with pixel numbers inside [%d, %d]\n", pixel_min, pixel_max);
+	/* min > max */
+	} else {
+	    msg("will keep only polygons with pixel numbers >= %d or <= %d\n", pixel_min, pixel_max);
+	    msg("         (only polygons with pixel numbers outside (%d, %d))\n", pixel_max, pixel_min);
+	}
+    } else if (is_pixel_min) {
+	msg("will keep only polygons with pixel numbers >= %d\n", pixel_min);
+    } else if (is_pixel_max) {
+	msg("will keep only polygons with pixel numbers <= %d\n", pixel_max);
+    }
 
     /* advise data format */
     advise_fmt(&fmt);

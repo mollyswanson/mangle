@@ -23,6 +23,14 @@ extern long double weight_min, weight_max;
 extern int is_area_min, is_area_max;
 extern long double area_min, area_max;
 
+/* min, max ids to keep */
+extern int is_id_min, is_id_max;
+extern int id_min, id_max;
+
+/* min, max pixels to keep */
+extern int is_pixel_min, is_pixel_max;
+extern int pixel_min, pixel_max;
+
 /*pixelization info*/
 extern int res_max;                  /*maximum resolution allowed for pixelization*/
 extern int polys_per_pixel;          /*level of pixelization: number of polygons allowed per pixel*/
@@ -1290,11 +1298,13 @@ int wr_healpix_weight(char *filename, format *fmt, int numweight, long double we
 */
 int discard_poly(int npolys, polygon *polys[/*npolys*/])
 {
-    int discard, ier, ipoly, nbadarea, noutarea, noutweight, npoly;
+    int discard, ier, ipoly, nbadarea, noutarea, noutweight, noutid, noutpixel, npoly;
     long double area, tol;
 
-    if (is_weight_min || is_weight_max || is_area_min || is_area_max) {
+    if (is_weight_min || is_weight_max || is_area_min || is_area_max || is_id_min || is_id_max || is_pixel_min || is_pixel_max) {
 	noutweight = 0;
+	noutid = 0;
+	noutpixel = 0;
 	nbadarea = 0;
 	noutarea = 0;
 	for (ipoly = 0; ipoly < npolys; ipoly++) {
@@ -1368,6 +1378,69 @@ int discard_poly(int npolys, polygon *polys[/*npolys*/])
 		polys[ipoly] = 0x0;
 		continue;
 	    }
+	    
+	    /* discard polygons with ids outside interval */
+	    if (is_id_min && is_id_max) {
+	      /* min <= max */
+	      if (id_min <= id_max) {
+		if (polys[ipoly]->id < id_min
+		    || polys[ipoly]->id > id_max) {
+		  discard = 1;
+		}
+		/* min > max */
+	      } else {
+		if (polys[ipoly]->id < id_min
+		    && polys[ipoly]->id > id_max) {
+		  discard = 1;
+		}
+	      }
+	    } else if (is_id_min) {
+	      if (polys[ipoly]->id < id_min) {
+		discard = 1;
+	      }
+	    } else if (is_id_max) {
+	      if (polys[ipoly]->id > id_max) {
+		discard = 1;
+	      }
+	    }
+	    if (discard) {
+	      noutid++;
+	      free_poly(polys[ipoly]);
+	      polys[ipoly] = 0x0;
+	      continue;
+	    }
+
+	    /* discard polygons with pixel numbers outside interval */
+	    if (is_pixel_min && is_pixel_max) {
+	      /* min <= max */
+	      if (pixel_min <= pixel_max) {
+		if (polys[ipoly]->pixel < pixel_min
+		    || polys[ipoly]->pixel > pixel_max) {
+		  discard = 1;
+		}
+		/* min > max */
+	      } else {
+		if (polys[ipoly]->pixel < pixel_min
+		    && polys[ipoly]->pixel > pixel_max) {
+		  discard = 1;
+		}
+	      }
+	    } else if (is_pixel_min) {
+	      if (polys[ipoly]->pixel < pixel_min) {
+		discard = 1;
+	      }
+	    } else if (is_pixel_max) {
+	      if (polys[ipoly]->pixel > pixel_max) {
+		discard = 1;
+	      }
+	    }
+	    if (discard) {
+	      noutpixel++;
+	      free_poly(polys[ipoly]);
+	      polys[ipoly] = 0x0;
+	      continue;
+	    }
+	    
 
 	}
 
@@ -1404,6 +1477,40 @@ int discard_poly(int npolys, polygon *polys[/*npolys*/])
 	    } else if (is_area_max) {
 		msg("%d polygons with areas > %Lg discarded\n",
 		    noutarea, area_max);
+	    }
+	}
+	if (noutid > 0) {
+	    if (is_id_min && is_id_max) {
+		if (id_min < id_max) {
+		    msg("%d polygons with ids outside [%d, %d] discarded\n",
+			noutid, id_min, id_max);
+		} else {
+		    msg("%d polygons with ids inside (%d, %d) discarded\n",
+			noutid, id_max, id_min);
+		}
+	    } else if (is_id_min) {
+		msg("%d polygons with ids < %d discarded\n",
+		    noutid, id_min);
+	    } else if (is_id_max) {
+		msg("%d polygons with ids > %d discarded\n",
+		    noutid, id_max);
+	    }
+	}
+	if (noutpixel > 0) {
+	    if (is_pixel_min && is_pixel_max) {
+		if (pixel_min < pixel_max) {
+		    msg("%d polygons with pixel numbers outside [%d, %d] discarded\n",
+			noutpixel, pixel_min, pixel_max);
+		} else {
+		    msg("%d polygons with pixel numbers inside (%d, %d) discarded\n",
+			noutpixel, pixel_max, pixel_min);
+		}
+	    } else if (is_pixel_min) {
+		msg("%d polygons with pixel numbers < %d discarded\n",
+		    noutpixel, pixel_min);
+	    } else if (is_pixel_max) {
+		msg("%d polygons with pixel numbers > %d discarded\n",
+		    noutpixel, pixel_max);
 	    }
 	}
 
