@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 void usage(void)
 {
     printf("usage:\n");
-    printf("unify [-d] [-q] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-U] [-i<f>[<n>][u]] [-o<f>[u]] polygon_infile1 [polygon_infile2 ...] polygon_outfile\n");
+    printf("unify [-d] [-q] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn|-vp] [-p[+|-][<n>]] [-U] [-i<f>[<n>][u]] [-o<f>[u]] polygon_infile1 [polygon_infile2 ...] polygon_outfile\n");
 #include "usage.h"
 }
 

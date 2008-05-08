@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
 void usage(void)
 {
     printf("usage:\n");
-    printf("poly2poly [-d] [-q] [-m<a>[u]] [-j[<min>][,<max>]] [-k[min][,<max>]] [-n] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] polygon_infile1 [polygon_infile2 ...] polygon_outfile\n");
+    printf("poly2poly [-d] [-q] [-m<a>[u]] [-j[<min>][,<max>]] [-J[<min>][,<max>]] [-k[min][,<max>]] [-K[min][,<max>]] [-n] [-s<n>] [-e<n>] [-vo|-vn|-vp] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] polygon_infile1 [polygon_infile2 ...] polygon_outfile\n");
 #include "usage.h"
 }
 
