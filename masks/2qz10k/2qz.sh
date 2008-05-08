@@ -4,7 +4,6 @@
 #see http://www.2dfquasar.org/ for more about the survey.
 #USAGE: 2qz.sh
 
-
 user=`whoami`
 names=`finger $user | fgrep "ame:" | sed 's/.*: *\([^ ]*\)[^:]*/\1/'`
 for name in ${names}; do break; done
@@ -42,25 +41,25 @@ fi
 npol=2qz_north_pixel.pol
 
 echo "${mangledir}pixelize $pix $quiet $mtol ngp_ukstfld.lims.txt jnup"
-#${mangledir}pixelize $pix $quiet $mtol ngp_ukstfld.lims.txt jnup || exit
+${mangledir}pixelize $pix $quiet $mtol ngp_ukstfld.lims.txt jnup || exit
 echo "${mangledir}pixelize $pix $quiet $mtol ngp_field_coords.txt jnfp"
-#${mangledir}pixelize $pix $quiet $mtol ngp_field_coords.txt jnfp || exit
+${mangledir}pixelize $pix $quiet $mtol ngp_field_coords.txt jnfp || exit
 echo "${mangledir}pixelize $pix $quiet $mtol ngp.used.rahole.txt jnhp"
-#${mangledir}pixelize $pix $quiet $mtol ngp.used.rahole.txt jnhp || exit
+${mangledir}pixelize $pix $quiet $mtol ngp.used.rahole.txt jnhp || exit
 echo "${mangledir}snap $quiet $snaptols $mtol jnup jnu"
-#${mangledir}snap $quiet $snaptols $mtol jnup jnu || exit
+${mangledir}snap $quiet $snaptols $mtol jnup jnu || exit
 echo "${mangledir}snap $quiet $snaptols $mtol jnfp jnf"
-#${mangledir}snap $quiet $snaptols $mtol jnfp jnf || exit
+${mangledir}snap $quiet $snaptols $mtol jnfp jnf || exit
 echo "${mangledir}snap $quiet $snaptols $mtol jnhp jnh"
-#${mangledir}snap $quiet $snaptols $mtol jnhp jnh || exit
+${mangledir}snap $quiet $snaptols $mtol jnhp jnh || exit
 echo "${mangledir}snap $quiet $snaptols $mtol jnu jnf jnh jnufh"
-#${mangledir}snap $quiet $snaptols $mtol jnu jnf jnh jnufh || exit
+${mangledir}snap $quiet $snaptols $mtol jnu jnf jnh jnufh || exit
 echo "${mangledir}balkanize $quiet $mtol jnufh jnb"
-#${mangledir}balkanize $quiet $mtol jnufh jnb || exit
+${mangledir}balkanize $quiet $mtol jnufh jnb || exit
 echo "${mangledir}weight $quiet $mtol -z2QZ10k jnb jnw"
-#${mangledir}weight $quiet $mtol -z2QZ10k jnb jnw || exit
+${mangledir}weight $quiet $mtol -z2QZ10k jnb jnw || exit
 echo "${mangledir}unify $quiet $mtol jnw $npol"
-#${mangledir}unify $quiet $mtol jnw $npol || exit
+${mangledir}unify $quiet $mtol jnw $npol || exit
 echo "Polygons for 2QZ 10k North are in $npol"
 
 # South
@@ -73,11 +72,11 @@ fi
 # name of output file to contain 2QZ 10k South polygons
 spol=2qz_south_pixel.pol
 
-echo "${mangledir}pixelize -P0 $quiet $mtol sgp_ukstfld.lims.txt jsup"
+echo "${mangledir}pixelize $pix $quiet $mtol sgp_ukstfld.lims.txt jsup"
 ${mangledir}pixelize $pix $quiet $mtol sgp_ukstfld.lims.txt jsup || exit
-echo "${mangledir}pixelize -P0 $quiet $mtol sgp_field_coords.txt jsfp"
+echo "${mangledir}pixelize $pix $quiet $mtol sgp_field_coords.txt jsfp"
 ${mangledir}pixelize $pix $quiet $mtol sgp_field_coords.txt jsfp || exit
-echo "${mangledir}pixelize -P0 $quiet $mtol sgp.used.rahole.txt jshp"
+echo "${mangledir}pixelize $pix $quiet $mtol sgp.used.rahole.txt jshp"
 ${mangledir}pixelize $pix $quiet $mtol sgp.used.rahole.txt jshp || exit
 echo "${mangledir}snap $quiet $snaptols $mtol jsup jsu"
 ${mangledir}snap $quiet $snaptols $mtol jsup jsu || exit

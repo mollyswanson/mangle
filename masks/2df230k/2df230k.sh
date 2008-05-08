@@ -83,7 +83,7 @@ ${mangledir}snap $quiet $snaptols $mtol -vo jshp jsh || exit
 # -n intersects holes with their parent fields
 echo "${mangledir}poly2poly $quiet $mtol -n jsh jsf jshf"
 ${mangledir}poly2poly $quiet $mtol -n jsh jsf jshf || exit
-echo "${mangledir}balkanize $quiet $mtol centres.sgp jrc jshf jsb"
+echo "${mangledir}balkanize $quiet $mtol jscp jrcp jshf jsb"
 ${mangledir}balkanize $quiet $mtol jscp jrcp jshf jsb || exit
 echo "${mangledir}weight $quiet $mtol -z2dF230k jsb jsw"
 ${mangledir}weight $quiet $mtol -z2dF230k jsb jsw || exit
