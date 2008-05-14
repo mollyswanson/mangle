@@ -103,13 +103,10 @@ int main(int argc, char *argv[])
 	exit(0);
     }
 
-    key = 'p';
-    poly_sort(npoly, polys, key);
-
     /* balkanize polygons */
     npolys = balkanize(npoly, polys, NPOLYSMAX - npoly, &polys[npoly]);
     if (npolys == -1) exit(1);
-
+ 
     /* write polygons */
     ifile = argc - 1;
     npolys = wrmask(argv[ifile], &fmt, npolys, &polys[npoly]);

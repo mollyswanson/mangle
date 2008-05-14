@@ -8,20 +8,17 @@
 int poly_cmp_pixel(polygon **poly1, polygon **poly2)
 {
   int pixel=(*poly1)->pixel - (*poly2)->pixel;
-  if(pixel!=0) return(pixel);
-  return (poly1-poly2);    
+  return(pixel);
 }
 int poly_cmp_id(polygon **poly1, polygon **poly2)
 {
   int id=(*poly1)->id - (*poly2)->id;
-  if(id!=0) return(id);
-  return (poly1-poly2);    
+  return(id);
 }
 int poly_cmp_weight(polygon **poly1, polygon **poly2)
 {
   double weight=(*poly1)->weight - (*poly2)->weight;
-  if(weight!=0) return(weight);
-  return (poly1-poly2);    
+  return(weight);
 }
 
 /*polygon sorting function
@@ -30,13 +27,13 @@ int poly_cmp_weight(polygon **poly1, polygon **poly2)
 */
 void poly_sort(int npoly, polygon *poly[],char key){
   if(key=='p'){
-    qsort(poly, npoly, sizeof(polygon *),poly_cmp_pixel);
+    mergesort(poly, npoly, sizeof(polygon *),poly_cmp_pixel);
   }
   else if(key=='i'){
-    qsort(poly, npoly, sizeof(polygon *),poly_cmp_id);
+    mergesort(poly, npoly, sizeof(polygon *),poly_cmp_id);
   }
   else if(key=='w'){
-    qsort(poly, npoly, sizeof(polygon *),poly_cmp_weight);
+    mergesort(poly, npoly, sizeof(polygon *),poly_cmp_weight);
   }
   else{
     fprintf(stderr,"sort key %c not recognized.  Array can't be sorted\n", key);
