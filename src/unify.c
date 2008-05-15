@@ -93,6 +93,8 @@ int main(int argc, char *argv[])
     nadj = unify(&npoly, polys);
     if (nadj == -1) exit(1);
 
+    if(unpixelize) pixelized=0;
+    
     ifile = argc - 1;
     npoly = wrmask(argv[ifile], &fmt, npoly, polys);
     if (npoly == -1) exit(1);
