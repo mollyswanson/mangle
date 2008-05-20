@@ -1,4 +1,27 @@
-Polygon files for the SDSS masks are available at
+To run the quickstart example script:
+sdss_quickstart.sh
+
+
+To prepare the full SDSS mask:
+
+Download the SDSS window and mask files from the mangle website at
 http://space.mit.edu/home/tegmark/mangle/download/data.html
-as well as
-http://sdss.physics.nyu.edu/vagc/
+
+
+or from the NYU VAGC:
+http://sdss.physics.nyu.edu/lss/<release>/<cut>/<number>/lss/
+download window.<release><cut><number>.ply and mask.<release><cut><number>.ply
+
+
+e.g. for the safe0 sample for fixed version of Data Release 6, go to 
+http://sdss.physics.nyu.edu/lss/dr6fix/safe/0/lss/
+and download window.dr6fixsafe0.ply and mask.dr6fixsafe0.ply
+
+then run the mangle_sdss.sh script:
+mangle_sdss.sh <release> <cut><number>
+
+e.g.:
+mangle_sdss.sh dr6fix safe0
+
+This will balkanize the window function and the holes together.
+

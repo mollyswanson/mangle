@@ -1,12 +1,8 @@
 #! /bin/sh
-# © M E C Swanson 2007
-#script to combine window and holes of SDSS, as provided by the NYU VAGC:
-# http://sdss.physics.nyu.edu/vagc/
-#the window and mask files used by this script are in 
-#lss/<release>/<cut>/<number>/lss/
-#window.<release><cut><number>.ply and mask.<release><cut><number>.ply
-#USAGE: mangle_sdss.sh <release> <cut><number>
-#EXAMPLE:mangle_sdss.sh dr6 safe0
+# © M E C Swanson 2008
+#Example script showing how to combine the hole and window functions for SDSS
+#Calculates mask for one of the equitorial slices of SDSS
+#type "sdss_quickstart.sh" and see what happens!
 
 if [ "$MANGLEBINDIR" = "" ] ; then
     MANGLEBINDIR="../../bin"
@@ -18,8 +14,8 @@ if [ "$MANGLEDATADIR" = "" ] ; then
     MANGLEDATADIR="../../masks"
 fi
 
-sample=$1
-cuts=$2
+sample='dr4plus'
+cuts='safe0'
 
 user=`whoami`
 names=`finger $user | fgrep "ame:" | sed 's/.*: *\([^ ]*\)[^:]*/\1/'`
@@ -50,13 +46,13 @@ restag="_res${res}${scheme}"
 #cd $filedir
 
 # name of output file to contain sdss polygons
-pol=sdss_${sample}${cuts}${restag}.pol
-grph=sdss_${sample}${cuts}${restag}.grph
-list=sdss_${sample}${cuts}${restag}.list
-eps=sdss_${sample}${cuts}${restag}.eps
-fields=window.${sample}${cuts}.ply
-mask=mask.${sample}${cuts}.ply
-holes=holes.${sample}${cuts}.ply
+pol=sdss_${sample}${cuts}${restag}_slice.pol
+grph=sdss_${sample}${cuts}${restag}_slice.grph
+list=sdss_${sample}${cuts}${restag}_slice.list
+eps=sdss_${sample}${cuts}${restag}_slice.eps
+fields=window.${sample}${cuts}.slice.ply
+mask=mask.${sample}${cuts}.slice.ply
+holes=holes.${sample}${cuts}.slice.ply
 
 echo 0 > jw
 echo "$MANGLEBINDIR/weight -zjw $mask $holes"
@@ -95,37 +91,35 @@ if which matlab ; then
     echo "Data for plotting polygons of the SDSS $1 $2 mask in Matlab are in $list."
     echo "Using Matlab to plot the SDSS $1 $2  mask ..."
     echo "$MANGLESCRIPTSDIR/graphmask.sh $list $eps"
-    $MANGLESCRIPTSDIR/graphmask.sh $list $eps
+    $MANGLESCRIPTSDIR/graphmask.sh $list $eps -45 35 8 21
     if [ $? -eq 0 ]; then
 	echo "Made a figure illustrating the SDSS $1 $2 mask: $eps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
-###uncomment to automatically plot usng the sm script -- sm tends to get overloaded with the SDSS mask
-#    elif which sm ; then
-#	echo "Using Supermongo to plot the SDSS $1 $2 mask:"
-#	sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
-#	rm temp.out
-#	if [ -e $eps ]; then
-#	    echo "Made a figure illustrating the SDSS $1 $2 mask: $eps" 
-#	    echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
-#	    echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
-#	    echo "or you can plot $grph using your own favorite plotting tool."
-#	fi
+    elif which sm ; then
+	echo "Using Supermongo to plot the SDSS $1 $2 mask:"
+	sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
+	rm temp.out
+	if [ -e $eps ]; then
+	    echo "Made a figure illustrating the SDSS $1 $2 mask: $eps" 
+	    echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
+	    echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
+	    echo "or you can plot $grph using your own favorite plotting tool."
+	fi
     else 
 	echo "Scripts are available for plotting mangle polygons in Matlab" 
 	echo "(with the mapping toolbox) or Supermongo, or you can plot $grph"
 	echo "using your own favorite plotting tool."
     fi
-###uncomment to automatically plot usng the sm script -- sm tends to get overloaded with the SDSS mask
-#elif which sm ; then
-#    echo "Using Supermongo to plot the SDSS $1 $2 mask:"
-#    sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
-#    rm temp.out
-#    if [ -e $eps ]; then
-#	echo "Made a figure illustrating the SDSS $1 $2 mask: $eps" 
-#	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
-#	echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
-#        echo "or you can plot $grph using your own favorite plotting tool."
-#    fi
+elif which sm ; then
+    echo "Using Supermongo to plot the SDSS $1 $2 mask:"
+    sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
+    rm temp.out
+    if [ -e $eps ]; then
+	echo "Made a figure illustrating the SDSS $1 $2 mask: $eps" 
+	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
+	echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
+        echo "or you can plot $grph using your own favorite plotting tool."
+    fi
 else
     echo "Scripts are available for plotting mangle polygons in Matlab" 
     echo "(with the mapping toolbox) or Supermongo, or you can plot $grph"
