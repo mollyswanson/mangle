@@ -1,6 +1,5 @@
 At the command line, type
 2qz.sh
-or 
 and find out what happens.
 
 You should be aware that Intel and Sun chips have different endianness.

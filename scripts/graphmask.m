@@ -4,7 +4,7 @@ function graphmask(infile,outfile,maprange,outlines)
 %arguments: 
 %infile=polygon file to be plotted, in 'list' format, i.e.created with poly2poly -ol30 mypolys.pol mypolys.list
 %outfile=name of eps file to output, or use 'none' if you want to, e.g., put the resulting figure into a subplot.
-%maprange=[lonmin,lonmax,latmin,latmax] are optional latitude and longitude (RA and Dec)
+%maprange=[lonmin,lonmax,latmin,latmax] are optional latitude and longitude (Dec and RA)
 %limits for the mask.  If not provided, default is to plot full sky. 
 %outlines=whether to draw black outlines around polygons. default is no outlines.  Use outlines='on' to draw outlines.
 
@@ -15,7 +15,8 @@ if ( ~exist('ispolycw') )
      save('matlabexit.temp','exitval');
      exit
 end
-    
+
+%process input arguments    
 if(nargin==1)
    maprange=[0 360 -90 90];
    outlines='';
@@ -39,13 +40,14 @@ lonmax=maprange(2);
 latmin=maprange(3);
 latmax=maprange(4);
 
+%set spacing for tickmarks
 range=max(latmax-latmin, lonmax-lonmin);
 avrange=mean([latmax-latmin, lonmax-lonmin]);
 if(range<15)
     sp=1;
 else if (range<30)
         sp=2;
-    else if (range<75)
+    else if (range<90)
             sp=5;
         else if (range<150)
                 sp=10;
@@ -63,7 +65,7 @@ end
 weightfile=[infile '.weight'];
 xymat=load(infile);
 wmat=load(weightfile);
-fprintf(1,'done reading files\n');
+fprintf(1,'Done reading files\n');
 ra=xymat(1:end,1);
 dec=xymat(1:end,2);
 weight=wmat(1:end,2);

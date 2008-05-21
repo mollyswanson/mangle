@@ -160,6 +160,8 @@ if which matlab ; then
 # name of output file to contain matlab graphics
     list="2df100k${restag}.list"
     eps="2df100k${restag}.eps"
+    neps="2df100k_north${restag}.eps"
+    seps="2df100k_south${restag}.eps"
 
     echo "$MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $npol $spol $list"
     $MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $mtol $npol $spol $list || exit
@@ -168,8 +170,11 @@ if which matlab ; then
     echo "$MANGLESCRIPTSDIR/graphmask.sh $list $eps"
     $MANGLESCRIPTSDIR/graphmask.sh $list $eps
     if [ $? -eq 0 ]; then
-	echo "Made a figure illustrating the 2dF 100k mask: $eps" 
-	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
+	$MANGLESCRIPTSDIR/graphmask.sh $list $neps 145 223 -7 6
+	$MANGLESCRIPTSDIR/graphmask.sh $list $seps -50 81 -52 -7
+	echo "Made a figure illustrating the 2dF 100k mask:" 
+        echo "$eps, $neps, $seps" 
+	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figures."  
     elif which sm ; then
 	echo "Using Supermongo to plot the 2dF 100k mask:"
 	sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out

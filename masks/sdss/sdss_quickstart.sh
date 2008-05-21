@@ -33,13 +33,13 @@ old=
 #old=-vo
 
 #to pixelize dynamically
-#pix=
-#restag=
+pix=
+restag=
 #to pixelize everything to fixed resolution
-scheme="d"
-res=6
-pix="-P${scheme}0,${res}"
-restag="_res${res}${scheme}"
+#scheme="d"
+#res=6
+#pix="-P${scheme}0,${res}"
+#restag="_res${res}${scheme}"
 
 #uncomment this to put files from different releases in individual directories
 #filedir=$MANGLEDATADIR/sdss/$sample/$cuts/
@@ -69,7 +69,7 @@ $MANGLEBINDIR/balkanize $quiet $old jfh jb || exit
 echo "$MANGLEBINDIR/unify $quiet $old jb $pol"
 $MANGLEBINDIR/unify $quiet $old jb $pol || exit
 
-echo "Polygons for SDSS $1 $2 are in $pol"
+echo "Polygons for the example slice of SDSS $sample $cuts are in $pol"
 
 # Graphics
 
@@ -78,7 +78,7 @@ pts_per_twopi=30
 
 echo "$MANGLEBINDIR/poly2poly -og$pts_per_twopi $quiet $pol $grph"
 $MANGLEBINDIR/poly2poly -og$pts_per_twopi $quiet $pol $grph || exit
-echo "Data suitable for plotting polygons of the SDSS $1 $2 mask are in $grph:"
+echo "Data suitable for plotting polygons for the example slice of the SDSS $sample $cuts mask are in $grph:"
 echo "each line is a sequence of az, el points delineating the perimeter of a polygon."
 
 # for plotting with the matlab script
@@ -88,19 +88,19 @@ if which matlab ; then
 
     echo "$MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $pol $list"
     $MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $pol $list || exit
-    echo "Data for plotting polygons of the SDSS $1 $2 mask in Matlab are in $list."
-    echo "Using Matlab to plot the SDSS $1 $2  mask ..."
+    echo "Data for plotting polygons for the example slice of the SDSS $sample $cuts mask in Matlab are in $list."
+    echo "Using Matlab to plot the example slice of the SDSS $sample $cuts  mask ..."
     echo "$MANGLESCRIPTSDIR/graphmask.sh $list $eps"
     $MANGLESCRIPTSDIR/graphmask.sh $list $eps -45 35 8 21
     if [ $? -eq 0 ]; then
-	echo "Made a figure illustrating the SDSS $1 $2 mask: $eps" 
+	echo "Made a figure illustrating example slice of the SDSS $sample $cuts mask: $eps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
     elif which sm ; then
-	echo "Using Supermongo to plot the SDSS $1 $2 mask:"
+	echo "Using Supermongo to plot the example slice of the SDSS $sample $cuts mask:"
 	sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
 	rm temp.out
 	if [ -e $eps ]; then
-	    echo "Made a figure illustrating the SDSS $1 $2 mask: $eps" 
+	    echo "Made a figure illustrating the example slice of the SDSS $sample $cuts mask: $eps" 
 	    echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
 	    echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
 	    echo "or you can plot $grph using your own favorite plotting tool."
@@ -111,11 +111,11 @@ if which matlab ; then
 	echo "using your own favorite plotting tool."
     fi
 elif which sm ; then
-    echo "Using Supermongo to plot the SDSS $1 $2 mask:"
+    echo "Using Supermongo to plot the example slice of the SDSS $sample $cuts mask:"
     sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
     rm temp.out
     if [ -e $eps ]; then
-	echo "Made a figure illustrating the SDSS $1 $2 mask: $eps" 
+	echo "Made a figure illustrating the example slice of the SDSS $sample $cuts mask: $eps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
 	echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
         echo "or you can plot $grph using your own favorite plotting tool."

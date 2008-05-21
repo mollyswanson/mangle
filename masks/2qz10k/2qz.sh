@@ -155,16 +155,21 @@ if which matlab ; then
 # name of output file to contain matlab graphics
     list="2qz${restag}.list"
     eps="2qz${restag}.eps"
+    neps="2qz_north${restag}.eps"
+    seps="2qz_south${restag}.eps"
 
     echo "$MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $npol $spol $list"
     $MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $mtol $npol $spol $list || exit
-    echo "Data for plotting polygons of the 2QZ 10k mask in Matlab are in $list."
+   echo "Data for plotting polygons of the 2QZ 10k mask in Matlab are in $list."
     echo "Using Matlab to plot the 2QZ 10k mask ..."
     echo "$MANGLESCRIPTSDIR/graphmask.sh $list $eps"
     $MANGLESCRIPTSDIR/graphmask.sh $list $eps
     if [ $? -eq 0 ]; then
-	echo "Made a figure illustrating the 2QZ 10k mask: $eps" 
-	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
+	$MANGLESCRIPTSDIR/graphmask.sh $list $neps 147 223 -6 6
+	$MANGLESCRIPTSDIR/graphmask.sh $list $seps -36 50 -36 -24
+	echo "Made figures illustrating the 2QZ 10k mask:" 
+        echo "$eps, $neps, $seps" 
+	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figures."  
     elif which sm ; then
 	echo "Using Supermongo to plot the 2QZ 10k mask:"
 	sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
