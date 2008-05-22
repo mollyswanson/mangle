@@ -4,8 +4,8 @@ Documentation on mangle is at
 
 http://space.mit.edu/home/tegmark/mangle/
 
-To get started, try creating the masks for the 2QZ 10k survey:
-cd <mangle_directory>/masks/2qz10k
+To get started, try creating the mask for an example slice of the SDSS survey:
+cd <mangle_directory>/masks/sdss
 and follow the README, 
 or follow the QuickStart section on the website.
 
@@ -29,4 +29,4 @@ http://space.mit.edu/home/tegmark/mangle/manual/troubleshooting.html
 If you still have a problem, please contact the mangle development team via
 Andrew.Hamilton@colorado.edu or tegmark@mit.edu
 
-Updated by mecs 28 Nov 2007
+Updated by mecs 21 May 2008

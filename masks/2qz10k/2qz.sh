@@ -1,8 +1,18 @@
 #! /bin/sh
 
-#script to create the angular mask for the 10k releast of the 2dF QSO Redshift Survey
+#script to create the angular mask for the 10k release of the 2dF QSO Redshift Survey
 #see http://www.2dfquasar.org/ for more about the survey.
 #USAGE: 2qz.sh
+
+if [ "$MANGLEBINDIR" = "" ] ; then
+    MANGLEBINDIR="../../bin"
+fi
+if [ "$MANGLESCRIPTSDIR" = "" ] ; then
+    MANGLESCRIPTSDIR="../../scripts"
+fi
+if [ "$MANGLEDATADIR" = "" ] ; then
+    MANGLEDATADIR="../../masks"
+fi
 
 user=`whoami`
 names=`finger $user | fgrep "ame:" | sed 's/.*: *\([^ ]*\)[^:]*/\1/'`
@@ -10,9 +20,13 @@ for name in ${names}; do break; done
 echo "Hello $name, watch me make the angular mask and harmonics for the 2QZ 10k survey."
 
 #to pixelize dynamically
-#pix=-Pd
-#to pixelize everything to maximum resolution
-pix=-Ps0,6
+#pix=
+#restag=
+#to pixelize everything to fixed resolution
+scheme="s"
+res=4
+pix="-P${scheme}0,${res}"
+restag="_res${res}${scheme}"
 
 # to make verbose
 quiet=
@@ -28,8 +42,6 @@ mtol="-m1e-5"
 # maximum harmonic number
 lmax=20
 
-mangledir=../../bin/
-
 # North
 
 if [ -z "$quiet" ]; then
@@ -38,28 +50,28 @@ if [ -z "$quiet" ]; then
 fi
 
 # name of output file to contain 2QZ 10k North polygons
-npol=2qz_north_pixel.pol
+npol="2qz_north${restag}.pol"
 
-echo "${mangledir}pixelize $pix $quiet $mtol ngp_ukstfld.lims.txt jnup"
-${mangledir}pixelize $pix $quiet $mtol ngp_ukstfld.lims.txt jnup || exit
-echo "${mangledir}pixelize $pix $quiet $mtol ngp_field_coords.txt jnfp"
-${mangledir}pixelize $pix $quiet $mtol ngp_field_coords.txt jnfp || exit
-echo "${mangledir}pixelize $pix $quiet $mtol ngp.used.rahole.txt jnhp"
-${mangledir}pixelize $pix $quiet $mtol ngp.used.rahole.txt jnhp || exit
-echo "${mangledir}snap $quiet $snaptols $mtol jnup jnu"
-${mangledir}snap $quiet $snaptols $mtol jnup jnu || exit
-echo "${mangledir}snap $quiet $snaptols $mtol jnfp jnf"
-${mangledir}snap $quiet $snaptols $mtol jnfp jnf || exit
-echo "${mangledir}snap $quiet $snaptols $mtol jnhp jnh"
-${mangledir}snap $quiet $snaptols $mtol jnhp jnh || exit
-echo "${mangledir}snap $quiet $snaptols $mtol jnu jnf jnh jnufh"
-${mangledir}snap $quiet $snaptols $mtol jnu jnf jnh jnufh || exit
-echo "${mangledir}balkanize $quiet $mtol jnufh jnb"
-${mangledir}balkanize $quiet $mtol jnufh jnb || exit
-echo "${mangledir}weight $quiet $mtol -z2QZ10k jnb jnw"
-${mangledir}weight $quiet $mtol -z2QZ10k jnb jnw || exit
-echo "${mangledir}unify $quiet $mtol jnw $npol"
-${mangledir}unify $quiet $mtol jnw $npol || exit
+echo "$MANGLEBINDIR/pixelize $pix $quiet $mtol ngp_ukstfld.lims.txt jnup"
+$MANGLEBINDIR/pixelize $pix $quiet $mtol ngp_ukstfld.lims.txt jnup || exit
+echo "$MANGLEBINDIR/pixelize $pix $quiet $mtol ngp_field_coords.txt jnfp"
+$MANGLEBINDIR/pixelize $pix $quiet $mtol ngp_field_coords.txt jnfp || exit
+echo "$MANGLEBINDIR/pixelize $pix $quiet $mtol ngp.used.rahole.txt jnhp"
+$MANGLEBINDIR/pixelize $pix $quiet $mtol ngp.used.rahole.txt jnhp || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol jnup jnu"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol jnup jnu || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol jnfp jnf"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol jnfp jnf || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol jnhp jnh"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol jnhp jnh || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol jnu jnf jnh jnufh"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol jnu jnf jnh jnufh || exit
+echo "$MANGLEBINDIR/balkanize $quiet $mtol jnufh jnb"
+$MANGLEBINDIR/balkanize $quiet $mtol jnufh jnb || exit
+echo "$MANGLEBINDIR/weight $quiet $mtol -z2QZ10k jnb jnw"
+$MANGLEBINDIR/weight $quiet $mtol -z2QZ10k jnb jnw || exit
+echo "$MANGLEBINDIR/unify $quiet $mtol jnw $npol"
+$MANGLEBINDIR/unify $quiet $mtol jnw $npol || exit
 echo "Polygons for 2QZ 10k North are in $npol"
 
 # South
@@ -70,28 +82,28 @@ if [ -z "$quiet" ]; then
 fi
 
 # name of output file to contain 2QZ 10k South polygons
-spol=2qz_south_pixel.pol
+spol="2qz_south${restag}.pol"
 
-echo "${mangledir}pixelize $pix $quiet $mtol sgp_ukstfld.lims.txt jsup"
-${mangledir}pixelize $pix $quiet $mtol sgp_ukstfld.lims.txt jsup || exit
-echo "${mangledir}pixelize $pix $quiet $mtol sgp_field_coords.txt jsfp"
-${mangledir}pixelize $pix $quiet $mtol sgp_field_coords.txt jsfp || exit
-echo "${mangledir}pixelize $pix $quiet $mtol sgp.used.rahole.txt jshp"
-${mangledir}pixelize $pix $quiet $mtol sgp.used.rahole.txt jshp || exit
-echo "${mangledir}snap $quiet $snaptols $mtol jsup jsu"
-${mangledir}snap $quiet $snaptols $mtol jsup jsu || exit
-echo "${mangledir}snap $quiet $snaptols $mtol jsfp jsf"
-${mangledir}snap $quiet $snaptols $mtol jsfp jsf || exit
-echo "${mangledir}snap $quiet $snaptols $mtol jshp jsh"
-${mangledir}snap $quiet $snaptols $mtol jshp jsh || exit
-echo "${mangledir}snap $quiet $snaptols $mtol jsu jsf jsh jsufh"
-${mangledir}snap $quiet $snaptols $mtol jsu jsf jsh jsufh || exit
-echo "${mangledir}balkanize $quiet $mtol jsufh jsb"
-${mangledir}balkanize $quiet $mtol jsufh jsb || exit
-echo "${mangledir}weight $quiet $mtol -z2QZ10k jsb jsw"
-${mangledir}weight $quiet $mtol -z2QZ10k jsb jsw || exit
-echo "${mangledir}unify $quiet $mtol jsw $spol"
-${mangledir}unify $quiet $mtol jsw $spol || exit
+echo "$MANGLEBINDIR/pixelize $pix $quiet $mtol sgp_ukstfld.lims.txt jsup"
+$MANGLEBINDIR/pixelize $pix $quiet $mtol sgp_ukstfld.lims.txt jsup || exit
+echo "$MANGLEBINDIR/pixelize $pix $quiet $mtol sgp_field_coords.txt jsfp"
+$MANGLEBINDIR/pixelize $pix $quiet $mtol sgp_field_coords.txt jsfp || exit
+echo "$MANGLEBINDIR/pixelize $pix $quiet $mtol sgp.used.rahole.txt jshp"
+$MANGLEBINDIR/pixelize $pix $quiet $mtol sgp.used.rahole.txt jshp || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol jsup jsu"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol jsup jsu || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol jsfp jsf"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol jsfp jsf || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol jshp jsh"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol jshp jsh || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol jsu jsf jsh jsufh"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol jsu jsf jsh jsufh || exit
+echo "$MANGLEBINDIR/balkanize $quiet $mtol jsufh jsb"
+$MANGLEBINDIR/balkanize $quiet $mtol jsufh jsb || exit
+echo "$MANGLEBINDIR/weight $quiet $mtol -z2QZ10k jsb jsw"
+$MANGLEBINDIR/weight $quiet $mtol -z2QZ10k jsb jsw || exit
+echo "$MANGLEBINDIR/unify $quiet $mtol jsw $spol"
+$MANGLEBINDIR/unify $quiet $mtol jsw $spol || exit
 echo "Polygons for 2QZ 10k South are in $spol"
 
 # Harmonics
@@ -102,42 +114,92 @@ if [ -z "$quiet" ]; then
 fi
 
 # name of output file to contain harmonics
-wlm=2qz_pixel.wlm
+wlm="2qz${restag}.wlm"
 
-echo "${mangledir}harmonize $quiet -l$lmax $npol $spol $wlm"
-${mangledir}harmonize $quiet $mtol -l$lmax $npol $spol $wlm || exit
+echo "$MANGLEBINDIR/harmonize $quiet -l$lmax $npol $spol $wlm"
+$MANGLEBINDIR/harmonize $quiet $mtol -l$lmax $npol $spol $wlm || exit
 echo "Harmonics for 2QZ 10k mask up to l = $lmax are in $wlm"
 
 # Map
 
 # name of output file to contain map
-map=2qz_pixel.map
+map="2qz${restag}.map"
 
-echo "${mangledir}map $quiet -w$wlm azel.dat $map"
-${mangledir}map $quiet -w$wlm azel.dat $map || exit
+echo "$MANGLEBINDIR/map $quiet -w$wlm azel.dat $map"
+$MANGLEBINDIR/map $quiet -w$wlm azel.dat $map || exit
 echo "Map of 2QZ 10k mask up to l = $lmax is in $map"
 
 # Vertices
 
 # name of output file to contain vertices
-vert=2qz_pixel.vrt
+vert="2qz${restag}.vrt"
 
-echo "${mangledir}poly2poly -ov $quiet $npol $spol $vert"
-${mangledir}poly2poly -ov $quiet $mtol $npol $spol $vert || exit
+echo "$MANGLEBINDIR/poly2poly -ov $quiet $npol $spol $vert"
+$MANGLEBINDIR/poly2poly -ov $quiet $mtol $npol $spol $vert || exit
 echo "Vertices of 2QZ 10k mask are in $vert"
 
 # Graphics
 
 # name of output file to contain graphics
-grph=2qzpixel.grph
+grph="2qz${restag}.grph"
 
 # number of points per (2 pi) along each edge of a polygon
 pts_per_twopi=30
 
-echo "${mangledir}poly2poly -og$pts_per_twopi $quiet $npol $spol $grph"
-${mangledir}poly2poly -og$pts_per_twopi $quiet $mtol $npol $spol $grph || exit
+echo "$MANGLEBINDIR/poly2poly -og$pts_per_twopi $quiet $npol $spol $grph"
+$MANGLEBINDIR/poly2poly -og$pts_per_twopi $quiet $mtol $npol $spol $grph || exit
 echo "Data suitable for plotting polygons of the 2QZ 10k mask are in $grph:"
 echo "each line is a sequence of az, el points delineating the perimeter of a polygon."
+
+if which matlab ; then
+# name of output file to contain matlab graphics
+    list="2qz${restag}.list"
+    eps="2qz${restag}.eps"
+    neps="2qz_north${restag}.eps"
+    seps="2qz_south${restag}.eps"
+
+    echo "$MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $npol $spol $list"
+    $MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $mtol $npol $spol $list || exit
+   echo "Data for plotting polygons of the 2QZ 10k mask in Matlab are in $list."
+    echo "Using Matlab to plot the 2QZ 10k mask ..."
+    echo "$MANGLESCRIPTSDIR/graphmask.sh $list $eps"
+    $MANGLESCRIPTSDIR/graphmask.sh $list $eps
+    if [ $? -eq 0 ]; then
+	$MANGLESCRIPTSDIR/graphmask.sh $list $neps 147 223 -6 6
+	$MANGLESCRIPTSDIR/graphmask.sh $list $seps -36 50 -36 -24
+	echo "Made figures illustrating the 2QZ 10k mask:" 
+        echo "$eps, $neps, $seps" 
+	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figures."  
+    elif which sm ; then
+	echo "Using Supermongo to plot the 2QZ 10k mask:"
+	sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
+	rm temp.out
+	if [ -e $eps ]; then
+	    echo "Made a figure illustrating the 2QZ 10k mask: $eps" 
+	    echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
+	    echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
+	    echo "or you can plot $grph using your own favorite plotting tool."
+	fi
+    else 
+	echo "Scripts are available for plotting mangle polygons in Matlab" 
+	echo "(with the mapping toolbox) or Supermongo, or you can plot $grph"
+	echo "using your own favorite plotting tool."
+    fi
+elif which sm ; then
+    echo "Using Supermongo to plot the 2QZ 10k mask:"
+    sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
+    rm temp.out
+    if [ -e $eps ]; then
+	echo "Made a figure illustrating the 2QZ 10k mask: $eps" 
+	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
+	echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
+        echo "or you can plot $grph using your own favorite plotting tool."
+    fi
+else
+    echo "Scripts are available for plotting mangle polygons in Matlab" 
+    echo "(with the mapping toolbox) or Supermongo, or you can plot $grph"
+    echo "using your own favorite plotting tool."
+fi
 
 # remove temporary files
 rm j[ns]*
@@ -150,5 +212,5 @@ fi
 if [ "$quiet" ]; then
     echo ""
     echo "If you'd like to repeat that with the sound on,"
-    echo "please turn off the quiet button in 2qz_pixel and try again."
+    echo "please turn off the quiet button in 2qz.sh and try again."
 fi

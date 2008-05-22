@@ -1,5 +1,5 @@
 At the command line, type
-2df100k
+2df100k.sh
 and find out what happens.
 
 You should be aware that Intel and Sun chips have different endianness.
