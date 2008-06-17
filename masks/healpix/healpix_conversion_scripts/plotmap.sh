@@ -25,3 +25,4 @@ map2gif -inp qaz_plotmap.fits -out $3 -bar .true. -add 0 -min 0 -max 1
 # default WMAP limits
 #map2gif -inp qaz_plotmap.fits -out $1.gif -bar .true. -add 0.2 -min 0 -max 0.4
 
+rm qaz_plotmap.fits qaz_ud_grade.dat

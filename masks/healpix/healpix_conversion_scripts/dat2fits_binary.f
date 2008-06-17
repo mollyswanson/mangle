@@ -376,6 +376,10 @@ c      endif
          call ftgmsg(errmessage)
       end do
 
+      open(unit = 20, file = "dat2fitserr.temp")
+      write(20,*) status
+      close(20)
+
       return
       end 
 

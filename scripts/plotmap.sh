@@ -1,0 +1,1 @@
+../masks/healpix/healpix_conversion_scripts/plotmap.sh
