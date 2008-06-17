@@ -119,7 +119,7 @@ if [ -e $3 ] ; then
     /bin/rm $3
 fi
 
-$MANGLEBINDIR/call $datfitsbin 1 $2 jhd $3 
+$MANGLESCRIPTSDIR/call $datfitsbin 1 $2 jhd $3 
 rm args.dat
 if [ $? -ne 0 ]; then
  echo "ERROR: binary $datfitsbin is not executable on your system."
@@ -164,7 +164,7 @@ if [ "$OUT" != 0 ]; then
     fi
     
     if which ud_grade && which map2gif ; then
-	$MANGLESCRIPTSDIR/plotmap.sh $4 $3 $5
+	$MANGLESCRIPTSDIR/plotmap.sh $4 $3 $5 || exit
 	echo "Rasterized mask image file written to $5."
     else
 	echo "ud_grade and/or map2gif not found!"
