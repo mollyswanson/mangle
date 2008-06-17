@@ -93,6 +93,8 @@ end
 %set holes (polygons with points wound counterclockwise) to have weight 0
 ccw=~ispolycw(dec,ra);
 weight(ccw)=0;
+%set polygons with weight >1 to have weight = 1
+weight(weight>1)=1;
 %create cell array of colors with each element as grayscale weight
 color=[weight weight weight];
 cellcolor=num2cell(color,2);

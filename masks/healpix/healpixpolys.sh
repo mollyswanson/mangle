@@ -2,8 +2,20 @@
 # (C) J C Hill 2007
 
 # script to construct, pixelize, and snap the approximate healpix polygons in mangle
+# If no outfile is given, healpix polygon file is named automatically and put in masks/healpix/healpix_polys directory
 # USAGE: healpixpolys.sh <Nside> <scheme> <p> <r> <polygon_outfile>
-# EXAMPLE: healpixpolys.sh 16 s 0 3 nside16p3s.pol
+# EXAMPLES: healpixpolys.sh 16 s 0 3 
+# EXAMPLES: healpixpolys.sh 16 s 0 3 nside16p3s.pol
+
+if [ "$MANGLEBINDIR" = "" ] ; then
+    MANGLEBINDIR="../../bin"
+fi
+if [ "$MANGLESCRIPTSDIR" = "" ] ; then
+    MANGLESCRIPTSDIR="../../scripts"
+fi
+if [ "$MANGLEDATADIR" = "" ] ; then
+    MANGLEDATADIR="../../masks"
+fi
 
 if [ "$1" != 0 ]; then
  for ((  I = 1 ;  I < 8192 ;  I = `expr 2 \* $I`  ))
@@ -33,14 +45,31 @@ do
   echo 0 >> jhw
 done
 
-$MANGLEBINDIR/poly2poly jhw jp
+$MANGLEBINDIR/poly2poly jhw jp || exit
 rm jhw
 #note that -vo switch is needed in order to keep the correct id numbers (the HEALPix NESTED pixel numbers)
 
-$MANGLEBINDIR/pixelize -P$2$3,$4 -vo jp jpx
+$MANGLEBINDIR/pixelize -P$2$3,$4 -vo jp jpx || exit
 rm jp
 
-$MANGLEBINDIR/snap -vo jpx $5
+if [ "$5" = "" ]; then
+    if [ ! -d "$MANGLEDATADIR/healpix/healpix_polys" ] ; then
+	echo >&2 "ERROR: $MANGLEDATADIR/healpix/healpix_polys not found." 
+	echo >&2 "Check that the environment variable MANGLEDATADIR is pointing to" 
+        echo >&2 "the appropriate directory (e.g., the mangle 'masks' directory)." 
+        exit 1
+    fi
+    
+    if [ "$3" = 0 ]; then 
+        outfile="$MANGLEDATADIR/healpix/healpix_polys/nside${1}_p${4}${2}.pol"
+    else
+        outfile="$MANGLEDATADIR/healpix/healpix_polys/nside${1}_p-1${2}.pol"
+    fi
+else
+    outfile=$5
+fi
+
+$MANGLEBINDIR/snap -vo jpx $outfile || exit
 rm jpx
 
-echo "HEALPix pixels at Nside=$1 written to $5."
+echo "HEALPix pixels at Nside=$1 written to $outfile."
