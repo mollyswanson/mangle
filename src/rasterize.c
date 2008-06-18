@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
   /* copy new weights to original rasterizer polygons */
   for (k = 0; k < nhealpix_poly; k++) {
     for (j = 0; j < nweights; j++) {
-      if (polys[k]->id == j) {
+      if (polys[k]->id == j+1) {
 	polys[k]->weight = weights[j];
 	break;
       }
