@@ -89,6 +89,13 @@ int main(int argc, char *argv[])
 	exit(0);
     }
 
+    if (snapped==0 || balkanized==0) {
+      fprintf(stderr, "Error: input polygons must be snapped and balkanized before unification.\n");
+      fprintf(stderr, "If your polygons are already snapped and balkanized, add the 'snapped' and\n'balkanized' keywords at the beginning of each of your input polygon files.\n");
+      exit(1);
+    }
+
+
     /* unify polygons */
     nadj = unify(&npoly, polys);
     if (nadj == -1) exit(1);

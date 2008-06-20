@@ -67,17 +67,17 @@ res1=`awk '{print substr($2, 1, length($2)-1)}' < jpix`
 scheme1=`awk '{print substr($2, length($2))}' < jpix`
 rm jpix
 
-#if input file is unpixelized, pixelize it and snap it
+#check if input file is snapped and balkanized
+snapped=`awk '/snapped/{print $1}' < $1`
+balkanized=`awk '/balkanized/{print $1}' < $1`
+
+#if input file is unpixelized, pixelize it
 #if input file is pixelized to the correct resolution, use it as is.
-#WARNING: this assumes that if the input polygon file is pixelized, it is also snapped.
 if [ "$res1" = "" ]; then
     echo ""
     echo "Pixelizing $1 ..."
     $MANGLEBINDIR/pixelize -P${scheme}0,$pix $1 jp || exit   
     echo ""
-    echo "Snapping $1 ..."
-    $MANGLEBINDIR/snap jp jps || exit
-    rm jp
 #if input file is pixelized to a different resolution and scheme,
 #warn and pixelize again
 elif [ ! "$res1" = "$pix" ] || [ ! "$scheme1" = "$scheme" ]; then
@@ -88,15 +88,33 @@ elif [ ! "$res1" = "$pix" ] || [ ! "$scheme1" = "$scheme" ]; then
     echo "with resolution $pix and scheme $scheme, using the flag -P${scheme}0,$pix .)"
     echo ""
     echo "Pixelizing $1 ..."
-    $MANGLEBINDIR/pixelize -P${scheme}0,$pix $1 jps  || exit 
+    $MANGLEBINDIR/pixelize -P${scheme}0,$pix $1 jps || exit   
 else
-    cp $1 jps
+    cp $1 jp
+fi
+
+#if input file isn't snapped, snap it
+if [ ! "$snapped" = "snapped" ]; then
+    echo "Snapping $1 ..."
+    $MANGLEBINDIR/snap jp jps || exit
+    rm jp
+else
+    mv jp jps
+fi
+
+#if input file isn't balkanized, balkanize it
+if [ ! "$balkanized" = "balkanized" ]; then
+    echo "Balkanizing $1 ..."
+    $MANGLEBINDIR/balkanize jps jb || exit
+    rm jps
+else
+    mv jps jb
 fi
 
 echo ""
 echo "Rasterizing $1 against the Nside=$2 approximate HEALPix pixels..."
-$MANGLEBINDIR/rasterize -H $healpixfile jps jhw || exit
-rm jps
+$MANGLEBINDIR/rasterize -H $healpixfile jb jhw || exit
+rm jb
 
 # use sed to remove the "healpix_weight N" (the first line) of the healpix_weight file
 sed '1d' jhw > jhd

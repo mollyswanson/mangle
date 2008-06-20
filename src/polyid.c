@@ -68,10 +68,15 @@ int main(int argc, char *argv[])
 	msg("total of %d polygons read\n", npoly);
     }
     if (npoly == 0) {
-	msg("STOP\n");
-	exit(0);
+      msg("STOP\n");
+      exit(0);
     }
-
+    
+    if (snapped==0) {
+      msg("WARNING: 'snapped' keyword not found in all input files.\n");
+      msg("Polygons should be snapped before performing other mangle operations.\n");
+    }
+    
     /* polygon id numbers */
     npolys = poly_ids(argv[argc - 2], argv[argc - 1], &fmt, npoly, poly);
     if (npolys == -1) exit(1);

@@ -90,6 +90,12 @@ int main(int argc, char *argv[])
     res_max=res_max_temp;
     msg("pixelization scheme %c, making map at resolution %d\n", scheme, res_max);
     
+    if (snapped==0 || balkanized==0) {
+      fprintf(stderr, "Error: input polygons must be snapped and balkanized before using pixelmap.\n");
+      fprintf(stderr, "If your polygons are already snapped and balkanized, add the 'snapped' and\n'balkanized' keywords at the beginning of each of your input polygon files.\n");
+      exit(1);
+    }
+
     /* pixelmap polygons */
     nadj = pixelmap(&npoly, polys);
     if (nadj == -1) exit(1);

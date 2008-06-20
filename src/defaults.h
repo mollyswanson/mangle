@@ -140,6 +140,8 @@ char *keywords[] = {
     "skip",
     "end",
     "unit",
+    "balkanized",
+    "snapped",
     '\0'
 };
 
@@ -163,3 +165,6 @@ int polys_per_pixel=POLYS_PER_PIXEL;  /*level of pixelization: number of polygon
 char scheme=SCHEME;                   /*default pixelization scheme*/
 int unpixelize=0;                     /*switch for whether unify should unpixelize or not*/
 int pixelized=0;                      /*counter for pixelized input files */
+
+int snapped=0;                      /*flag for whether files have been snapped */
+int balkanized=0;                      /*flag for whether files have been balkanized */

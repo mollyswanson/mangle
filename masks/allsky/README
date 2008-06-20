@@ -1,4 +1,4 @@
 To create an allsky file pixelized to a desired resolution, do
-pixelize -P<scheme>0,<res> allsky.pol allsky<res><scheme>.pol
+make_allsky.sh <r> <scheme>
 where <scheme> is the pixelization scheme and <res> is the resolution.
-Example: pixelize -Ps0,8 allsky.pol allsky8s.pol
+EXAMPLE: make_allsky.sh 6 d 

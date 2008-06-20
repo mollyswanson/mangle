@@ -18,6 +18,8 @@ fi
 
 mask=$1
 complement=$2
+dres=3
+dscheme="s"
 
 #check command line arguments
 if [ "$mask" = "" ] || [ "$complement" = "" ] ; then
@@ -32,32 +34,51 @@ fi
 awk '/pixelization/{print $0}' < $mask > jpix
 res=`awk '{print substr($2, 1, length($2)-1)}' < jpix`
 scheme=`awk '{print substr($2, length($2))}' < jpix`
-if [ $res -eq -1 ] ; then
-    echo >&2 "ERROR: cannot take the complement of a mask pixelized adaptively."
-    echo >&2 "Pixelize your mask using a fixed resolution, e.g. -Ps0,8, and try again."
-    exit 1
+
+#if input file is unpixelized, pixelize it
+#if input file is pixelized to a fixed resolution, use it as is.
+if [ "$res" = "" ]; then
+    res=$dres
+    scheme=$dscheme
+    echo ""
+    echo "Pixelizing $1 ..."
+    $MANGLEBINDIR/pixelize -P${scheme}0,$res $mask jp || exit  
+    echo ""
+elif [ "$res" = -1 ] ; then
+    res=$dres
+    scheme=$dscheme
+    echo "WARNING: cannot take the complement of a mask pixelized adaptively."
+    echo "Pixelizing your mask using a fixed resolution:"
+    echo ""
+    echo "Pixelizing $1 ..."
+    $MANGLEBINDIR/pixelize -P${scheme}0,$res $mask jp || exit   
+    echo ""
+else
+    cp $mask jp
 fi
 
-#check for appropriate allsky file, and generate it if it'
+#check for appropriate allsky file, and generate it if it's not there:
 allsky=$MANGLEDATADIR/allsky/allsky$res$scheme.pol
 if [ ! -e $allsky ] ; then
-    echo "Generating allsky$res$scheme.pol..."
-    if [ ! -d "$MANGLEDATADIR/allsky" ] ; then
-	echo >&2 "ERROR: $MANGLEDATADIR/allsky not found." 
-	echo >&2 "Check that the environment variable MANGLEDATADIR is pointing to" 
-        echo >&2 "the appropriate directory (e.g., the mangle 'masks' directory)." 
-        exit 1
-    fi
-    currentdir=$PWD
-    cd $MANGLEDATADIR/allsky
-    $MANGLEBINDIR/pixelize -P${scheme}0,${res} allsky.pol allsky$res$scheme.pol 
-    cd $currentdir
+    $MANGLESCRIPTSDIR/make_allsky.sh $res $scheme
+fi
+
+#check if input file is snapped
+snapped=`awk '/snapped/{print $1}' < $mask`
+
+#if input file isn't snapped, snap it
+if [ ! "$snapped" = "snapped" ]; then
+    echo "Snapping $1 ..."
+    $MANGLEBINDIR/snap jp jps || exit
+    rm jp
+else
+    mv jp jps
 fi
 
 #set weight of all polygons in mask to zero
 echo 0 > jw0
 echo "$MANGLEBINDIR/weight -zjw0 $mask jw"
-$MANGLEBINDIR/weight -zjw0 $mask jw || exit
+$MANGLEBINDIR/weight -zjw0 jps jw || exit
 
 #balkanize the full sky with the zero-weighted mask to find the complement
 echo "$MANGLEBINDIR/balkanize $allsky jw jb"
