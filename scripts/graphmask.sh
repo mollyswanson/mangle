@@ -29,11 +29,11 @@ if [ $# -eq 2 ]; then
 elif [ $# -ge 6 ]; then
     matlab -nodisplay -r addpath\(\'$MANGLESCRIPTSDIR\'\)\;graphmask\(\'$1\',\'$2\',\[$3,$4,$5,$6\],\'$7\'\)
 else
-    echo "USAGE: graphmask.sh <infile> <outfile> [<ramin>] [<ramax>] [<decmin>] [<decmax>] [<outlines>]"
-    echo "EXAMPLES:" 
-    echo "fullsky, no outlines: graphmask.sh \"dr4/safe0/sdss_dr4safe0_mask.list\" \"dr4/safe0/sdss_dr4safe0_mask.eps\""
-    echo "defined range, no outlines: graphmask.sh sdss_slice.list sdss_slice.eps -45 35 8 21"
-    echo "defined range, outlines: graphmask.sh sdss_slice.list sdss_slice.eps -45 35 8 21 on"
+    echo <&2 "USAGE: graphmask.sh <infile> <outfile> [<ramin>] [<ramax>] [<decmin>] [<decmax>] [<outlines>]"
+    echo <&2 "EXAMPLES:" 
+    echo <&2 "fullsky, no outlines: graphmask.sh \"dr4/safe0/sdss_dr4safe0_mask.list\" \"dr4/safe0/sdss_dr4safe0_mask.eps\""
+    echo <&2 "defined range, no outlines: graphmask.sh sdss_slice.list sdss_slice.eps -45 35 8 21"
+    echo <&2 "defined range, outlines: graphmask.sh sdss_slice.list sdss_slice.eps -45 35 8 21 on"
     exit 1
 fi
 if [ -e matlabexit.temp ]; then

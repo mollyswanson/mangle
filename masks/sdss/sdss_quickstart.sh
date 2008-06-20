@@ -126,4 +126,4 @@ else
     echo "using your own favorite plotting tool."
 fi
 
-rm j*
+rm jw jfhs jfhp jfh jb

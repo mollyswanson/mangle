@@ -6,7 +6,7 @@
 #lss/<release>/<cut>/<number>/lss/
 #window.<release><cut><number>.ply and mask.<release><cut><number>.ply
 #USAGE: mangle_sdss.sh <release> <cut><number>
-#EXAMPLE:mangle_sdss.sh dr6 safe0
+#EXAMPLE:mangle_sdss.sh dr7 safe0
 
 if [ "$MANGLEBINDIR" = "" ] ; then
     MANGLEBINDIR="../../bin"
@@ -20,6 +20,15 @@ fi
 
 sample=$1
 cuts=$2
+
+#check command line arguments
+if [ "$sample" = "" ] || [ "$cuts" = "" ] ; then
+    echo >&2 "ERROR: enter the SDSS release and cuts to use as command line arguments."
+    echo >&2 "" 
+    echo >&2 "USAGE: mangle_sdss.sh <release> <cut><number>"
+    echo >&2 "EXAMPLE:mangle_sdss.sh dr7 safe0"
+    exit 1
+fi
 
 user=`whoami`
 names=`finger $user | fgrep "ame:" | sed 's/.*: *\([^ ]*\)[^:]*/\1/'`
@@ -132,4 +141,4 @@ else
     echo "using your own favorite plotting tool."
 fi
 
-rm j*
+rm jw jfhs jfhp jfh jb

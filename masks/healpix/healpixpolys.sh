@@ -4,8 +4,8 @@
 # script to construct, pixelize, and snap the approximate healpix polygons in mangle
 # If no outfile is given, healpix polygon file is named automatically and put in masks/healpix/healpix_polys directory
 # USAGE: healpixpolys.sh <Nside> <scheme> <p> <r> <polygon_outfile>
-# EXAMPLES: healpixpolys.sh 16 s 0 3 
-# EXAMPLES: healpixpolys.sh 16 s 0 3 nside16p3s.pol
+# EXAMPLE: healpixpolys.sh 16 s 0 3 
+# EXAMPLE: healpixpolys.sh 16 s 0 3 nside16p3s.pol
 
 if [ "$MANGLEBINDIR" = "" ] ; then
     MANGLEBINDIR="../../bin"
@@ -17,6 +17,17 @@ if [ "$MANGLEDATADIR" = "" ] ; then
     MANGLEDATADIR="../../masks"
 fi
 
+#check command line arguments
+if [ $# -lt 4 ] ; then
+    echo >&2 "ERROR: enter Nside value, pixelization scheme, maximum number of polygons per pixel <p>," 
+    echo >&2 "resolution <r>, and (optionally) the name of the output file as command line arguments."
+    echo >&2 "" 
+    echo >&2 "USAGE: healpixpolys.sh <Nside> <scheme> <p> <r> <polygon_outfile>"
+    echo >&2 "EXAMPLE: healpixpolys.sh 16 s 0 3" 
+    echo >&2 "EXAMPLE: healpixpolys.sh 16 s 0 3 nside16p3s.pol"
+    exit 1
+fi
+
 if [ "$1" != 0 ]; then
  for ((  I = 1 ;  I < 8192 ;  I = `expr 2 \* $I`  ))
  do
@@ -26,10 +37,11 @@ if [ "$1" != 0 ]; then
  done
 
  if [ "$FLAG" != 1 ]; then
-  echo "USAGE: healpixpolys.sh <Nside> <scheme> <p> <r> <polygon_outfile>"
-  echo "<Nside> must be a power of 2."
-  echo "<scheme> is the pixelization scheme to use; <p> is the number of polygons allowed in each pixel; <r> is the maximum pixelization resolution."
-  exit 1
+     echo >&2 "ERROR: <Nside> must be a power of 2."
+     echo >&2 "USAGE: healpixpolys.sh <Nside> <scheme> <p> <r> <polygon_outfile>"
+     echo >&2 "EXAMPLE: healpixpolys.sh 16 s 0 3" 
+     echo >&2 "EXAMPLE: healpixpolys.sh 16 s 0 3 nside16p3s.pol"
+     exit 1
  fi
 fi
 

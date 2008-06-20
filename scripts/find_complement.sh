@@ -34,6 +34,7 @@ fi
 awk '/pixelization/{print $0}' < $mask > jpix
 res=`awk '{print substr($2, 1, length($2)-1)}' < jpix`
 scheme=`awk '{print substr($2, length($2))}' < jpix`
+rm jpix
 
 #if input file is unpixelized, pixelize it
 #if input file is pixelized to a fixed resolution, use it as is.
@@ -79,16 +80,16 @@ fi
 echo 0 > jw0
 echo "$MANGLEBINDIR/weight -zjw0 $mask jw"
 $MANGLEBINDIR/weight -zjw0 jps jw || exit
+rm jps
 
 #balkanize the full sky with the zero-weighted mask to find the complement
 echo "$MANGLEBINDIR/balkanize $allsky jw jb"
 $MANGLEBINDIR/balkanize $allsky jw jb || exit
+rm jw
 
 #unify to get rid of zero weight polygons
 echo "$MANGLEBINDIR/unify jb $complement"
 $MANGLEBINDIR/unify jb $complement || exit
+rm jb
 
 echo "Complement of $mask written to ${complement}."
-
-#clean up
-rm j*
