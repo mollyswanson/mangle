@@ -103,10 +103,18 @@ int main(int argc, char *argv[])
 	exit(0);
     }
 
+    if (snapped==0) {
+      fprintf(stderr, "Error: input polygons must be snapped before balkanization.\n");
+      fprintf(stderr, "If your polygons are already snapped, add the 'snapped' keyword\nat the beginning of each of your input polygon files.\n");
+      exit(1);
+    }
+
     /* balkanize polygons */
     npolys = balkanize(npoly, polys, NPOLYSMAX - npoly, &polys[npoly]);
     if (npolys == -1) exit(1);
  
+    balkanized=1;
+
     /* write polygons */
     ifile = argc - 1;
     npolys = wrmask(argv[ifile], &fmt, npolys, &polys[npoly]);

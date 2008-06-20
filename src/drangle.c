@@ -85,6 +85,11 @@ int main(int argc, char *argv[])
 	msg("STOP\n");
 	exit(0);
     }
+    if (snapped==0 || balkanized==0) {
+      fprintf(stderr, "Error: input polygons must be snapped and balkanized before using drangle.\n");
+      fprintf(stderr, "If your polygons are already snapped and balkanized, add the 'snapped' and\n'balkanized' keywords at the beginning of each of your input polygon files.\n");
+      exit(1);
+    }
 
     /* name of file containing angular radii th, if present */
     th_in_filename = (nfiles == 3)? 0x0 : argv[optind + 2];

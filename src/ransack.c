@@ -83,6 +83,11 @@ int main(int argc, char *argv[])
 	msg("STOP\n");
 	exit(0);
     }
+ 
+   if (snapped==0 || balkanized==0) {
+     msg("WARNING: 'snapped' and 'balkanized' keywords not found in all input files.\n");
+     msg("Running ransack on polygons that are not snapped and balkanized may give misleading results.\n");
+   }
 
     /* random points in polygons */
     ifile = argc - 1;

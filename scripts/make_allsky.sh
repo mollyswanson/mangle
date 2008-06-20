@@ -1,0 +1,1 @@
+../masks/allsky/make_allsky.sh

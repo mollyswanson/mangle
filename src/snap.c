@@ -101,6 +101,8 @@ int main(int argc, char *argv[])
     nadj = snap(npoly, polys);
     if(nadj==-1) exit(1);
 
+    snapped=1;
+    
     /* write polygons */
     ifile = argc - 1;
     npoly = wrmask(argv[ifile], &fmt, npoly, polys);

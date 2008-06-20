@@ -38,6 +38,9 @@ extern int polys_per_pixel;          /*level of pixelization: number of polygons
 extern char scheme;                  /*default pixelization scheme*/
 extern int pixelized;                /*switch indicating whether input has been pixelized */
 
+extern int snapped;                /*switch indicating whether input has been snapped */
+extern int balkanized;                /*switch indicating whether input has been balkanized */
+
 /*------------------------------------------------------------------------------
   Write mask data.
 
@@ -147,6 +150,16 @@ int wr_circ(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
     /* write angular unit */
     fprintf(file, "unit %c\n", fmt->outunitp);
 
+    if(pixelized>0){
+      fprintf(file, "pixelization %d%c\n", res_max, scheme);
+    }
+    if(snapped>0){
+      fprintf(file, "snapped\n");
+    }
+    if(balkanized>0){
+      fprintf(file, "balkanized\n");
+    }
+    
     npoly = 0;
     nbadarea = 0;
     for (ipoly = 0; ipoly < npolys; ipoly++) {
@@ -752,6 +765,12 @@ int wr_poly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 
     if(pixelized>0){
       fprintf(file, "pixelization %d%c\n", res_max, scheme);
+    }
+    if(snapped>0){
+      fprintf(file, "snapped\n");
+    }
+    if(balkanized>0){
+      fprintf(file, "balkanized\n");
     }
 
     npoly = 0;

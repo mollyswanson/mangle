@@ -100,6 +100,8 @@ extern int is_area_min, is_area_max;
 extern int res_max;
 extern char scheme;
 extern int pixelized;
+extern int snapped;
+extern int balkanized;
 
 /* counter for input files*/
 extern int infiles;
@@ -213,6 +215,16 @@ int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
        fprintf(stderr, "error: some input files are pixelized and some are not.\n");
        fprintf(stderr, "all input files must have consistent pixelization.\n");
       goto error;
+    }
+    /* if there are snapped files, make sure all files are snapped */ 
+    if(snapped>0 && infiles!=snapped){
+       msg("WARNING: some input files are snapped and some are not.\n");
+       snapped=0;
+    }
+    /* if there are balkanized files, make sure all files are balkanized */ 
+    if(balkanized>0 && infiles!=balkanized){
+      msg("WARNING: some input files are balkanized and some are not.\n");
+      balkanized=0;
     }
 
     /* advise */
@@ -577,7 +589,13 @@ int new_fmt(char *keyword, char **line_rest, format *fmt)
 	  res_max=res_max_temp;
 	}
 	pixelized++;
+    } else if (strcmp(keyword, "snapped") == 0) {
+      snapped++;
+    } else if (strcmp(keyword, "balkanized") == 0) {
+      balkanized++;
     }
+
+
 
     return(0);
 }

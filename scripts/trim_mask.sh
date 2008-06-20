@@ -91,6 +91,17 @@ else
     mask="mask_pix"
 fi
 
+#check if input file is snapped
+snapped=`awk '/snapped/{print $1}' < $mask`
+
+#if mask file isn't snapped, snap it
+if [ ! "$snapped" = "snapped" ]; then
+    echo "Snapping $mask ..."
+    mv $mask jp
+    $MANGLEBINDIR/snap jp $mask  || exit
+    rm jp
+fi
+
 #find the complement of the trimmer polygon
 echo "$MANGLESCRIPTSDIR/find_complement.sh $trimmer trimmer_comp"
 $MANGLESCRIPTSDIR/find_complement.sh $trimmer trimmer_comp || exit

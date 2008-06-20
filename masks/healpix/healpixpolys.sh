@@ -69,7 +69,7 @@ else
     outfile=$5
 fi
 
-$MANGLEBINDIR/snap -vo jpx $outfile || exit
+$MANGLEBINDIR/snap -vo -os jpx $outfile || exit
 rm jpx
 
 echo "HEALPix pixels at Nside=$1 written to $outfile."

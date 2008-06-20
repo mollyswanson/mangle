@@ -76,6 +76,11 @@ int main(int argc, char *argv[])
 	msg("STOP\n");
 	exit(0);
     }
+    
+    if (snapped==0 || balkanized==0) {
+      msg("WARNING: 'snapped' and 'balkanized' keywords not found in all input files.\n");
+      msg("Running harmonize on polygons that are not snapped and balkanized may give misleading results.\n");
+    }
 
     /* allocate array containing spherical harmonics of complete mask */
     w = (harmonic *) malloc(sizeof(harmonic) * NW);
