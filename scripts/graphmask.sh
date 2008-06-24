@@ -14,7 +14,7 @@
 #if specifying the full path to a file (rather than just running in the directory 
 #containing the file you want to plot), put the path in double-quotes as shown below.
 #
-#graphmask.sh <infile> <outfile> [<ramin>] [<ramax>] [<decmin>] [<decmax>] [<outlines>]
+#USAGE: graphmask.sh <infile> <outfile> [<ramin>] [<ramax>] [<decmin>] [<decmax>] [<outlines>]
 #EXAMPLES: 
 #fullsky, no outlines: graphmask.sh "dr4/safe0/sdss_dr4safe0_mask.list" "dr4/safe0/sdss_dr4safe0_mask.eps"
 #defined range, no outlines: graphmask.sh sdss_slice.list sdss_slice.eps -45 35 8 21

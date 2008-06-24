@@ -1,30 +1,31 @@
 #! /bin/sh
 # © M E C Swanson 2008
 #
-#script called by wrapper script setup_mangle_environment.sh to set
+#script called by wrapper script setup_mangle_environment to set
 #mangle environment variables
 #
-#USAGE: type 'source setup_mangle_environment.sh' in mangle 'scripts' directory
-#Or use 'source <MANGLEDIR>scripts/setup_mangle_environment.sh <MANGLEDIR>'
+#USAGE: type 'source setup_mangle_environment' in the base mangle directory
+#
+#If that doesn't work, try 'source setup_mangle_environment $PWD/'
+#
+#
+#You can also use 'source <MANGLEDIR>setup_mangle_environment.sh <MANGLEDIR>'
 #where <MANGLEDIR> is the path to the base mangle directory, e.g., /home/username/mangle2.0/
 #
-#To automatically set up mangle environnment when you start your shell, add the following line
+#To automatically set up mangle environment when you start your shell, add the following line
 #to your .bashrc (or .tcshrc, or .cshrc, or .login, or .profile) (replace <MANGLEDIR>
 #with the path to your mangle installation):
 #
-#source <MANGLEDIR>scripts/setup_mangle_environment.sh <MANGLEDIR>
+#source <MANGLEDIR>setup_mangle_environment <MANGLEDIR>
 
 
-#if running in the 'scripts' directory, set the value of $MANGLEDIR to be the 
-#name of the directory one level higher
-CURRENTDIR=`basename $PWD`
-if [ "$CURRENTDIR" = "scripts" ]; then
-    cd ..
-    MANGLEDIR="$PWD"
-    cd $CURRENTDIR
+#If no command line argument is given, assume we're running in the mangle directory
+if [ $? -eq 0 ]; then
+    MANGLEDIR="$PWD/"
 #otherwise use the path in the first command-line argument as $MANGLEDIR
 else
     MANGLEDIR=$1
+    echo $MANGLEDIR
 fi
 
 MANGLEBINDIR="${MANGLEDIR}bin"
@@ -55,7 +56,7 @@ CURRENTSHELL=`basename $SHELL`
 #export environment variables and put bin and scripts directories in the path
 case $CURRENTSHELL in
     sh|bash|ksh)
-	cat <<EOF >> setup.sh
+	cat <<EOF >> setup
 export MANGLEBINDIR=$MANGLEBINDIR
 export MANGLESCRIPTSDIR=$MANGLESCRIPTSDIR
 export MANGLEDATADIR=$MANGLEDATADIR
@@ -63,10 +64,10 @@ export PATH=$PATH:$MANGLEBINDIR:$MANGLESCRIPTSDIR
 EOF
 	;;
     csh|tcsh)
-	cat <<EOF >> setup.sh
+	cat <<EOF >> setup
 setenv MANGLEBINDIR $MANGLEBINDIR
 setenv MANGLESCRIPTSDIR $MANGLESCRIPTSDIR
-setenv MANGLEBINDIR $MANGLESCRIPTSDIR    
+setenv MANGLEDATADIR $MANGLEDATADIR    
 setenv PATH $PATH:$MANGLEBINDIR:$MANGLESCRIPTSDIR
 EOF
 	;;
