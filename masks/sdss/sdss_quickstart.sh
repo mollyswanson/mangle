@@ -96,6 +96,10 @@ if which matlab ; then
 	echo "Made a figure illustrating example slice of the SDSS $sample $cuts mask: $eps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
     elif which sm ; then
+	echo "$MANGLEBINDIR/poly2poly -og12 -p3 $quiet $pol $grph"
+	$MANGLEBINDIR/poly2poly -og12 -p3 $quiet $pol $grph || exit
+	echo "Data suitable for plotting polygons for the example slice of the SDSS $sample $cuts mask are in $grph:"
+	echo "each line is a sequence of az, el points delineating the perimeter of a polygon."
 	echo "Using Supermongo to plot the example slice of the SDSS $sample $cuts mask:"
 	sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
 	rm temp.out
