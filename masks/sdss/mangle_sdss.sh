@@ -104,16 +104,15 @@ if which matlab ; then
     echo "Data for plotting polygons of the SDSS $1 $2 mask in Matlab are in $list."
     echo "Using Matlab to plot the SDSS $1 $2  mask ..."
     echo "$MANGLESCRIPTSDIR/graphmask.sh $list $eps"
-    $MANGLESCRIPTSDIR/graphmask.sh $list $eps
+    $MANGLESCRIPTSDIR/graphmask.sh $list $eps "Completeness mask for SDSS $sample $cuts"
     if [ $? -eq 0 ]; then
 	echo "Made a figure illustrating the SDSS $1 $2 mask: $eps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
 ###uncomment to automatically plot usng the sm script -- sm tends to get overloaded with the SDSS mask
 #    elif which sm ; then
 #	echo "Using Supermongo to plot the SDSS $1 $2 mask:"
-#	sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
-#	rm temp.out
-#	if [ -e $eps ]; then
+#	$MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps 0 0 0 0 "Completeness mask for SDSS $sample $cuts"
+#	if [ $? -eq 0 ]; then
 #	    echo "Made a figure illustrating the SDSS $1 $2 mask: $eps" 
 #	    echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
 #	    echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
@@ -127,13 +126,12 @@ if which matlab ; then
 ###uncomment to automatically plot usng the sm script -- sm tends to get overloaded with the SDSS mask
 #elif which sm ; then
 #    echo "Using Supermongo to plot the SDSS $1 $2 mask:"
-#    sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
-#    rm temp.out
-#    if [ -e $eps ]; then
+#    $MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps 0 0 0 0 "Completeness mask for SDSS $sample $cuts"
+#    if [ $? -eq 0 ]; then
 #	echo "Made a figure illustrating the SDSS $1 $2 mask: $eps" 
 #	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
 #	echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
-#        echo "or you can plot $grph using your own favorite plotting tool."
+#       echo "or you can plot $grph using your own favorite plotting tool."
 #    fi
 else
     echo "Scripts are available for plotting mangle polygons in Matlab" 

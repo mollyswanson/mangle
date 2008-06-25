@@ -168,18 +168,17 @@ if which matlab ; then
     echo "Data for plotting polygons of the 2dF 230k mask in Matlab are in $list."
     echo "Using Matlab to plot the 2dF 230k mask ..."
     echo "$MANGLESCRIPTSDIR/graphmask.sh $list $eps"
-    $MANGLESCRIPTSDIR/graphmask.sh $list $eps
+    $MANGLESCRIPTSDIR/graphmask.sh $list $eps 0 0 0 0 "Completeness mask for 2dF 230k"
     if [ $? -eq 0 ]; then
-	$MANGLESCRIPTSDIR/graphmask.sh $list $neps 145 223 -9 6
-	$MANGLESCRIPTSDIR/graphmask.sh $list $seps -55 85 -73 1
+	$MANGLESCRIPTSDIR/graphmask.sh $list $neps 145 223 -9 6 "Completeness mask for 2dF 230k north"
+	$MANGLESCRIPTSDIR/graphmask.sh $list $seps -55 85 -73 1 "Completeness mask for 2dF 230k south"
 	echo "Made a figure illustrating the 2dF 230k mask:" 
         echo "$eps, $neps, $seps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figures."  
     elif which sm ; then
 	echo "Using Supermongo to plot the 2dF 230k mask:"
-	sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
-	rm temp.out
-	if [ -e $eps ]; then
+	$MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps 0 0 0 0 "Completeness mask for 2dF 230k"
+	if [ $? -eq 0 ]; then
 	    echo "Made a figure illustrating the 2dF 230k mask: $eps" 
 	    echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
 	    echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
@@ -191,10 +190,9 @@ if which matlab ; then
 	echo "using your own favorite plotting tool."
     fi
 elif which sm ; then
-    echo "Using Supermongo to plot the 2dF 230k mask:"
-    sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
-    rm temp.out
-    if [ -e $eps ]; then
+    echo "Using Supermongo to plot the 2dF 100k mask:"
+    $MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps 0 0 0 0 "Completeness mask for 2dF 230k"
+    if [ $? -eq 0 ]; then
 	echo "Made a figure illustrating the 2dF 230k mask: $eps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
 	echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
