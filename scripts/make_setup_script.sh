@@ -5,27 +5,28 @@
 #mangle environment variables
 #
 #USAGE: type 'source setup_mangle_environment' in the base mangle directory
+#If environment is setup correctly, typing
+#'echo $MANGLEBINDIR; echo $MANGLESCRIPTSDIR; echo $MANGLEDATADIR'
+#should print out the names of the appropriate directories.
 #
-#If that doesn't work, try 'source setup_mangle_environment $PWD/'
+#If the above command doesn't work, try 'source setup_mangle_environment $PWD/' 
 #
 #
 #You can also use 'source <MANGLEDIR>setup_mangle_environment.sh <MANGLEDIR>'
 #where <MANGLEDIR> is the path to the base mangle directory, e.g., /home/username/mangle2.0/
 #
-#To automatically set up mangle environment when you start your shell, add the following line
-#to your .bashrc (or .tcshrc, or .cshrc, or .login, or .profile) (replace <MANGLEDIR>
-#with the path to your mangle installation):
+#To automatically set up the mangle environment variables when you start your shell, 
+#add the following line to your .bashrc (or .tcshrc, or .cshrc, or .login, or .profile) 
+#(replace <MANGLEDIR> with the path to your mangle installation):
 #
 #source <MANGLEDIR>setup_mangle_environment <MANGLEDIR>
 
-
-#If no command line argument is given, assume we're running in the mangle directory
-if [ $? -eq 0 ]; then
-    MANGLEDIR="$PWD/"
+#If no command line argument is given, assume we're running in the mangle directory 
+if [ "$1" == "" ]; then
+    MANGLEDIR=$PWD/
 #otherwise use the path in the first command-line argument as $MANGLEDIR
 else
     MANGLEDIR=$1
-    echo $MANGLEDIR
 fi
 
 MANGLEBINDIR="${MANGLEDIR}bin"
