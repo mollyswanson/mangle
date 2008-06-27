@@ -63,11 +63,13 @@ echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jnfp jnf"
 $MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jnfp jnf || exit
 echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jnhp jnh"
 $MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jnhp jnh || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jncp jnc"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jncp jnc || exit
 # -n intersects holes with their parent fields
 echo "$MANGLEBINDIR/poly2poly $quiet $mtol -n jnh jnf jnhf"
 $MANGLEBINDIR/poly2poly $quiet $mtol -n jnh jnf jnhf || exit
 echo "$MANGLEBINDIR/balkanize $quiet $mtol jncp jnhf jnb"
-$MANGLEBINDIR/balkanize $quiet $mtol jncp jnhf jnb || exit
+$MANGLEBINDIR/balkanize $quiet $mtol jnc jnhf jnb || exit
 echo "$MANGLEBINDIR/weight $quiet $mtol -z2dF230k jnb jnw"
 $MANGLEBINDIR/weight $quiet $mtol -z2dF230k jnb jnw || exit
 echo "$MANGLEBINDIR/unify $quiet $mtol jnw $npol"
@@ -97,11 +99,15 @@ echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jsfp jsf"
 $MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jsfp jsf || exit
 echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jshp jsh"
 $MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jshp jsh || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jscp jsc"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jscp jsc || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jrcp jrc"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jrcp jrc || exit
 # -n intersects holes with their parent fields
 echo "$MANGLEBINDIR/poly2poly $quiet $mtol -n jsh jsf jshf"
 $MANGLEBINDIR/poly2poly $quiet $mtol -n jsh jsf jshf || exit
 echo "$MANGLEBINDIR/balkanize $quiet $mtol centres.sgp centres.ran jshf jsb"
-$MANGLEBINDIR/balkanize $quiet $mtol jscp jrcp jshf jsb || exit
+$MANGLEBINDIR/balkanize $quiet $mtol jsc jrc jshf jsb || exit
 echo "$MANGLEBINDIR/weight $quiet $mtol -z2dF230k jsb jsw"
 $MANGLEBINDIR/weight $quiet $mtol -z2dF230k jsb jsw || exit
 echo "$MANGLEBINDIR/unify $quiet $mtol jsw $spol"

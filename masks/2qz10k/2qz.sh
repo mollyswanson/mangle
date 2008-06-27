@@ -163,7 +163,7 @@ if which matlab ; then
    echo "Data for plotting polygons of the 2QZ 10k mask in Matlab are in $list."
     echo "Using Matlab to plot the 2QZ 10k mask ..."
     echo "$MANGLESCRIPTSDIR/graphmask.sh $list $eps"
-    $MANGLESCRIPTSDIR/graphmask.sh $list $eps "Completeness mask for 2qz 10k"
+    $MANGLESCRIPTSDIR/graphmask.sh $list $eps 0 0 0 0 "Completeness mask for 2qz 10k"
     if [ $? -eq 0 ]; then
 	$MANGLESCRIPTSDIR/graphmask.sh $list $neps 147 223 -6 6 "Completeness mask for 2qz 10k north"
 	$MANGLESCRIPTSDIR/graphmask.sh $list $seps -36 50 -36 -24 "Completeness mask for 2qz 10k south"

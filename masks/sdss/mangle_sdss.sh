@@ -104,7 +104,7 @@ if which matlab ; then
     echo "Data for plotting polygons of the SDSS $1 $2 mask in Matlab are in $list."
     echo "Using Matlab to plot the SDSS $1 $2  mask ..."
     echo "$MANGLESCRIPTSDIR/graphmask.sh $list $eps"
-    $MANGLESCRIPTSDIR/graphmask.sh $list $eps "Completeness mask for SDSS $sample $cuts"
+    $MANGLESCRIPTSDIR/graphmask.sh $list $eps 0 0 0 0 "Completeness mask for SDSS $sample $cuts"
     if [ $? -eq 0 ]; then
 	echo "Made a figure illustrating the SDSS $1 $2 mask: $eps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
