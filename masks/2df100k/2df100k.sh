@@ -161,13 +161,13 @@ echo "each line is a sequence of az, el points delineating the perimeter of a po
 
 # for plotting with the matlab script
 
+eps="2df100k${restag}.eps"
+neps="2df100k_north${restag}.eps"
+seps="2df100k_south${restag}.eps"
 
 if which matlab ; then
 # name of output file to contain matlab graphics
     list="2df100k${restag}.list"
-    eps="2df100k${restag}.eps"
-    neps="2df100k_north${restag}.eps"
-    seps="2df100k_south${restag}.eps"
 
     echo "$MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $npol $spol $list"
     $MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $mtol $npol $spol $list || exit

@@ -151,12 +151,13 @@ $MANGLEBINDIR/poly2poly -og$pts_per_twopi $quiet $mtol $npol $spol $grph || exit
 echo "Data suitable for plotting polygons of the 2QZ 10k mask are in $grph:"
 echo "each line is a sequence of az, el points delineating the perimeter of a polygon."
 
+eps="2qz${restag}.eps"
+neps="2qz_north${restag}.eps"
+seps="2qz_south${restag}.eps"
+
 if which matlab ; then
 # name of output file to contain matlab graphics
     list="2qz${restag}.list"
-    eps="2qz${restag}.eps"
-    neps="2qz_north${restag}.eps"
-    seps="2qz_south${restag}.eps"
 
     echo "$MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $npol $spol $list"
     $MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $mtol $npol $spol $list || exit

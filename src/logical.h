@@ -12,7 +12,7 @@ typedef long int logical;	/* type of fortran logical, according to f2c */
 #elif  INT_MAX==2147483647
 typedef int logical;            /* if long is too big, make logical an int */
 #else
-#error Couldn't define a 32-bit integer type for "logical"
+#error Could not define a 32-bit integer type for "logical"
 #endif
 
 #endif	/* LOGICAL_H */
