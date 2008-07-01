@@ -1,1 +1,1 @@
-GNUmakefile
+Makefile.mac

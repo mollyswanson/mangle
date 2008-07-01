@@ -27,13 +27,13 @@ int poly_cmp_weight(polygon **poly1, polygon **poly2)
 */
 void poly_sort(int npoly, polygon *poly[],char key){
   if(key=='p'){
-    mergesort(poly, npoly, sizeof(polygon *),poly_cmp_pixel);
+    mysort(poly, npoly, sizeof(polygon *),poly_cmp_pixel);
   }
   else if(key=='i'){
-    mergesort(poly, npoly, sizeof(polygon *),poly_cmp_id);
+    mysort(poly, npoly, sizeof(polygon *),poly_cmp_id);
   }
   else if(key=='w'){
-    mergesort(poly, npoly, sizeof(polygon *),poly_cmp_weight);
+    mysort(poly, npoly, sizeof(polygon *),poly_cmp_weight);
   }
   else{
     fprintf(stderr,"sort key %c not recognized.  Array can't be sorted\n", key);

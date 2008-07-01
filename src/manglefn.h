@@ -10,6 +10,7 @@
 #include "logical.h"
 #include "polygon.h"
 #include "vertices.h"
+#include "polysort.h"
 
 void	advise_fmt(format *);
 
