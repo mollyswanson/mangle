@@ -17,6 +17,17 @@ if [ "$MANGLEDATADIR" = "" ] ; then
     MANGLEDATADIR="../../masks"
 fi
 
+#check command line arguments
+if [ $# -lt 3 ] ; then
+    echo >&2 "ERROR: enter the name of the input file, Nside value, pixelization scheme, " 
+    echo >&2 "and the name of the output file as command line arguments."
+    echo >&2 "" 
+    echo >&2 "USAGE: healpixrast2fits.sh <polygon_infile> <Nside> <fits_outfile> <Nside_out> <gif_outfile>"
+    echo >&2 "EXAMPLE: healpixrast2fits.sh mask.pol 16 rast_mask_nside16.fits 8 rast_mask_nside16.gif"
+    echo >&2 "EXAMPLE (without healpix): healpixrast2fits.sh mask.pol 16 rast_mask_nside16.fits"
+    exit 1
+fi
+
 scheme="s"
 
 if [ "$2" != 0 ]; then
@@ -28,9 +39,11 @@ if [ "$2" != 0 ]; then
  done
 
  if [ "$FLAG" != 1 ]; then
-  echo "USAGE: healpixrast.sh <polygon_infile> <Nside> <polygon_outfile>"
-  echo "<Nside> must be a power of 2."
-  exit 1
+     echo >&2 "ERROR: <Nside> must be a power of 2."
+     echo >&2 "USAGE: healpixrast2fits.sh <polygon_infile> <Nside> <fits_outfile> <Nside_out> <gif_outfile>"
+     echo >&2 "EXAMPLE: healpixrast2fits.sh mask.pol 16 rast_mask_nside16.fits 8 rast_mask_nside16.gif"
+     echo >&2 "EXAMPLE (without healpix): healpixrast2fits.sh mask.pol 16 rast_mask_nside16.fits"
+     exit 1
  fi
 fi
 
@@ -48,12 +61,12 @@ healpixfile=$MANGLEDATADIR/healpix/healpix_polys/nside$2_p${pix}${scheme}.pol
 
 if [ ! -e $healpixfile ] ; then
     if [ "$2" -gt 32 ]; then
-	echo "ERROR: file $healpixfile does not exist."
-	echo "You can download it from the website (recommended)"
-	echo "or you can create it by running"
-	echo "sh healpixpolys.sh $2 ${scheme} 0 8"
-	echo "in $MANGLEDATADIR/healpix."
-	echo ""
+	echo >&2 "ERROR: file $healpixfile does not exist."
+	echo >&2 "You can download it from the website (recommended)"
+	echo >&2 "or you can create it by running"
+	echo >&2 "sh healpixpolys.sh $2 ${scheme} 0 8"
+	echo >&2 "in $MANGLEDATADIR/healpix."
+	echo >&2 ""
 	exit 1
     else
 	echo "Generating HEALPix polygons with healpixpolys.sh ..."
@@ -122,13 +135,13 @@ rm jhw
 
 datfitsbin=$MANGLEBINDIR/dat2fits_binary.x
 if [ ! -e $datfitsbin ] ; then
- echo "ERROR: binary $datfitsbin does not exist."
- echo "You can create it by compiling the fortran file"
- echo "$MANGLEDATADIR/healpix/healpix_conversion_scripts/dat2fits_binary.f as follows:"
- echo "g77 dat2fits_binary.f -o dat2fits_binary.x libcfitsio.a"
- echo "NOTE: You will need to obtain and install the library file libcfitsio.a"
- echo "from http://heasarc.nasa.gov/fitsio/fitsio.html"
- echo "in order to compile the fortran file successfully."
+ echo >&2 "ERROR: binary $datfitsbin does not exist."
+ echo >&2 "You can create it by compiling the fortran file"
+ echo >&2 "$MANGLEDATADIR/healpix/healpix_conversion_scripts/dat2fits_binary.f as follows:"
+ echo >&2 "g77 dat2fits_binary.f -o dat2fits_binary.x libcfitsio.a"
+ echo >&2 "NOTE: You will need to obtain and install the library file libcfitsio.a"
+ echo >&2 "from http://heasarc.nasa.gov/fitsio/fitsio.html"
+ echo >&2 "in order to compile the fortran file successfully."
  exit 1
 fi
 	
@@ -140,13 +153,12 @@ fi
 $MANGLESCRIPTSDIR/call $datfitsbin 1 $2 jhd $3 
 rm args.dat
 if [ $? -ne 0 ]; then
- echo "ERROR: binary $datfitsbin is not executable on your system."
- echo "You can recompile it on your system as follows:"
- echo "g77 dat2fits_binary.f -o dat2fits_binary.x libcfitsio.a"
- echo "NOTE: You will need to obtain and install the library file libcfitsio.a"
- echo "from http://heasarc.nasa.gov/fitsio/fitsio.html"
- echo "in order to compile the fortran file successfully."
-    
+ echo >&2 "ERROR: binary $datfitsbin is not executable on your system."
+ echo >&2 "You can recompile it on your system as follows:"
+ echo >&2 "g77 dat2fits_binary.f -o dat2fits_binary.x libcfitsio.a"
+ echo >&2 "NOTE: You will need to obtain and install the library file libcfitsio.a"
+ echo >&2 "from http://heasarc.nasa.gov/fitsio/fitsio.html"
+ echo >&2 "in order to compile the fortran file successfully."    
  exit 1
 fi
 
@@ -174,20 +186,21 @@ if [ "$OUT" != 0 ]; then
 	  FLAGG=1
       fi
     done
-    
-    if [ "$FLAGG" != 1 ]; then
-	echo "USAGE: healpixrast2fits.sh <polygon_infile> <Nside> <fits_outfile> <Nside_out> <gif_outfile>"
-	echo "<Nside_out> must be a power of 2."
+    if [ "$FLAG" != 1 ]; then
+	echo >&2 "ERROR: <Nside_out> must be a power of 2."
+	echo >&2 "USAGE: healpixrast2fits.sh <polygon_infile> <Nside> <fits_outfile> <Nside_out> <gif_outfile>"
+	echo >&2 "EXAMPLE: healpixrast2fits.sh mask.pol 16 rast_mask_nside16.fits 8 rast_mask_nside16.gif"
+	echo >&2 "EXAMPLE (without healpix): healpixrast2fits.sh mask.pol 16 rast_mask_nside16.fits"
 	exit 1
     fi
-    
+   
     if which ud_grade && which map2gif ; then
 	$MANGLESCRIPTSDIR/plotmap.sh $4 $3 $5 || exit
-	echo "Rasterized mask image file written to $5."
+	echo >&2 "Rasterized mask image file written to $5."
     else
-	echo "ud_grade and/or map2gif not found!"
-	echo "In order to plot a gif image of $3, you need to install HEALPix,"
-        echo "which is available at http://healpix.jpl.nasa.gov/."
+	echo >&2 "ud_grade and/or map2gif not found!"
+	echo >&2 "In order to plot a gif image of $3, you need to install HEALPix,"
+        echo >&2 "which is available at http://healpix.jpl.nasa.gov/."
 	exit 1
     fi
 fi

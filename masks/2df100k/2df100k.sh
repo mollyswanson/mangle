@@ -63,11 +63,13 @@ echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jnfp jnf"
 $MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jnfp jnf || exit
 echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jnhp jnh"
 $MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jnhp jnh || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jncp jnc"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jncp jnc || exit
 # -n intersects holes with their parent fields
 echo "$MANGLEBINDIR/poly2poly $quiet $mtol -n jnh jnf jnhf"
 $MANGLEBINDIR/poly2poly $quiet $mtol -n jnh jnf jnhf || exit
-echo "$MANGLEBINDIR/balkanize $quiet $mtol jncp jnhf jnb"
-$MANGLEBINDIR/balkanize $quiet $mtol jncp jnhf jnb || exit
+echo "$MANGLEBINDIR/balkanize $quiet $mtol jnc jnhf jnb"
+$MANGLEBINDIR/balkanize $quiet $mtol jnc jnhf jnb || exit
 echo "$MANGLEBINDIR/weight $quiet $mtol -z2dF100k jnb jnw"
 $MANGLEBINDIR/weight $quiet $mtol -z2dF100k jnb jnw || exit
 echo "$MANGLEBINDIR/unify $quiet $mtol jnw $npol"
@@ -97,11 +99,15 @@ echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jsfp jsf"
 $MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jsfp jsf || exit
 echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jshp jsh"
 $MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jshp jsh || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jscp jsc"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jscp jsc || exit
+echo "$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jrcp jrc"
+$MANGLEBINDIR/snap $quiet $snaptols $mtol -vo jrcp jrc || exit
 # -n intersects holes with their parent fields
 echo "$MANGLEBINDIR/poly2poly $quiet $mtol -n jsh jsf jshf"
 $MANGLEBINDIR/poly2poly $quiet $mtol -n jsh jsf jshf || exit
 echo "$MANGLEBINDIR/balkanize $quiet $mtol centres.sgp centres.ran jshf jsb"
-$MANGLEBINDIR/balkanize $quiet $mtol jscp jrcp jshf jsb || exit
+$MANGLEBINDIR/balkanize $quiet $mtol jsc jrc jshf jsb || exit
 echo "$MANGLEBINDIR/weight $quiet $mtol -z2dF100k jsb jsw"
 $MANGLEBINDIR/weight $quiet $mtol -z2dF100k jsb jsw || exit
 echo "$MANGLEBINDIR/unify $quiet $mtol jsw $spol"
@@ -155,31 +161,29 @@ echo "each line is a sequence of az, el points delineating the perimeter of a po
 
 # for plotting with the matlab script
 
+eps="2df100k${restag}.eps"
+neps="2df100k_north${restag}.eps"
+seps="2df100k_south${restag}.eps"
 
 if which matlab ; then
 # name of output file to contain matlab graphics
     list="2df100k${restag}.list"
-    eps="2df100k${restag}.eps"
-    neps="2df100k_north${restag}.eps"
-    seps="2df100k_south${restag}.eps"
 
     echo "$MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $npol $spol $list"
     $MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $mtol $npol $spol $list || exit
     echo "Data for plotting polygons of the 2dF 100k mask in Matlab are in $list."
     echo "Using Matlab to plot the 2dF 100k mask ..."
-    echo "$MANGLESCRIPTSDIR/graphmask.sh $list $eps"
-    $MANGLESCRIPTSDIR/graphmask.sh $list $eps
+    $MANGLESCRIPTSDIR/graphmask.sh $list $eps 0 0 0 0 "Completeness mask for 2dF 100k"
     if [ $? -eq 0 ]; then
-	$MANGLESCRIPTSDIR/graphmask.sh $list $neps 145 223 -7 6
-	$MANGLESCRIPTSDIR/graphmask.sh $list $seps -50 81 -52 -7
-	echo "Made a figure illustrating the 2dF 100k mask:" 
+	$MANGLESCRIPTSDIR/graphmask.sh $list $neps 145 223 -7 6 "Completeness mask for 2dF 100k north"
+	$MANGLESCRIPTSDIR/graphmask.sh $list $seps -50 81 -52 -7 "Completeness mask for 2dF 100k south"
+	echo "Made figures illustrating the 2dF 100k mask:" 
         echo "$eps, $neps, $seps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figures."  
     elif which sm ; then
 	echo "Using Supermongo to plot the 2dF 100k mask:"
-	sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
-	rm temp.out
-	if [ -e $eps ]; then
+	$MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps 0 0 0 0 "Completeness mask for 2dF 100k"
+	if [ $? -eq 0 ]; then
 	    echo "Made a figure illustrating the 2dF 100k mask: $eps" 
 	    echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
 	    echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
@@ -192,9 +196,8 @@ if which matlab ; then
     fi
 elif which sm ; then
     echo "Using Supermongo to plot the 2dF 100k mask:"
-    sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
-    rm temp.out
-    if [ -e $eps ]; then
+    $MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps 0 0 0 0 "Completeness mask for 2dF 100k"
+    if [ $? -eq 0 ]; then
 	echo "Made a figure illustrating the 2dF 100k mask: $eps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
 	echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 

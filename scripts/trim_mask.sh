@@ -46,6 +46,7 @@ scheme1=`awk '{print substr($2, length($2))}' < jpix`
 awk '/pixelization/{print $0}' < $trimmer > jpix
 res2=`awk '{print substr($2, 1, length($2)-1)}' < jpix`
 scheme2=`awk '{print substr($2, length($2))}' < jpix`
+rm jpix
 
 #if input files are pixelized, make sure they are consistent:
 if [ ! "$res1" = "" ] && [ ! "$res2" = "" ] ; then
@@ -110,20 +111,23 @@ $MANGLESCRIPTSDIR/find_complement.sh $trimmer trimmer_comp || exit
 echo 0 > jw0
 echo "$MANGLEBINDIR/weight -zjw0 trimmer_comp jcomp0"
 $MANGLEBINDIR/weight -zjw0 trimmer_comp jcomp0 || exit
-echo "$MANGLEBINDIR/balkanize $mask jcomp0 jb"
+rm jw0
 
 #balkanize the mask with the zero-weight complement, thereby trimming off 
 #everything that does not lie within the trimmer polygon 
+echo "$MANGLEBINDIR/balkanize $mask jcomp0 jb"
 $MANGLEBINDIR/balkanize $mask jcomp0 jb || exit
-echo "$MANGLEBINDIR/unify jb $outfile"
+rm jcomp0
 
 #unify to get rid of zero weight polygons
+echo "$MANGLEBINDIR/unify jb $outfile"
 $MANGLEBINDIR/unify jb $outfile || exit
+rm jb
 
 echo "Polygons of $1 trimmed by $2 written to ${outfile}."
 
 #clean up
-rm j*
+
 rm trimmer_comp
 if [ -e trimmer_pix ] ; then 
     rm trimmer_pix

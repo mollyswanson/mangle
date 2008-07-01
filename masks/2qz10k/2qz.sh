@@ -151,30 +151,30 @@ $MANGLEBINDIR/poly2poly -og$pts_per_twopi $quiet $mtol $npol $spol $grph || exit
 echo "Data suitable for plotting polygons of the 2QZ 10k mask are in $grph:"
 echo "each line is a sequence of az, el points delineating the perimeter of a polygon."
 
+eps="2qz${restag}.eps"
+neps="2qz_north${restag}.eps"
+seps="2qz_south${restag}.eps"
+
 if which matlab ; then
 # name of output file to contain matlab graphics
     list="2qz${restag}.list"
-    eps="2qz${restag}.eps"
-    neps="2qz_north${restag}.eps"
-    seps="2qz_south${restag}.eps"
 
     echo "$MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $npol $spol $list"
     $MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $mtol $npol $spol $list || exit
    echo "Data for plotting polygons of the 2QZ 10k mask in Matlab are in $list."
     echo "Using Matlab to plot the 2QZ 10k mask ..."
     echo "$MANGLESCRIPTSDIR/graphmask.sh $list $eps"
-    $MANGLESCRIPTSDIR/graphmask.sh $list $eps
+    $MANGLESCRIPTSDIR/graphmask.sh $list $eps 0 0 0 0 "Completeness mask for 2qz 10k"
     if [ $? -eq 0 ]; then
-	$MANGLESCRIPTSDIR/graphmask.sh $list $neps 147 223 -6 6
-	$MANGLESCRIPTSDIR/graphmask.sh $list $seps -36 50 -36 -24
+	$MANGLESCRIPTSDIR/graphmask.sh $list $neps 147 223 -6 6 "Completeness mask for 2qz 10k north"
+	$MANGLESCRIPTSDIR/graphmask.sh $list $seps -36 50 -36 -24 "Completeness mask for 2qz 10k south"
 	echo "Made figures illustrating the 2QZ 10k mask:" 
         echo "$eps, $neps, $seps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figures."  
     elif which sm ; then
 	echo "Using Supermongo to plot the 2QZ 10k mask:"
-	sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
-	rm temp.out
-	if [ -e $eps ]; then
+	$MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps 0 0 0 0 "Completeness mask for 2qz 10k"
+	if [ $? -eq 0 ]; then
 	    echo "Made a figure illustrating the 2QZ 10k mask: $eps" 
 	    echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
 	    echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
@@ -187,9 +187,8 @@ if which matlab ; then
     fi
 elif which sm ; then
     echo "Using Supermongo to plot the 2QZ 10k mask:"
-    sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
-    rm temp.out
-    if [ -e $eps ]; then
+    $MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps 0 0 0 0 "Completeness mask for 2qz 10k"
+    if [ $? -eq 0 ]; then
 	echo "Made a figure illustrating the 2QZ 10k mask: $eps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
 	echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 

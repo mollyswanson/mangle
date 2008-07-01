@@ -1,4 +1,4 @@
-function graphmask(infile,outfile,maprange,outlines)
+function graphmask(infile,outfile,maprange,plottitle,outlines)
 % © M E C Swanson 2008
 %function for plotting MANGLE polygon files using the Matlab mapping toolbox.  
 %arguments: 
@@ -6,6 +6,7 @@ function graphmask(infile,outfile,maprange,outlines)
 %outfile=name of eps file to output, or use 'none' if you want to, e.g., put the resulting figure into a subplot.
 %maprange=[lonmin,lonmax,latmin,latmax] are optional latitude and longitude (Dec and RA)
 %limits for the mask.  If not provided, default is to plot full sky. 
+%title=optional title for the plot
 %outlines=whether to draw black outlines around polygons. default is no outlines.  Use outlines='on' to draw outlines.
 
 %check if mapping toolbox is installed:
@@ -17,22 +18,44 @@ if ( ~exist('ispolycw') )
 end
 
 %process input arguments    
+if(nargin<1)
+     error('graphmask requires at least one input argument: the name of the input data file to plot.');
+end
 if(nargin==1)
+   outfile='none';
    maprange=[0 360 -90 90];
+   plottitle='';
    outlines='';
    lims=0;
 end
 if(nargin==2)
    maprange=[0 360 -90 90];
+   plottitle='';
    outlines='';
    lims=0;
 end
 if(nargin==3)
+   plottitle='';
    outlines='';
    lims=1;
 end
 if(nargin==4)
-     lims=1;
+   outlines='';
+   lims=1;
+end
+if(nargin>=5)
+   lims=1;
+end
+if(all(maprange==0))
+   maprange=[0 360 -90 90];
+   lims=0;
+end
+%check if mapping toolbox is installed:
+if (~isnumeric(maprange))
+     fprintf(2, 'ERROR: Non-numeric values used in maprange\n');
+     exitval=1;
+     save('matlabexit.temp','exitval');
+     exit
 end
 
 lonmin=maprange(1);
@@ -127,6 +150,7 @@ else
     xlabel('+90^{\circ}','Color','k')
     ylabel('0^{\circ}','Rotation',0.0,'Color','k','VerticalAlignment','Middle','HorizontalAlignment','Left')
 end
+title(plottitle);
 
 %add colorbar
 %axes('Position',[0 0 1 1])

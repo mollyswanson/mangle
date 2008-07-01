@@ -17,6 +17,16 @@ if [ "$MANGLEDATADIR" = "" ] ; then
     MANGLEDATADIR="../../masks"
 fi
 
+#check command line arguments
+if [ $# -lt 3 ] ; then
+    echo >&2 "ERROR: enter the name of the input file, Nside value, pixelization scheme, " 
+    echo >&2 "and the name of the output file as command line arguments."
+    echo >&2 "" 
+    echo >&2 "USAGE: healpixrast.sh <polygon_infile> <Nside> <polygon_outfile>"
+    echo >&2 "EXAMPLE: healpixrast.sh mask.pol 16 rast_mask_nside16.pol"
+    exit 1
+fi
+
 scheme="s"
 
 if [ "$2" != 0 ]; then
@@ -28,9 +38,10 @@ if [ "$2" != 0 ]; then
  done
 
  if [ "$FLAG" != 1 ]; then
-  echo "USAGE: healpixrast.sh <polygon_infile> <Nside> <polygon_outfile>"
-  echo "<Nside> must be a power of 2."
-  exit 1
+     echo >&2 "ERROR: <Nside> must be a power of 2."
+     echo >&2 "USAGE: healpixrast.sh <polygon_infile> <Nside> <polygon_outfile>"
+     echo >&2 "EXAMPLE: healpixrast.sh mask.pol 16 rast_mask_nside16.pol"
+     exit 1
  fi
 fi
 

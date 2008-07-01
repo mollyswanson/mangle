@@ -50,6 +50,8 @@ pol=sdss_${sample}${cuts}${restag}_slice.pol
 grph=sdss_${sample}${cuts}${restag}_slice.grph
 list=sdss_${sample}${cuts}${restag}_slice.list
 eps=sdss_${sample}${cuts}${restag}_slice.eps
+eps1=sdss_${sample}${cuts}${restag}_slice1.eps
+eps2=sdss_${sample}${cuts}${restag}_slice2.eps
 fields=window.${sample}${cuts}.slice.ply
 mask=mask.${sample}${cuts}.slice.ply
 holes=holes.${sample}${cuts}.slice.ply
@@ -91,39 +93,60 @@ if which matlab ; then
     echo "Data for plotting polygons for the example slice of the SDSS $sample $cuts mask in Matlab are in $list."
     echo "Using Matlab to plot the example slice of the SDSS $sample $cuts  mask ..."
     echo "$MANGLESCRIPTSDIR/graphmask.sh $list $eps"
-    $MANGLESCRIPTSDIR/graphmask.sh $list $eps -45 35 8 21
+    $MANGLESCRIPTSDIR/graphmask.sh $list $eps -45 35 8 21 "Completeness mask for slice of SDSS $sample $cuts"
     if [ $? -eq 0 ]; then
 	echo "Made a figure illustrating example slice of the SDSS $sample $cuts mask: $eps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
     elif which sm ; then
+	echo "$MANGLEBINDIR/poly2poly -og12 -p3 $quiet $pol $grph"
+	$MANGLEBINDIR/poly2poly -og12 -p3 $quiet $pol $grph || exit
+	echo "Data suitable for plotting polygons for the example slice of the SDSS $sample $cuts mask are in $grph:"
+	echo "each line is a sequence of az, el points delineating the perimeter of a polygon."
 	echo "Using Supermongo to plot the example slice of the SDSS $sample $cuts mask:"
-	sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
-	rm temp.out
-	if [ -e $eps ]; then
-	    echo "Made a figure illustrating the example slice of the SDSS $sample $cuts mask: $eps" 
-	    echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
+	$MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps1 0 35 0 0 "Completeness mask for slice of SDSS $sample $cuts"
+	if [ $? -eq 0 ]; then
+	    echo "Made a figure of half of the example slice of the SDSS $sample $cuts mask: $eps1" 
+	    echo "Type \"ggv $eps1\" or \"gv $eps1\" to view the figure."  
 	    echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
 	    echo "or you can plot $grph using your own favorite plotting tool."
 	fi
-    else 
+ 	$MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps2 315 360 0 0 "Completeness mask for slice of SDSS $sample $cuts"
+	if [ $? -eq 0 ]; then
+	    echo "Made a figure of the other half of the example slice of the SDSS $sample $cuts mask: $eps2" 
+	    echo "Type \"ggv $eps2\" or \"gv $eps2\" to view the figure."  
+	    echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
+	    echo "or you can plot $grph using your own favorite plotting tool."
+	fi
+   else 
 	echo "Scripts are available for plotting mangle polygons in Matlab" 
 	echo "(with the mapping toolbox) or Supermongo, or you can plot $grph"
 	echo "using your own favorite plotting tool."
     fi
 elif which sm ; then
+    echo "$MANGLEBINDIR/poly2poly -og12 -p3 $quiet $pol $grph"
+    $MANGLEBINDIR/poly2poly -og12 -p3 $quiet $pol $grph || exit
+    echo "Data suitable for plotting polygons for the example slice of the SDSS $sample $cuts mask are in $grph:"
+    echo "each line is a sequence of az, el points delineating the perimeter of a polygon."
     echo "Using Supermongo to plot the example slice of the SDSS $sample $cuts mask:"
-    sm -m $MANGLESCRIPTSDIR/graphmask.sm $grph $eps > temp.out
-    rm temp.out
-    if [ -e $eps ]; then
-	echo "Made a figure illustrating the example slice of the SDSS $sample $cuts mask: $eps" 
-	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
+    $MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps1 0 35 0 0 "Completeness mask for slice of SDSS $sample $cuts"
+    if [ $? -eq 0 ]; then
+	echo "Made a figure of half of the example slice of the SDSS $sample $cuts mask: $eps1" 
+	echo "Type \"ggv $eps1\" or \"gv $eps1\" to view the figure."  
 	echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
-        echo "or you can plot $grph using your own favorite plotting tool."
+	echo "or you can plot $grph using your own favorite plotting tool."
     fi
+    $MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps2 315 360 0 0 "Completeness mask for slice of SDSS $sample $cuts"
+    if [ $? -eq 0 ]; then
+	echo "Made a figure of the other half of the example slice of the SDSS $sample $cuts mask: $eps2" 
+	echo "Type \"ggv $eps2\" or \"gv $eps2\" to view the figure."  
+	echo "A script is also available to plot mangle files Matlab (with the mapping toolbox)," 
+	echo "or you can plot $grph using your own favorite plotting tool."
+    fi
+    echo "Using Supermongo to plot the example slice of the SDSS $sample $cuts mask:"
 else
     echo "Scripts are available for plotting mangle polygons in Matlab" 
     echo "(with the mapping toolbox) or Supermongo, or you can plot $grph"
     echo "using your own favorite plotting tool."
 fi
 
-rm j*
+rm jw jfhs jfhp jfh jb
