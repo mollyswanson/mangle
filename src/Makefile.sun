@@ -6,7 +6,11 @@
 ## Gnu
 #
 #CC = gcc
-#CFLAGS = -g -O3 -Wall -DLINUX -DGCC
+### linux
+#CFLAGS = -g -O3 -Wall -DLINUX -DGCC -m32
+#
+### Mac OS X
+##CFLAGS = -g -O3 -Wall -DMACOSX -DGCC -m32
 #
 ### f2c
 ##F77 = fort77
@@ -15,8 +19,12 @@
 ###-pg
 #
 ## gnu g77 (which assumes no SAVE)
-#F77 = g77
-#FFLAGS = -Wimplicit -g -O3 -DG77
+##F77 = g77
+##FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 -m32
+#
+## gnu gfortran
+#F77 = gfortran
+#FFLAGS = -Wall -g -O3 -DGFORTRAN -ff2c -m32 -static
 #
 ##MAKE=gmake
 #
