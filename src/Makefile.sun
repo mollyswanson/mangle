@@ -33,19 +33,23 @@
 #----
 # Sun
 
-CC = cc
-CFLAGS = -O -DSUN
+#CC = cc
+#CFLAGS = -O -DSUN
 
-#CC = gcc
-#CFLAGS = -g -O3 -DGCC
+CC = gcc
+CFLAGS = -g -O3 -DGCC -DSUN -m32
 
-F77 = f77
-#FFLAGS = -u -O -pg -DSUN
-FFLAGS = -u -O -DSUN
+#F77 = f77
+##FFLAGS = -u -O -pg -DSUN
+#FFLAGS = -u -O -DSUN
 
-## gnu g77 (which assumes no SAVE)
+# gnu g77 (which assumes no SAVE)
 #F77 = g77
-#FFLAGS = -Wimplicit -g -O3 -DG77
+#FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 -m32
+
+# gnu gfortran
+F77 = gfortran
+FFLAGS = -Wall -g -O3 -DGFORTRAN -ff2c -m32 -static
 
 #MAKE=make
 
@@ -342,7 +346,7 @@ pix2vec_nest.s.o: pix2vec_nest.s.f
 twodf100k.o: pi.par twodf100k.f
 	$(F77) $(FFLAGS) -c twodf100k.f
 twodf230k.o: pi.par twodf230k.f
-        $(F77) $(FFLAGS) -c twodf230k.f
+	$(F77) $(FFLAGS) -c twodf230k.f
 twoqz.o: mangdir.data mangdir.inc twoqz.f
 	$(F77) $(FFLAGS) -c twoqz.f
 wlm.s.o: pi.par wlm.s.f
