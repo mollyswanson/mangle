@@ -197,7 +197,8 @@ c        mangle directory
               endif
 
 c        option to write unformatted copy
-              if (verbose.ge.2.and.ifmt.eq.2) then
+c              if (verbose.ge.2.and.ifmt.eq.2) then
+              if (verbose.ge.1.and.ifmt.eq.2) then
                 write (*,'(" write unformatted copy of ",a,
      *            "? [CR,n=no, y=yes]: ",$)') tmpnam(1:lnblnk(tmpnam))
                 read (*,'(a1)',end=140,err=140) go
