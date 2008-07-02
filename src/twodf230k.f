@@ -458,21 +458,21 @@ c try formatted
         ok=.true.
 
 c COMMENT THIS OUT IF YOU DON'T WANT IT
-C       if (access(name_mask,' ').ne.0) then
-C         print *,'write UNFORMATTED values? [CR,n=no, y=yes]'
-C         read (*,'(a1)',end=250,err=250) go
-C         if (go.eq.'y'.or.go.eq.'Y') then
-C           open(11,file=name_mask,form='unformatted')
-C           write(11) np_xx,np_yy
-C           do ix=1,np_xx
-C             write(11) (mask(ix,iy),iy=1,np_yy)
-C           enddo
-C           print *,np_xx,' x',np_yy,' values written to from ',
-C    *        name_mask(1:lnblnk(name_mask))
-C           close(11)
-C         endif
-C 250     continue
-C       endif
+       if (access(name_mask,' ').ne.0) then
+         print *,'write UNFORMATTED values? [CR,n=no, y=yes]'
+         read (*,'(a1)',end=250,err=250) go
+         if (go.eq.'y'.or.go.eq.'Y') then
+           open(11,file=name_mask,form='unformatted')
+           write(11) np_xx,np_yy
+           do ix=1,np_xx
+             write(11) (mask(ix,iy),iy=1,np_yy)
+           enddo
+           print *,np_xx,' x',np_yy,' values written to from ',
+     *        name_mask(1:lnblnk(name_mask))
+           close(11)
+         endif
+ 250     continue
+       endif
 
       endif
 c
@@ -580,23 +580,23 @@ c try formatted
         ok=.true.
 
 c COMMENT THIS OUT IF YOU DON'T WANT IT
-C       if (access(namemask,' ').ne.0) then
-C         print *,'write UNFORMATTED values? [CR,n=no, y=yes]'
-C         read (*,'(a1)',end=250,err=250) go
-C         if (go.eq.'y'.or.go.eq.'Y') then
-C           open(14,file=namemask,form='unformatted')
-C           write(14) nbff,npxx,npyy
-C           do k=1,nbff
-C             do i=1,npxx
-C               write (14) (rpix(k,i,j),j=1,npyy)
-C             enddo
-C           enddo
-C           print *,nbff,' x',npxx,' x',npyy,
-C    *        ' values written to ',namemask(1:lnblnk(namemask))
-C           close(14)
-C         endif
-C 250     continue
-C       endif
+       if (access(namemask,' ').ne.0) then
+         print *,'write UNFORMATTED values? [CR,n=no, y=yes]'
+         read (*,'(a1)',end=250,err=250) go
+         if (go.eq.'y'.or.go.eq.'Y') then
+           open(14,file=namemask,form='unformatted')
+           write(14) nbff,npxx,npyy
+           do k=1,nbff
+             do i=1,npxx
+               write (14) (rpix(k,i,j),j=1,npyy)
+             enddo
+           enddo
+           print *,nbff,' x',npxx,' x',npyy,
+     *        ' values written to ',namemask(1:lnblnk(namemask))
+           close(14)
+         endif
+ 250     continue
+       endif
 
       endif
 c
@@ -686,22 +686,22 @@ c try formatted
         ok=.true.
 
 c COMMENT THIS OUT IF YOU DON'T WANT IT
-C       if (access(name,' ').ne.0) then
-C         print *,'write UNFORMATTED values? [CR,n=no, y=yes]'
-C         read (*,'(a1)',end=250,err=250) go
-C         if (go.eq.'y'.or.go.eq.'Y') then
-C           open(unit=11,file=name,form='unformatted')
-C           write(11) nb_field
-C           write(11) (xc(i),i=1,nb_field)
-C           write(11) (yc(i),i=1,nb_field)
-C           write(11) (zc(i),i=1,nb_field)
-C           write(11) (comp(i),i=1,nb_field)
-C           close(11)
-C           print *,nb_field,' x y z w values written to ',
-C    *        name(1:lnblnk(name))
-C         endif
-C 250     continue
-C       endif
+       if (access(name,' ').ne.0) then
+         print *,'write UNFORMATTED values? [CR,n=no, y=yes]'
+         read (*,'(a1)',end=250,err=250) go
+         if (go.eq.'y'.or.go.eq.'Y') then
+           open(unit=11,file=name,form='unformatted')
+           write(11) nb_field
+           write(11) (xc(i),i=1,nb_field)
+           write(11) (yc(i),i=1,nb_field)
+           write(11) (zc(i),i=1,nb_field)
+           write(11) (comp(i),i=1,nb_field)
+           close(11)
+           print *,nb_field,' x y z w values written to ',
+     *        name(1:lnblnk(name))
+         endif
+ 250     continue
+       endif
 
       endif
 
