@@ -9,13 +9,13 @@
 #EXAMPLE:mangle_sdss.sh dr7 safe0
 
 if [ "$MANGLEBINDIR" = "" ] ; then
-    MANGLEBINDIR="../../../bin"
+    MANGLEBINDIR="../../bin"
 fi
 if [ "$MANGLESCRIPTSDIR" = "" ] ; then
-    MANGLESCRIPTSDIR="../../../scripts"
+    MANGLESCRIPTSDIR="../../scripts"
 fi
 if [ "$MANGLEDATADIR" = "" ] ; then
-    MANGLEDATADIR="../../../masks"
+    MANGLEDATADIR="../../masks"
 fi
 
 sample=$1
@@ -55,8 +55,8 @@ pix="-P${scheme}0,${res}"
 restag="_res${res}${scheme}"
 
 #uncomment this to put files from different releases in individual directories
-filedir=$sample/
-cd $filedir
+#filedir=$MANGLEDATADIR/$sample/$cuts/
+#cd $filedir
 
 # name of output file to contain sdss polygons
 pol=sdss_${sample}${cuts}${restag}.pol
