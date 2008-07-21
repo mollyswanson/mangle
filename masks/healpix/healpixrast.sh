@@ -99,7 +99,7 @@ elif [ ! "$res1" = "$pix" ] || [ ! "$scheme1" = "$scheme" ]; then
     echo "with resolution $pix and scheme $scheme, using the flag -P${scheme}0,$pix .)"
     echo ""
     echo "Pixelizing $1 ..."
-    $MANGLEBINDIR/pixelize -P${scheme}0,$pix $1 jps || exit   
+    $MANGLEBINDIR/pixelize -P${scheme}0,$pix $1 jp || exit   
 else
     cp $1 jp
 fi
