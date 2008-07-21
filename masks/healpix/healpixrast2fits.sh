@@ -101,7 +101,7 @@ elif [ ! "$res1" = "$pix" ] || [ ! "$scheme1" = "$scheme" ]; then
     echo "with resolution $pix and scheme $scheme, using the flag -P${scheme}0,$pix .)"
     echo ""
     echo "Pixelizing $1 ..."
-    $MANGLEBINDIR/pixelize -P${scheme}0,$pix $1 jps || exit   
+    $MANGLEBINDIR/pixelize -P${scheme}0,$pix $1 jp || exit   
 else
     cp $1 jp
 fi
@@ -151,7 +151,6 @@ if [ -e $3 ] ; then
 fi
 
 $MANGLESCRIPTSDIR/call $datfitsbin 1 $2 jhd $3 
-rm args.dat
 if [ $? -ne 0 ]; then
  echo >&2 "ERROR: binary $datfitsbin is not executable on your system."
  echo >&2 "You can recompile it on your system as follows:"
@@ -162,12 +161,13 @@ if [ $? -ne 0 ]; then
  exit 1
 fi
 
-rm jhd
-
 if [ -e dat2fitserr.temp ]; then
     rm dat2fitserr.temp
     exit 1
 fi
+
+rm args.dat
+rm jhd
 
 echo "Rasterized mask FITS file written to $3."
 
