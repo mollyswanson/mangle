@@ -24,7 +24,11 @@
 #
 ## gnu gfortran
 #F77 = gfortran
+###linux
 #FFLAGS = -Wall -g -O3 -DGFORTRAN -ff2c -m32 -static
+#
+###mac
+##FFLAGS = -Wall -g -O3 -DGFORTRAN -ff2c -m32 -static-libgfortran
 #
 ##MAKE=gmake
 #
@@ -33,23 +37,19 @@
 #----
 # Sun
 
-#CC = cc
-#CFLAGS = -O -DSUN
+CC = cc
+CFLAGS = -O -DSUN
 
-CC = gcc
-CFLAGS = -g -O3 -DGCC -DSUN -m32
+#CC = gcc
+#CFLAGS = -g -O3 -DGCC -DSUN -m32
 
-#F77 = f77
-##FFLAGS = -u -O -pg -DSUN
-#FFLAGS = -u -O -DSUN
+F77 = f77
+#FFLAGS = -u -O -pg -DSUN
+FFLAGS = -u -O -DSUN
 
 # gnu g77 (which assumes no SAVE)
 #F77 = g77
 #FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 -m32
-
-# gnu gfortran
-F77 = gfortran
-FFLAGS = -Wall -g -O3 -DGFORTRAN -ff2c -m32 -static
 
 #MAKE=make
 

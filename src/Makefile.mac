@@ -22,8 +22,12 @@ CFLAGS = -g -O3 -Wall -DMACOSX -DGCC -m32
 F77 = g77
 FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 -m32
 
-# gnu gfortran
+## gnu gfortran
 #F77 = gfortran
+###linux
+##FFLAGS = -Wall -g -O3 -DGFORTRAN -ff2c -m32 -static
+#
+###mac
 #FFLAGS = -Wall -g -O3 -DGFORTRAN -ff2c -m32 -static-libgfortran
 
 #MAKE=gmake
