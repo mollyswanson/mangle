@@ -41,9 +41,9 @@
 /* default smoothing exponent (2. = gaussian) */
 #define ESMOOTH		2.
 /* default snap angles for axis, latitude, and edge */
-#define AXTOL		2.0e-6
-#define BTOL		2.0e-6
-#define THTOL		2.0e-6
+#define AXTOL		2.0e-5
+#define BTOL		2.0e-5
+#define THTOL		2.0e-5
 /* default value of ytol */
 #define YTOL		.01
 /* default snap angle for multiple intersections */
