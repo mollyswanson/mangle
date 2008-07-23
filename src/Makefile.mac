@@ -24,11 +24,21 @@ FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 -m32
 
 ## gnu gfortran
 #F77 = gfortran
+#
 ###linux
-##FFLAGS = -Wall -g -O3 -DGFORTRAN -ff2c -m32 -static
+##FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c -m32
+##STATICFLAGS:= -static
 #
 ###mac
-#FFLAGS = -Wall -g -O3 -DGFORTRAN -ff2c -m32 -static-libgfortran
+#FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c -m32 
+##STATICFLAGS:= -static-libgfortran
+#STATICFLAGS:= -nodefaultlibs -lSystem -lgcc -lm -lgfortran_static
+## static linking of gfortran library to compile for distribution.
+## hack to work around the fact that the -static-libgfortran flag does 
+## not currently work on Darwin - requires running the following 
+## command to make a symbolic link to the static gfortran library 
+## in /usr/local/gfortran/lib or wherever gfortran is installed:
+## sudo ln -s libgfortran.a libgfortran_static.a
 
 #MAKE=gmake
 
@@ -110,6 +120,9 @@ cleaner:
 cleanest:
 	rm -f *.o core libmangle.a $(PROGS)
 	if [ -d "$(BIN)" ] ; then cd $(BIN) ; rm -f core $(PROGS) ; fi
+
+static:
+	$(MAKE) FFLAGS="$(FFLAGS) $(STATICFLAGS)"
 
 libmangle.a: $(COBJ) $(FOBJ) Makefile
 	@ if [ -r libmangle.a ] ; then echo "updating libmangle.a" ; else echo "creating libmangle.a" ; fi
