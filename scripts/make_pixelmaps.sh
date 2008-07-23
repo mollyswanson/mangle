@@ -7,7 +7,7 @@
 #the input mask sdss_dr7safe0_res6d.pol, pixelmap files will be
 #sdss_dr7safe0_res6d.pol.1d, sdss_dr7safe0_res6d.pol.2d, etc.
 #
-#if a galaxy file is given, this script also uses polyid to find which pixels
+#if a galaxy file is given, this script also uses polyid to find in which pixels
 #each galaxy in the list lies.  The input galaxy file can have any number of columns,
 #but the first 2 columns should be the RA and dec.
 #output galaxy files for each resolution will attach the pixel number to the end of 
@@ -59,22 +59,25 @@ if [ "$gals" == 0 ] ; then
     cutweights=0
     gals=
 fi
-if [ "$cutweights" == "" ] ; then
+if [ "$cutweights" = "" ] ; then
     cutweights=1
 fi
 
 dresmax=6
 dscheme="d"
 
+head -n 100 $mask > jmaskhead
+
 #grab pixelization info from input file
-awk '/pixelization/{print $0}' < $mask > jpix
+awk '/pixelization/{print $0}' < jmaskhead > jpix
 resmax=`awk '{print substr($2, 1, length($2)-1)}' < jpix`
 scheme=`awk '{print substr($2, length($2))}' < jpix`
 rm jpix
 
 #check if input file is snapped and balkanized
-snapped=`awk '/snapped/{print $1}' < $1`
-balkanized=`awk '/balkanized/{print $1}' < $1`
+snapped=`awk '/snapped/{print $1}' < jmaskhead`
+balkanized=`awk '/balkanized/{print $1}' < jmaskhead`
+rm jmaskhead
 
 #if input file is not pixelized, snapped, and balkanized, exit.
 #if input file is pixelized to a fixed resolution, use it as is.
@@ -132,24 +135,7 @@ for (( res=1; res<=$resmax; res++ ))
   if [ ! "$gals" == "" ] ; then
       if [ -e "$gals" ] ; then 
 	  outgals=$gals.$res$scheme
-	  
-  #count number of columns in input galaxy file
-	  head -n 1 $gals > jgals
-	  numfields=`awk '{print NF}' jgals`
-	  rm jgals
-	  
-  #run polyid on galaxy file and assemble output galaxy files with pixel numbers
-	  echo "Running polyid on pixelmap for resolution $res ... "
-	  $MANGLEBINDIR/polyid $outmask $gals j1 || exit
-	  tail +2 j1 > j2
-	  awk '{print $3}' j2 > j3
-	  paste $gals j3 > j4
-	  awk "NF == ($numfields+1) {print \$0}" j4 > $outgals
-	  rm j1 j2 j3 j4
-	  
-	  count=`wc -l < $outgals`
-	  echo ""
-	  echo "wrote $count galaxies in resolution $res pixels to $outgals."
+	  $MANGLESCRIPTSDIR/polyid_gals.sh $outmask $gals $outgals
       else 
 	  echo >&2 "ERROR: input galaxy file $gals not found!"
 	  exit 1

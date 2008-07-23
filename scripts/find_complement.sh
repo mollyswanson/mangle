@@ -30,11 +30,13 @@ if [ "$mask" = "" ] || [ "$complement" = "" ] ; then
     exit 1
 fi
 
+head -n 100 $mask > jmaskhead
+
 #grab pixelization info from input files
-awk '/pixelization/{print $0}' < $mask > jpix
+awk '/pixelization/{print $0}' < jmaskhead > jpix
 res=`awk '{print substr($2, 1, length($2)-1)}' < jpix`
 scheme=`awk '{print substr($2, length($2))}' < jpix`
-rm jpix
+rm jpix jmaskhead
 
 #if input file is unpixelized, pixelize it
 #if input file is pixelized to a fixed resolution, use it as is.

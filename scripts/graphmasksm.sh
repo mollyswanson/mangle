@@ -77,7 +77,9 @@ fi
 if [ -e smerr.temp ] || [ ! -e $2 ]; then
     echo <&2 "ERROR: error in sm plotting script."
     echo <&2 "See log in sm.temp for more details."
-    rm smerr.temp
+    if [ -e smerr.temp ]; then
+	rm smerr.temp
+    fi
     exit 1
 fi
 rm sm.temp

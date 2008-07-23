@@ -72,15 +72,18 @@ if [ ! -e $healpixfile ] ; then
     fi
 fi
 
+head -n 100 $mask > jmaskhead
+
 #grab pixelization info from input file
-awk '/pixelization/{print $0}' < $1 > jpix
+awk '/pixelization/{print $0}' < jmaskhead > jpix
 res1=`awk '{print substr($2, 1, length($2)-1)}' < jpix`
 scheme1=`awk '{print substr($2, length($2))}' < jpix`
 rm jpix
 
 #check if input file is snapped and balkanized
-snapped=`awk '/snapped/{print $1}' < $1`
-balkanized=`awk '/balkanized/{print $1}' < $1`
+snapped=`awk '/snapped/{print $1}' < jmaskhead`
+balkanized=`awk '/balkanized/{print $1}' < jmaskhead`
+rm jmaskhead
 
 #if input file is unpixelized, pixelize it
 #if input file is pixelized to the correct resolution, use it as is.
