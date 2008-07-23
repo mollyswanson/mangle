@@ -39,14 +39,17 @@ if [ "$pixargs" = "" ] ; then
     pixargs="-Ps0,6"
 fi
 
+head -n 100 $mask > jmaskhead
+head -n 100 $trimmer > jtrimmerhead
+
 #grab pixelization info from input files
-awk '/pixelization/{print $0}' < $mask > jpix
+awk '/pixelization/{print $0}' < jmaskhead > jpix
 res1=`awk '{print substr($2, 1, length($2)-1)}' < jpix`
 scheme1=`awk '{print substr($2, length($2))}' < jpix`
-awk '/pixelization/{print $0}' < $trimmer > jpix
+awk '/pixelization/{print $0}' < jtrimmerhead > jpix
 res2=`awk '{print substr($2, 1, length($2)-1)}' < jpix`
 scheme2=`awk '{print substr($2, length($2))}' < jpix`
-rm jpix
+rm jpix jmaskhead jtrimmerhead
 
 #if input files are pixelized, make sure they are consistent:
 if [ ! "$res1" = "" ] && [ ! "$res2" = "" ] ; then

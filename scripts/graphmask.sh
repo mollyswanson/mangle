@@ -61,7 +61,9 @@ else
 fi
 if [ -e matlabexit.temp ] || [ ! -e $2 ]; then
     echo <&2 "ERROR: error in matlab plotting script."
-    rm matlabexit.temp
+    if [ -e matlabexit.temp ]; then
+	rm matlabexit.temp
+    fi
     exit 1
 fi
 echo all done!
