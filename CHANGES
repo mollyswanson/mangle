@@ -1,3 +1,18 @@
+25 July 2008
+MANGLE 2.1 RELEASE
+Upgrades from mangle2.0:
+-added versions for Mac OSX (Intel and PowerPC)
+-added versions that use real*8 in fortran and double in C (as opposed to real*10 and long double)
+-compiled binaries statically to allow for greater portability
+-added new example scripts (including an SDSS example) 
+-made extensive improvements to existing scripts
+-added a script to automatically set up mangle environment variables
+-added "snapped" and "balkanized" keywords so polygon files can automatically track whether they've been snapped or balkanized
+-fixed bug in rasterize that assigned the wrong weights to output polygons
+
+--Molly Swanson
+--------------------------------------------------------------------------------
+
 28 Nov 2007
 MANGLE 2.0 RELEASE
 Upgrades from mangle1.4.1:
