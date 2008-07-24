@@ -74,7 +74,7 @@ if [ ! -e $healpixfile ] ; then
     fi
 fi
 
-head -n 100 $mask > jmaskhead
+head -n 100 $1 > jmaskhead
 
 #grab pixelization info from input file
 awk '/pixelization/{print $0}' < jmaskhead > jpix
