@@ -5,6 +5,7 @@
 #output files for further examination.
 #
 #USAGE: mangle_testsuite.sh > test.log
+mkdir test
 
 echo "Setting mangle environment variables"
 cd ..
@@ -15,8 +16,7 @@ echo "MANGLESCRIPTSDIR=$MANGLESCRIPTSDIR"
 echo "MANGLEDATADIR=$MANGLEDATADIR"
 
 echo "Checking if unformatted fortran files are readable."
-echo "If they are, you will NOT be prompted to read formatted files." 
-cd ../2df100k
+cd masks/2df100k
 weight -z2dF100k ngp_fields.dat jnf || exit
 weight -z2dF100k sgp_fields.dat jnf || exit
 cd ../2df230k
@@ -24,10 +24,8 @@ weight -z2dF230k ngp_fields.dat jnf || exit
 weight -z2dF230k sgp_fields.dat jnf || exit
 rm jnf
 
-mkdir test
-
 echo "Running mangle on 2qz10k mask ..."
-cd ../masks/2qz10k/
+cd ../2qz10k/
 2qz.sh
 if [ -e 2qz_res4s.eps ]; then
     mv 2qz_res4s.eps ../../scripts/test
@@ -75,6 +73,7 @@ poly2poly rasterized_mask1.dat rasterized_mask1.pol
 echo "Making pixelmaps of 2qz north mask ..."
 cp ../../masks/2qz10k/azel.dat .
 make_pixelmaps.sh 2qz_north_res4s.pol azel.dat 0
+rm azel.dat
 
 if which matlab ; then
     poly2poly -ol30 trimmed_mask.pol trimmed_mask.list
@@ -82,10 +81,10 @@ if which matlab ; then
     rm trimmed_mask.list*
     poly2poly -ol30 rasterized_mask.pol rasterized_mask.list
     graphmask.sh rasterized_mask.list rasterized_mask.eps
-    rm rasterize_mask.list*
+    rm rasterized_mask.list*
     poly2poly -ol30 rasterized_mask1.pol rasterized_mask1.list
     graphmask.sh rasterized_mask1.list rasterized_mask1.eps
-    rm rasterize_mask1.list*
+    rm rasterized_mask1.list*
     for(( i=1; i<=4; i++ ))
       do
       poly2poly -ol30 2qz_north_res4s.pol.${i}s jpix.list
