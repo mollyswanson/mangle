@@ -109,6 +109,7 @@ elif which sm ; then
     done
 fi
 cd ..
-tar cfz test.tar.gz test
 echo >&2 "mangle test suite complete!  Output files are in test.tar.gz"
+mv test.log test
+tar cfz test.tar.gz test
 
