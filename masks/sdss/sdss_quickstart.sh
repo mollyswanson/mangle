@@ -14,7 +14,7 @@ if [ "$MANGLEDATADIR" = "" ] ; then
     MANGLEDATADIR="../../masks"
 fi
 
-sample='dr4plus'
+sample='dr6'
 cuts='safe0'
 
 user=`whoami`
