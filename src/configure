@@ -61,6 +61,7 @@ if [ "$OS" != "Linux" ] && [ "$OS" != "Darwin" ] && [ "$OS" != "SunOS" ] ; then
     OS="Linux"
 fi
 
+#Start of Makefile
 echo "#Makefile for $OS $ARCH $BYTES generated with configure." > Makefile
 
 cat <<EOF >> Makefile
@@ -71,8 +72,11 @@ cat <<EOF >> Makefile
 
 EOF
 
+#For real*10 version of Mangle, add compiler flags to the Makefile for
+#Linux, Darwin, Darwinppc, or SunOS
 if [ "$BYTES" = "real10" ]; then
     case $OS in
+#Linux compiler flags:
 	Linux)
 cat <<EOF >> Makefile
 #------
@@ -91,6 +95,7 @@ all: mangle
 
 EOF
 	    ;;
+#Intel Mac compiler flags:
 	Darwin)
 cat <<EOF >> Makefile	    
 #------
@@ -115,7 +120,12 @@ STATICFLAGS:= -nodefaultlibs -lSystem -lgcc -lm -lgfortran_static
 all: mangle
 
 EOF
+echo "WARNING: To compile statically with gfortran (i.e., using 'make static'),"
+echo "you need to make a symbolic link to the static gfortran library as follows:"
+echo "cd /usr/local/gfortran/lib (or wherever gfortran is installed)"
+echo "sudo ln -s libgfortran.a libgfortran_static.a"
 	    ;;
+#PPC Mac compiler flags:
 	Darwinppc)
 cat <<EOF >> Makefile	    
 #------
@@ -141,24 +151,25 @@ all: mangle
 
 EOF
 	    ;;
+#SunOS compiler flags:
 	SunOS)
 cat <<EOF >> Makefile	    
 #----
 # Sun
 
-CC = cc
-CFLAGS = -O -DSUN
+#CC = cc
+#CFLAGS = -O -DSUN
 
-#CC = gcc
-#CFLAGS = -g -O3 -DGCC
+CC = gcc
+CFLAGS = -g -O3 -DGCC
 
-F77 = f77
-#FFLAGS = -u -O -pg -DSUN
-FFLAGS = -u -O -DSUN
+#F77 = f90
+##FFLAGS = -u -O -pg -DSUN
+#FFLAGS = -u -O -DSUN
 
-## gnu g77 (which assumes no SAVE)
-#F77 = g77
-#FFLAGS = -Wimplicit -g -O3 -DG77
+# gnu gfortran
+F77 = gfortran
+FFLAGS = -W -g -O3 -DGFORTRAN -ff2c
 
 #MAKE=make
 
@@ -168,8 +179,11 @@ EOF
 	    ;;
     esac
 
+#If real*10 is not specified, default to real*8 version and add compiler 
+#flags to the Makefile for Linux, Darwin, Darwinppc, or SunOS
 else
     case $OS in
+#Linux compiler flags:
 	Linux)
 cat <<EOF >> Makefile	    
 #------
@@ -194,6 +208,7 @@ all: mangle
 
 EOF
 	    ;;
+#Intel Mac compiler flags:
 	Darwin)
 cat <<EOF >> Makefile	    
 #------
@@ -212,6 +227,7 @@ all: mangle
 
 EOF
 	    ;;
+#PPC Mac compiler flags:
 	Darwinppc)
 
 cat <<EOF >> Makefile	    
@@ -231,20 +247,21 @@ all: mangle
 
 EOF
 	    ;;
+#SunOS compiler flags:
 	SunOS)
 cat <<EOF >> Makefile	    
 #----
 # Sun
 
 CC = cc
-CFLAGS = -O -DSUN
+CFLAGS = -O -DSUN -m32
 
 #CC = gcc
 #CFLAGS = -g -O3 -DGCC
 
 F77 = f77
 #FFLAGS = -u -O -pg -DSUN
-FFLAGS = -u -O -DSUN
+FFLAGS = -u -O -DSUN -m32
 
 ## gnu g77 (which assumes no SAVE)
 #F77 = g77
