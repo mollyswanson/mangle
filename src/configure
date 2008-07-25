@@ -120,6 +120,10 @@ STATICFLAGS:= -nodefaultlibs -lSystem -lgcc -lm -lgfortran_static
 all: mangle
 
 EOF
+echo "WARNING: To compile statically with gfortran (i.e., using 'make static'),"
+echo "you need to make a symbolic link to the static gfortran library as follows:"
+echo "cd /usr/local/gfortran/lib (or wherever gfortran is installed)"
+echo "sudo ln -s libgfortran.a libgfortran_static.a"
 	    ;;
 #PPC Mac compiler flags:
 	Darwinppc)
