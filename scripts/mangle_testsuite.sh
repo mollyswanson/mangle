@@ -40,7 +40,7 @@ mv 2qz_north_res4s.pol 2qz_south_res4s.pol  ../../scripts/test
 
 rm 2qz_*
 
-samp=dr4plus
+samp=dr6
 echo "Running mangle on slice of SDSS $samp mask ..."
 cd ../sdss
 sdss_quickstart.sh

@@ -36,7 +36,7 @@ fi
 #Warnings
 if [ "$ARCH" = "ppc" ]; then
     OS=$OS$ARCH
-    if ["$BYTES" = "real10" ]; then
+    if [ "$BYTES" = "real10" ]; then
 	echo "WARNING: the real*10 version of mangle has not yet been"
 	echo "successfully compiled on a PPC Mac.  Please contact the mangle"
 	echo "development team (tegmark@mit.edu) if you manage to succeed!"
@@ -55,7 +55,7 @@ if [ "$ARCH" = "ppc64" ]; then
     echo "if you manage to compile mangle on this system!"
 fi
 
-if [ "$OS" != "Linux" ] && [ "$OS" != "Darwin" ] && [ "$OS" != "SunOS" ] ; then
+if [ "$OS" != "Linux" ] && [ "$OS" != "Darwin" ] && [ "$OS" != "Darwinppc" ] && [ "$OS" != "SunOS" ] ; then
     echo "WARNING: this configure script does not support $OS."
     echo "Attempting to use configuration for Linux ..."
     OS="Linux"
@@ -122,8 +122,10 @@ all: mangle
 EOF
 echo "WARNING: To compile statically with gfortran (i.e., using 'make static'),"
 echo "you need to make a symbolic link to the static gfortran library as follows:"
+echo ""
 echo "cd /usr/local/gfortran/lib (or wherever gfortran is installed)"
 echo "sudo ln -s libgfortran.a libgfortran_static.a"
+echo ""
 	    ;;
 #PPC Mac compiler flags:
 	Darwinppc)
