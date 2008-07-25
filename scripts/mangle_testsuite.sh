@@ -46,8 +46,8 @@ cd ../sdss
 sdss_quickstart.sh
 if [ -e sdss_${samp}safe0_slice.eps ]; then 
     mv sdss_${samp}safe0_slice.eps ../../scripts/test
-elif [ -e sdss_${samp}safe0_slice1.eps ] && [ -e sdss_${samp}safe0_slice1.eps ]; then
-    mv sdss_${samp}safe0_slice1.eps sdss_${samp}safe0_slice1.eps ../../scripts/test
+elif [ -e sdss_${samp}safe0_slice1.eps ] && [ -e sdss_${samp}safe0_slice2.eps ]; then
+    mv sdss_${samp}safe0_slice1.eps sdss_${samp}safe0_slice2.eps ../../scripts/test
 else
     mv sdss_${samp}safe0_slice.pol ../../scripts/test
 fi
