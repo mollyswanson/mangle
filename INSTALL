@@ -23,15 +23,23 @@ cd <mangle_directory>/src
 make cleanest
 make
 
+To generate a new Makefile for your local system and then compile from scratch
+------------------------------------------------------------------------------
+cd <mangle_directory>/src
+configure
+make cleanest
+make
+
+
 To compile a statically linked version suitable for distribution
----------------------------------------------------------
+----------------------------------------------------------------
 
 cd <mangle_directory>/src
 make cleanest
 make static
 
 Systems on which mangle 2.x has compiled successfully
--------------------------------------------------
+-----------------------------------------------------
 
 real*10 version:
 Linux
@@ -55,7 +63,7 @@ Mac OSX Intel and PowerPC
  g77
 
 Systems on which mangle1.x has compiled successfully
--------------------------------------------------
+----------------------------------------------------
 
 Linux
  gcc versions 2 or 3
@@ -89,4 +97,4 @@ systems.  If you are having problems compiling, please contact the mangle develo
 team via Andrew.Hamilton@colorado.edu or tegmark@mit.edu, and we will try to work
 with you to get mangle to compile on your system.
 
-Updated by mecs 24 July 2008
+Updated by mecs 25 July 2008
