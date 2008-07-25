@@ -1,69 +1,22 @@
+#Makefile for Darwin i386 real8 generated with configure.
+
 ###############################################################################
 # LOCAL CONFIGURATION: EDIT AS DESIRED
 ###############################################################################
 
-##------
-## Gnu
-#
-#CC = gcc
-### linux
-#CFLAGS = -g -O3 -Wall -DLINUX -DGCC -m32
-#
-### Mac OS X
-##CFLAGS = -g -O3 -Wall -DMACOSX -DGCC -m32
-#
-### f2c
-##F77 = fort77
-##FFLAGS = -u -a -C -g -DF2C
-###-O3
-###-pg
-#
-## gnu g77 (which assumes no SAVE)
-#F77 = g77
-#FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 -m32
-#
-### gnu gfortran
-##F77 = gfortran
-##
-###linux
-##FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c -m32
-##STATICFLAGS:= -static
-#
-###mac
-##FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c -m32 
-###STATICFLAGS:= -static-libgfortran
-##STATICFLAGS:= -nodefaultlibs -lSystem -lgcc -lm -lgfortran_static
-## static linking of gfortran library to compile for distribution.
-## hack to work around the fact that the -static-libgfortran flag does 
-## not currently work on Darwin - requires running the following 
-## command to make a symbolic link to the static gfortran library 
-## in /usr/local/gfortran/lib or wherever gfortran is installed:
-## sudo ln -s libgfortran.a libgfortran_static.a
-#
-##MAKE=gmake
-#
-#all: mangle
+#------
+# Gnu
 
-#----
-# Sun
-
-CC = cc
-CFLAGS = -O -DSUN
-
-#CC = gcc
-#CFLAGS = -g -O3 -DGCC -DSUN -m32
-
-F77 = f77
-#FFLAGS = -u -O -pg -DSUN
-FFLAGS = -u -O -DSUN
+CC = gcc
+CFLAGS = -g -O3 -Wall -DMACOSX -DGCC -m32
 
 # gnu g77 (which assumes no SAVE)
-#F77 = g77
-#FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 -m32
+F77 = g77
+FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 -m32
 
-#MAKE=make
+#MAKE=gmake
 
-all: mangler
+all: mangle
 
 #-----------------
 # starlink library
@@ -91,6 +44,18 @@ PROGS = balkanize drangle harmonize map pixelize pixelmap polyid poly2poly ransa
 COBJ = advise_fmt.o braktop_.o cmminf.o convert.o copy_format.o copy_poly.o drandom.o drangle_polys.o dranglepolys_.o dump_poly.o findtop_.o get_pixel.o garea.o gcmlim.o gphbv.o gphi.o gptin.o gspher.o gsphr.o gvert.o gvlim.o gvphi.o harmonize_polys.o harmonizepolys_.o healpix_ang2pix_nest.o healpixpolys.o ikrand.o msg.o new_poly.o new_vert.o partition_poly.o places.o poly_id.o poly_sort.o prune_poly.o rasterize.o rdangle.o rdline.o rdmask.o rdmask_.o rdspher.o rrcoeffs.o scale.o sdsspix.o search.o snap_poly.o split_poly.o strcmpl.o strdict.o vmid.o weight_fn.o which_pixel.o wrangle.o wrho.o wrmask.o wrrrcoeffs.o wrspher.o
 
 FOBJ = azel.s.o azell.s.o braktop.s.o felp.s.o fframe.s.o findtop.s.o garea.s.o gaream.s.o gcmlim.s.o gphi.s.o gphim.s.o gphbv.s.o gptin.s.o gsphera.s.o gspher.s.o gsubs.s.o gvert.s.o gvlim.s.o gvphi.s.o iylm.s.o pix2vec_nest.s.o twodf100k.o twodf230k.o twoqz.o wlm.s.o wrho.s.o
+
+# objects not already present (will try to extract them from libmangle.a)
+OBJ := $(strip $(foreach objfile, $(COBJ) $(FOBJ), $(shell if [ ! -r $(objfile) ]; then echo $(objfile); fi)))
+
+mangle:
+	@ if [ -r libmangle.a -a "$(OBJ)" ] ; then \
+		echo "extracting files from libmangle.a" ; \
+		ar xo libmangle.a $(OBJ) &> /dev/null ; \
+		rm -f __.SYMDEF ; \
+	fi
+	@ $(MAKE) mangler
+	@ rm -f $(COBJ) $(FOBJ)
 
 mangler:
 	$(MAKE) libmangle.a $(PROGS)
