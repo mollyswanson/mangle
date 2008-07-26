@@ -199,7 +199,7 @@ if [ "$OUT" != 0 ]; then
    
     if which ud_grade >& /dev/null && which map2gif >& /dev/null ; then
 	$MANGLESCRIPTSDIR/plotmap.sh $4 $3 $5 || exit
-	echo >&2 "Rasterized mask image file written to $5."
+	echo "Rasterized mask image file written to $5."
     else
 	echo >&2 "ud_grade and/or map2gif not found!"
 	echo >&2 "In order to plot a gif image of $3, you need to install HEALPix,"
