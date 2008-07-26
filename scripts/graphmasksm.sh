@@ -62,21 +62,21 @@ if [ $# -ge 2 ]; then
 	fi
 	sm -m $MANGLESCRIPTSDIR/graphmask.sm $1 $2 $3 $4 $5 $6 $title $outlines > sm.temp
     else
-	echo <&2 "ERROR: file $1 not found."
+	echo >&2 "ERROR: file $1 not found."
 	exit 1
     fi
 else
-    echo <&2 "USAGE: graphmasksm.sh <infile> <outfile> [<ramin> <ramax>] [<decmin> <decmax>] [<title>] [<outlines>]"
-    echo <&2 "EXAMPLES:" 
-    echo <&2 "default range, no outlines: graphmasksm.sh \"dr4/safe0/sdss_dr4safe0_mask.grph\" \"dr4/safe0/sdss_dr4safe0_mask.eps\""
-    echo <&2 "defined range, title, no outlines: graphmasksm.sh sdss_slice.grph sdss_slice.eps -45 35 8 21 \"SDSS slice\""
-    echo <&2 "defined range, no title, outlines: graphmasksm.sh sdss_slice.grph sdss_slice.eps -45 35 8 21 \" \" on"
-    echo <&2 "default range, no title, outlines: graphmasksm.sh sdss_slice.grph sdss_slice.eps 0 0 0 0 \" \" on"
+    echo >&2 "USAGE: graphmasksm.sh <infile> <outfile> [<ramin> <ramax>] [<decmin> <decmax>] [<title>] [<outlines>]"
+    echo >&2 "EXAMPLES:" 
+    echo >&2 "default range, no outlines: graphmasksm.sh \"dr4/safe0/sdss_dr4safe0_mask.grph\" \"dr4/safe0/sdss_dr4safe0_mask.eps\""
+    echo >&2 "defined range, title, no outlines: graphmasksm.sh sdss_slice.grph sdss_slice.eps -45 35 8 21 \"SDSS slice\""
+    echo >&2 "defined range, no title, outlines: graphmasksm.sh sdss_slice.grph sdss_slice.eps -45 35 8 21 \" \" on"
+    echo >&2 "default range, no title, outlines: graphmasksm.sh sdss_slice.grph sdss_slice.eps 0 0 0 0 \" \" on"
     exit 1
 fi
 if [ -e smerr.temp ] || [ ! -e $2 ]; then
-    echo <&2 "ERROR: error in sm plotting script."
-    echo <&2 "See log in sm.temp for more details."
+    echo >&2 "ERROR: error in sm plotting script."
+    echo >&2 "See log in sm.temp for more details."
     if [ -e smerr.temp ]; then
 	rm smerr.temp
     fi
