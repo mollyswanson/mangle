@@ -4,12 +4,9 @@
 #This script tests the mangle installation and creates a tarball of
 #output files for further examination.
 #
-#USAGE: mangle_testsuite.sh > test.log
+#USAGE: source run_mangle_testsuite > test.log
 mkdir test
 
-echo "Setting mangle environment variables"
-cd ..
-source setup_mangle_environment
 echo "mangle environment variables are:"
 echo "MANGLEBINDIR=$MANGLEBINDIR"
 echo "MANGLESCRIPTSDIR=$MANGLESCRIPTSDIR"
@@ -17,7 +14,7 @@ echo "MANGLEDATADIR=$MANGLEDATADIR"
 echo "PATH=$PATH"
 
 echo "Checking if unformatted fortran files are readable."
-cd masks/2df100k
+cd ../masks/2df100k
 ../../bin/weight -z2dF100k ngp_fields.dat jnf || exit
 ../../bin/weight -z2dF100k sgp_fields.dat jnf || exit
 cd ../2df230k
@@ -76,7 +73,7 @@ cp ../../masks/2qz10k/azel.dat .
 ../../scripts/make_pixelmaps.sh 2qz_north_res4s.pol azel.dat 0
 rm azel.dat
 
-if which matlab ; then
+if which matlab >& /dev/null ; then
     ../../bin/poly2poly -ol30 trimmed_mask.pol trimmed_mask.list
     ../../scripts/graphmask.sh trimmed_mask.list trimmed_mask.eps
     rm trimmed_mask.list*
@@ -92,7 +89,7 @@ if which matlab ; then
       graphmask.sh jpix.list pixmap${i}.eps
       rm jpix.list*
     done
-elif which sm ; then
+elif which sm >& /dev/null ; then
     ../../bin/poly2poly -og30 trimmed_mask.pol trimmed_mask.grph
     ../../scripts/graphmasksm.sh trimmed_mask.grph trimmed_mask.eps
     rm trimmed_mask.grph

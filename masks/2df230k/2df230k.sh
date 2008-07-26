@@ -165,7 +165,7 @@ eps="2df230k${restag}.eps"
 neps="2df230k_north${restag}.eps"
 seps="2df230k_south${restag}.eps"
 
-if which matlab ; then
+if which matlab >& /dev/null ; then
 # name of output file to contain matlab graphics
     list="2df230k${restag}.list"
 
@@ -181,7 +181,7 @@ if which matlab ; then
 	echo "Made a figure illustrating the 2dF 230k mask:" 
         echo "$eps, $neps, $seps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figures."  
-    elif which sm ; then
+    elif which sm >& /dev/null ; then
 	echo "Using Supermongo to plot the 2dF 230k mask:"
 	$MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps 0 0 0 0 "Completeness mask for 2dF 230k"
 	if [ $? -eq 0 ]; then
@@ -195,7 +195,7 @@ if which matlab ; then
 	echo "(with the mapping toolbox) or Supermongo, or you can plot $grph"
 	echo "using your own favorite plotting tool."
     fi
-elif which sm ; then
+elif which sm >& /dev/null ; then
     echo "Using Supermongo to plot the 2dF 100k mask:"
     $MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps 0 0 0 0 "Completeness mask for 2dF 230k"
     if [ $? -eq 0 ]; then
