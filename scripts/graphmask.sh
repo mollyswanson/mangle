@@ -35,7 +35,7 @@ if [ $# -eq 2 ]; then
 	fi
 	matlab -nodisplay -r addpath\(\'$MANGLESCRIPTSDIR\'\)\;graphmask\(\'$1\',\'$2\'\)
     else
-	echo <&2 "ERROR: file $1 not found."
+	echo >&2 "ERROR: file $1 not found."
 	exit 1
     fi
 elif [ $# -ge 6 ]; then
@@ -47,20 +47,20 @@ elif [ $# -ge 6 ]; then
 	matlab -nodisplay < jgraphtemp.m
 	rm jgraphtemp.m
     else
-	echo <&2 "ERROR: file $1 not found."
+	echo >&2 "ERROR: file $1 not found."
 	exit 1
     fi
 else
-    echo <&2 "USAGE: graphmask.sh <infile> <outfile> [<ramin> <ramax> <decmin> <decmax>] [<title>] [<outlines>]"
-    echo <&2 "EXAMPLES:" 
-    echo <&2 "fullsky, no outlines: graphmask.sh \"dr4/safe0/sdss_dr4safe0_mask.list\" \"dr4/safe0/sdss_dr4safe0_mask.eps\""
-    echo <&2 "defined range, title, no outlines: graphmask.sh sdss_slice.list sdss_slice.eps -45 35 8 21 \"SDSS slice\""
-    echo <&2 "defined range, no title, outlines: graphmask.sh sdss_slice.list sdss_slice.eps -45 35 8 21 \"\" on"
-    echo <&2 "fullsky, no title, outlines: graphmask.sh sdss_slice.list sdss_slice.eps 0 0 0 0 \"\" on"
+    echo >&2 "USAGE: graphmask.sh <infile> <outfile> [<ramin> <ramax> <decmin> <decmax>] [<title>] [<outlines>]"
+    echo >&2 "EXAMPLES:" 
+    echo >&2 "fullsky, no outlines: graphmask.sh \"dr4/safe0/sdss_dr4safe0_mask.list\" \"dr4/safe0/sdss_dr4safe0_mask.eps\""
+    echo >&2 "defined range, title, no outlines: graphmask.sh sdss_slice.list sdss_slice.eps -45 35 8 21 \"SDSS slice\""
+    echo >&2 "defined range, no title, outlines: graphmask.sh sdss_slice.list sdss_slice.eps -45 35 8 21 \"\" on"
+    echo >&2 "fullsky, no title, outlines: graphmask.sh sdss_slice.list sdss_slice.eps 0 0 0 0 \"\" on"
     exit 1
 fi
 if [ -e matlabexit.temp ] || [ ! -e $2 ]; then
-    echo <&2 "ERROR: error in matlab plotting script."
+    echo >&2 "ERROR: error in matlab plotting script."
     if [ -e matlabexit.temp ]; then
 	rm matlabexit.temp
     fi

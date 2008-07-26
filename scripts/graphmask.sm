@@ -82,7 +82,7 @@ graphmask 28	# © M E C Swanson 2008
 				write standard Formatting error in line $i of $1
 				write standard Your data file probably contains a line over 1500 characters long.
 				write standard Please try to make your data file with shorter lines:
-				write standard i.e., use poly2poly -og12 -p3 instead of poly2poly -og30.
+				write standard i.e., use poly2poly -og10 -p3 instead of poly2poly -og30.
 				write smerr.temp 1
 				quit
 			}				
