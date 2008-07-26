@@ -197,7 +197,7 @@ if [ "$OUT" != 0 ]; then
 	exit 1
     fi
    
-    if which ud_grade && which map2gif ; then
+    if which ud_grade >& /dev/null && which map2gif >& /dev/null ; then
 	$MANGLESCRIPTSDIR/plotmap.sh $4 $3 $5 || exit
 	echo >&2 "Rasterized mask image file written to $5."
     else

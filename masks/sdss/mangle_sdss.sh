@@ -96,7 +96,7 @@ echo "each line is a sequence of az, el points delineating the perimeter of a po
 
 # for plotting with the matlab script
 
-if which matlab ; then
+if which matlab >& /dev/null ; then
 # name of output file to contain matlab graphics
 
     echo "$MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $pol $list"
@@ -109,7 +109,7 @@ if which matlab ; then
 	echo "Made a figure illustrating the SDSS $1 $2 mask: $eps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
 ###uncomment to automatically plot usng the sm script -- sm tends to get overloaded with the SDSS mask
-#    elif which sm ; then
+#    elif which sm >& /dev/null ; then
 #	echo "Using Supermongo to plot the SDSS $1 $2 mask:"
 #	$MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps 0 0 0 0 "Completeness mask for SDSS $sample $cuts"
 #	if [ $? -eq 0 ]; then
@@ -124,7 +124,7 @@ if which matlab ; then
 	echo "using your own favorite plotting tool."
     fi
 ###uncomment to automatically plot usng the sm script -- sm tends to get overloaded with the SDSS mask
-#elif which sm ; then
+#elif which sm >& /dev/null ; then
 #    echo "Using Supermongo to plot the SDSS $1 $2 mask:"
 #    $MANGLESCRIPTSDIR/graphmasksm.sh $grph $eps 0 0 0 0 "Completeness mask for SDSS $sample $cuts"
 #    if [ $? -eq 0 ]; then

@@ -57,21 +57,19 @@ CURRENTSHELL=`basename $SHELL`
 #export environment variables and put bin and scripts directories in the path
 case $CURRENTSHELL in
     sh|bash|ksh)
-	cat <<EOF >> setup
+	cat <<EOF > setup_script
 export MANGLEBINDIR=$MANGLEBINDIR
 export MANGLESCRIPTSDIR=$MANGLESCRIPTSDIR
 export MANGLEDATADIR=$MANGLEDATADIR
 export PATH=$PATH:$MANGLEBINDIR:$MANGLESCRIPTSDIR
-#export SMPATH=$MANGLESCRIPTSDIR/
 EOF
 	;;
     csh|tcsh)
-	cat <<EOF >> setup
+	cat <<EOF >> setup_script
 setenv MANGLEBINDIR $MANGLEBINDIR
 setenv MANGLESCRIPTSDIR $MANGLESCRIPTSDIR
 setenv MANGLEDATADIR $MANGLEDATADIR    
 setenv PATH $PATH:$MANGLEBINDIR:$MANGLESCRIPTSDIR
-#setenv SMPATH $MANGLESCRIPTSDIR/
 EOF
 	;;
     *)
