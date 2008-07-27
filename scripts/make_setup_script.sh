@@ -24,16 +24,10 @@
 #If no command line argument is given, assume we're running in the mangle directory 
 
 if [ "$1" = "" ]; then
-    CURRENTSHELL=`basename $SHELL`
-else
-    CURRENTSHELL=`basename $1`
-fi
-
-if [ "$2" = "" ]; then
     MANGLEDIR=$PWD/
 #otherwise use the path in the first command-line argument as $MANGLEDIR
 else
-    MANGLEDIR=$2
+    MANGLEDIR=$1
 fi
 
 MANGLEBINDIR="${MANGLEDIR}bin"
@@ -60,28 +54,24 @@ if [ ! -d $MANGLEBINDIR ] || [ ! -d $MANGLESCRIPTSDIR ] || [ ! -d $MANGLEDATADIR
 fi
  
 #export environment variables and put bin and scripts directories in the path
-case $CURRENTSHELL in
-    sh|bash|ksh)
-	cat <<EOF > setup_script
+if export MANGLEBINDIR=$MANGLEBINDIR >& /dev/null ; then
+    cat <<EOF > setup_script
 export MANGLEBINDIR=$MANGLEBINDIR
 export MANGLESCRIPTSDIR=$MANGLESCRIPTSDIR
 export MANGLEDATADIR=$MANGLEDATADIR
 export PATH=$PATH:$MANGLEBINDIR:$MANGLESCRIPTSDIR
 EOF
-	;;
-    csh|tcsh)
-	cat <<EOF >> setup_script
+elif setenv MANGLEBINDIR $MANGLEBINDIR >& /dev/null ; then
+    cat <<EOF > setup_script
 setenv MANGLEBINDIR $MANGLEBINDIR
 setenv MANGLESCRIPTSDIR $MANGLESCRIPTSDIR
 setenv MANGLEDATADIR $MANGLEDATADIR    
 setenv PATH $PATH:$MANGLEBINDIR:$MANGLESCRIPTSDIR
 EOF
-	;;
-    *)
-    echo >&2 "ERROR: $MANGLESCRIPTSDIR/make_setup_script.sh does" 
-    echo >&2 "not know what to do for your shell, which is: $CURRENTSHELL."
+else       
+    echo >&2 "ERROR: did not detect either export or setenv in your shell." 
+    echo >&2 "make_setup_script.sh cannot set the mangle environment variables."
     exit 1
-	;;
-esac
+fi
 
 
