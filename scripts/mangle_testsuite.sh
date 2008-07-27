@@ -62,7 +62,7 @@ echo "Rasterizing 2qz north mask ... "
 rm ../../masks/healpix/healpix_polys/nside16_p5s.pol
 ../../scripts/healpixrast.sh 2qz_north_res4s.pol 16 rasterized_mask.pol
 ../../scripts/healpixrast2fits.sh 2qz_north_res4s.pol 16 rasterized_mask.fits 16 rasterized_mask.gif
-../../scripts/call fits2dat_binary.x 1 16 rasterized_mask.fits j2
+../../scripts/call ../../bin/fits2dat_binary.x 1 16 rasterized_mask.fits j2
 echo healpix_weight 3072 > j1
 cat j1 j2 > rasterized_mask1.dat
 rm j1 j2 args.dat

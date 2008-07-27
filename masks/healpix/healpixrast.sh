@@ -68,7 +68,7 @@ if [ ! -e $healpixfile ] ; then
 	exit 1
     else
 	echo "Generating HEALPix polygons with healpixpolys.sh ..."
-	healpixpolys.sh $2 $scheme 0 $pix || exit
+	$MANGLESCRIPTSDIR/healpixpolys.sh $2 $scheme 0 $pix || exit
     fi
 fi
 
