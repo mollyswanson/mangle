@@ -22,11 +22,18 @@
 #source <MANGLEDIR>setup_mangle_environment <MANGLEDIR>
 
 #If no command line argument is given, assume we're running in the mangle directory 
-if [ "$1" == "" ]; then
+
+if [ "$1" = "" ]; then
+    CURRENTSHELL=`basename $SHELL`
+else
+    CURRENTSHELL=`basename $1`
+fi
+
+if [ "$2" = "" ]; then
     MANGLEDIR=$PWD/
 #otherwise use the path in the first command-line argument as $MANGLEDIR
 else
-    MANGLEDIR=$1
+    MANGLEDIR=$2
 fi
 
 MANGLEBINDIR="${MANGLEDIR}bin"
@@ -52,8 +59,6 @@ if [ ! -d $MANGLEBINDIR ] || [ ! -d $MANGLESCRIPTSDIR ] || [ ! -d $MANGLEDATADIR
     exit 1
 fi
  
-CURRENTSHELL=`basename $SHELL`
-
 #export environment variables and put bin and scripts directories in the path
 case $CURRENTSHELL in
     sh|bash|ksh)
