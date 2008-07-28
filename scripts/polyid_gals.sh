@@ -63,7 +63,7 @@ if [ $cut -ne 0 ] ; then
 else
     cp j4 $outgals
 fi
-rm j1 j2 j3 j4
+#rm j1 j2 j3 j4
 
 count=`wc -l < $outgals`
 echo ""

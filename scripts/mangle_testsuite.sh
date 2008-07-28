@@ -69,9 +69,10 @@ rm j1 j2 args.dat
 ../../bin/poly2poly rasterized_mask1.dat rasterized_mask1.pol
 
 echo "Making pixelmaps of 2qz north mask ..."
-cp ../../masks/2qz10k/azel.dat .
+cp ../../masks/2qz10k/azel.dat jazel
+tail +2 jazel > azel.dat
 ../../scripts/make_pixelmaps.sh 2qz_north_res4s.pol azel.dat 0
-rm azel.dat
+rm azel.dat jazel
 
 if which matlab >& /dev/null ; then
     ../../bin/poly2poly -ol30 trimmed_mask.pol trimmed_mask.list
