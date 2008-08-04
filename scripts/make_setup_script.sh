@@ -12,8 +12,8 @@
 #If the above command doesn't work, try 'source setup_mangle_environment $PWD/' 
 #
 #
-#You can also use 'source <MANGLEDIR>setup_mangle_environment.sh <MANGLEDIR>'
-#where <MANGLEDIR> is the path to the base mangle directory, e.g., /home/username/mangle2.0/
+#You can also use 'source <MANGLEDIR>setup_mangle_environment <MANGLEDIR>'
+#where <MANGLEDIR> is the path to the base mangle directory, e.g., /home/username/mangle2.1/
 #
 #To automatically set up the mangle environment variables when you start your shell, 
 #add the following line to your .bashrc (or .tcshrc, or .cshrc, or .login, or .profile) 
@@ -49,10 +49,10 @@ if [ ! -d $MANGLEDATADIR ]; then
 fi
 if [ ! -d $MANGLEBINDIR ] || [ ! -d $MANGLESCRIPTSDIR ] || [ ! -d $MANGLEDATADIR ]; then
     echo >&2 ""
-    echo >&2 "USAGE: type 'source setup_mangle_environment.sh' in mangle 'scripts' directory."
-    echo >&2 "Or use 'source <MANGLEDIR>scripts/setup_mangle_environment.sh <MANGLEDIR>'"
+    echo >&2 "USAGE: type 'source setup_mangle_environment' in the base mangle directory"
+    echo >&2 "Or use 'source <MANGLEDIR>setup_mangle_environment <MANGLEDIR>'"
     echo >&2 "where <MANGLEDIR> is the path to the base mangle directory," 
-    echo >&2 "e.g., /home/username/mangle2.0/"
+    echo >&2 "e.g., /home/username/mangle2.1/"
     exit 1
 fi
  
