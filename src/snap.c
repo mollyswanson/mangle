@@ -138,10 +138,11 @@ void usage(void)
 int snap(int npoly, polygon *poly[/*npoly*/])
 {
 #define WARNMAX         8
-  int i, inull, iprune, nadj, dnadj, warnmax;
+  int i, j, ip, inull, iprune, nadj, dnadj, warnmax;
   int *start;
   int *total;
   int p, max_pixel, ier;
+  long double r;
 
   /* start by sorting polygons by pixel number*/
   poly_sort(npoly,poly,'p');
@@ -176,6 +177,18 @@ int snap(int npoly, polygon *poly[/*npoly*/])
 
   /*turn off warning messages if using more than one pixel*/
   warnmax= (max_pixel<=1) ? WARNMAX : 0;
+
+  /* ensure that rp is a unit vector for all polygon caps*/
+  for (i = 0; i < npoly; i++) {
+    for(ip=0; ip<poly[i]->np; ip++){
+      r = 0.;
+      for (j = 0; j < 3; j++) r += poly[i]->rp[ip][j] * poly[i]->rp[ip][j];
+      if (r != 1.) {
+	r = sqrt(r);
+	for (j = 0; j < 3; j++) poly[i]->rp[ip][j] /= r;
+      }
+    }
+  }
 
   /* snap edges of polygons to each other */
   nadj=0;
