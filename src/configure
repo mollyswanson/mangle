@@ -318,7 +318,7 @@ OBJ := \$(strip \$(foreach objfile, \$(COBJ) \$(FOBJ), \$(shell if [ ! -r \$(obj
 mangle:
 	@ if [ -r libmangle.a -a "\$(OBJ)" ] ; then \\
 		echo "extracting files from libmangle.a" ; \\
-		ar xo libmangle.a \$(OBJ) &> /dev/null ; \\
+		ar xo libmangle.a \$(OBJ) >/dev/null 2>&1 ; \\
 		rm -f __.SYMDEF ; \\
 	fi
 	@ \$(MAKE) mangler
