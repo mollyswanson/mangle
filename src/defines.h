@@ -13,7 +13,7 @@
   If you are making zillions of polygons, chances are it's a silly mistake.
 */
 
-#define NPOLYSMAX	9000000
+#define NPOLYSMAX	90000000
 
 
 /* number of extra caps to allocate to polygon, to allow for later splitting */
