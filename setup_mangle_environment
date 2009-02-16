@@ -18,7 +18,7 @@
 #
 #source <MANGLEDIR>setup_mangle_environment <MANGLEDIR>
 
-export >/dev/null 2>&1
+export >& /dev/null
 ${1}scripts/make_setup_script.sh $? $1 || return
 source setup_script
 /bin/rm setup_script
