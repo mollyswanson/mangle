@@ -41,6 +41,7 @@ void parse_args(int argc, char *argv[])
 		if (strchr(optstr, 'u')) printf(" -u%c,%c", INUNIT, OUTUNIT);
 		if (strchr(optstr, 'p')) printf(" -p%c%s", OUTPHASE, "auto");
 		if (strchr(optstr, 'P')) printf(" -P%c%d,%d", SCHEME,POLYS_PER_PIXEL,RES_MAX);
+		if (strchr(optstr, 'B')) printf(" -B%c", BMETHOD);
 		if (strchr(optstr, 'i')) {
 		    if (!fmt.in) {
 			printf(" -i?%c", INUNITP);
@@ -261,6 +262,17 @@ void parse_args(int argc, char *argv[])
 		    fprintf(stderr, "-%c: expecting option o (old id), n (new id), or p (pixel number=id)\n", opt);
 		} else {
 		    fprintf(stderr, "-%c%s: option %c should be o (old id), n (new id), or p (pixel number=id)\n", opt, optarg, fmt.newid);
+		}
+		exit(1);
+	    }
+	    break;
+	case 'B':		/* set balkanize method */
+	    iscan = sscanf(optarg, " %c", &bmethod);
+	    if (!strchr(BMETHODS, bmethod)) {
+		if (fmt.newid == '-') {
+		    fprintf(stderr, "-%c: expecting option l (last weight), a (add weights together), n (use minimum weight) or x (use maximum weight)\n", opt);
+		} else {
+		    fprintf(stderr, "-%c%s: option %c should be l (last weight), a (add weights together), n (use minimum weight) or x (use maximum weight)\n", opt, optarg, bmethod);
 		}
 		exit(1);
 	    }

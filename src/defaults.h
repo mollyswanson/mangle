@@ -168,3 +168,10 @@ int pixelized=0;                      /*counter for pixelized input files */
 
 int snapped=0;                      /*flag for whether files have been snapped */
 int balkanized=0;                      /*flag for whether files have been balkanized */
+
+/*balkanization method*/
+char bmethod=BMETHOD;
+//Default is for a balkanized polygon to inherit the weight of 
+//the last overlapping polygon in the input polygons.  other options
+//are to add them together (bmethod=a), or to take the minimum 
+//(bmethod=n) or the maximum (bmethod=x) of the weights 

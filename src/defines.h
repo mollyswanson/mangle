@@ -109,4 +109,9 @@
 #define POLYS_PER_PIXEL  40
 #define RES_MAX          10
 
+/*list of balkanize methods */
+#define BMETHODS        "lanx" /*last, add, min, max */
+/*default balkanize method */
+#define BMETHOD         'l'
+
 #endif	/* DEFINES_H */

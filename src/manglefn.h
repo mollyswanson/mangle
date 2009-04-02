@@ -262,11 +262,11 @@ int	snap_polys(format *fmt, int npoly, polygon *poly[/*npoly*/], int, long doubl
 int	snap_poly(polygon *, polygon *, long double, long double);
 int	snap_polyth(polygon *, polygon *, long double, long double, long double);
 
-int	split_poly(polygon **, polygon *, polygon **, long double);
+int	split_poly(polygon **, polygon *, polygon **, long double, char);
 #ifdef	GCC
-int	fragment_poly(polygon **, polygon *, int, int npolys, polygon *[npolys], long double);
+int	fragment_poly(polygon **, polygon *, int, int npolys, polygon *[npolys], long double, char);
 #else
-int	fragment_poly(polygon **, polygon *, int, int npolys, polygon *[/*npolys*/], long double);
+int	fragment_poly(polygon **, polygon *, int, int npolys, polygon *[/*npolys*/], long double, char);
 #endif
 
 int	strcmpl(const char *, const char *);

@@ -159,7 +159,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
 	    if (!polys[k] || (polys[k]->np > 0 && polys[k]->cm[0] == 0.)) continue;
 	    /* fragment */
 	    tol = mtol;
-	    dn = fragment_poly(&polys[k], poly[j], discard, npolys - n, &polys[n], tol);
+	    dn = fragment_poly(&polys[k], poly[j], discard, npolys - n, &polys[n], tol, bmethod);
  
 	    /* error */
 	    if (dn == -1) {

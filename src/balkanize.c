@@ -14,8 +14,8 @@
 //#define	CARRY_ON_REGARDLESS
 
 /* getopt options */
-//const char *optstr = "dqa:b:t:y:m:s:e:v:p:i:o:";
-const char *optstr = "dqm:s:e:v:p:i:o:";
+//const char *optstr = "B:dqa:b:t:y:m:s:e:v:p:i:o:";
+const char *optstr = "B:dqm:s:e:v:p:i:o:";
 
 /* allocate polygons as a global array */
 polygon *polys_global[NPOLYSMAX];
@@ -291,7 +291,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
 	  if (!polys[k] || (polys[k]->np > 0 && polys[k]->cm[0] == 0.)) continue;
 	  /* fragment */
 	  tol = mtol;
-	  dn = fragment_poly(&polys[k], poly[j], discard, npolys - n, &polys[n], tol);
+	  dn = fragment_poly(&polys[k], poly[j], discard, npolys - n, &polys[n], tol, bmethod);
 
 	  /* error */
 	  if (dn == -1) {
