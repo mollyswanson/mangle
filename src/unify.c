@@ -318,17 +318,20 @@ int unify(int *npoly, polygon *poly[/**npoly*/])
 	    continue;
 	}
 	if (poly[i]->np > 0 && poly[i]->cm[0] == 0.) {
-	    if (dnadj == 0) msg("warning from unify: following polygons have zero area and are being discarded:\n");
-            msg(" %d", poly[i]->id);
-            dnadj++;
-	    free_poly(poly[i]);
-	    poly[i] = 0x0;
+	  if (WARNMAX > 0 && dnadj == 0)
+	    msg("unify: the following polygons have zero area and are being discarded:\n");
+	  if (dnadj < WARNMAX) {
+	    msg(" %d", poly[i]->id);
+	  } else if (dnadj == WARNMAX) {
+	    msg(" ... more\n");
+	  }
+	  dnadj++;
+	  free_poly(poly[i]);
+	  poly[i] = 0x0;	  
         }
     }
-    if (dnadj > 0) {
-	msg("\n");
-	msg("unify: %d polygons with zero area were discarded\n", dnadj);
-    }
+    if (WARNMAX > 0 && dnadj > 0 && dnadj <= WARNMAX) msg("\n");
+    if (dnadj > 0) msg("unify: %d polygons with zero area were discarded\n", dnadj);
     nadj += dnadj;
 
     /*unify polygons within each pixel*/

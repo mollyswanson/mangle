@@ -175,3 +175,5 @@ char bmethod=BMETHOD;
 //the last overlapping polygon in the input polygons.  other options
 //are to add them together (bmethod=a), or to take the minimum 
 //(bmethod=n) or the maximum (bmethod=x) of the weights 
+
+int polyid_weight=0;                     /*0= polyid prints id numbers, 1= polyid prints weights*/

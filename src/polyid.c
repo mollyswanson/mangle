@@ -11,7 +11,7 @@
 #include "defaults.h"
 
 /* getopt options */
-const char *optstr = "dqu:p:P:";
+const char *optstr = "dqu:p:P:W";
 
 /* allocate polygons as a global array */
 polygon *poly_global[NPOLYSMAX];
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 void usage(void)
 {
     printf("usage:\n");
-    printf("polyid [-d] [-q] [-u<inunit>[,<outunit>]] [-p[+|-][<n>]] [-P[scheme][<p>][,<r>]] polygon_infile1 [polygon_infile2 ...] azel_infile outfile\n");
+    printf("polyid [-d] [-q] [-u<inunit>[,<outunit>]] [-p[+|-][<n>]] [-P[scheme][<p>][,<r>]] [-W] polygon_infile1 [polygon_infile2 ...] azel_infile outfile\n");
 #include "usage.h"
 }
 
@@ -124,6 +124,7 @@ int poly_ids(char *in_filename, char *out_filename, format *fmt, int npoly, poly
     char az_str[AZEL_STR_LEN], el_str[AZEL_STR_LEN];
     int i, idmax, idmin, idwidth, ird, len, nid, nids, nid0, nid2, np;
     int *id;
+    long double *weight;
     azel v;
     char *out_fn;
     FILE *outfile;
@@ -226,7 +227,14 @@ int poly_ids(char *in_filename, char *out_filename, format *fmt, int npoly, poly
 	sprintf(el_str, "el(%c)", fmt->outunit);
     }
     fprintf(outfile, "%*s %*s", len, az_str, len, el_str);
-    if (npoly > 0) fprintf(outfile, " polygon_ids");
+    if (npoly > 0){
+      if(polyid_weight==1){
+	fprintf(outfile, " polygon_weights");
+      }
+      else{
+	fprintf(outfile, " polygon_ids");	
+      }
+    }
     fprintf(outfile, "\n");
 
     /* interpretive read/write loop */
@@ -273,7 +281,7 @@ int poly_ids(char *in_filename, char *out_filename, format *fmt, int npoly, poly
 	  //if this pixel isn't in the polygon list, go to next parent pixel
 	  if(total[p]==0) continue;
 	  // id numbers of the polygons containing position az, el 
-	  nid = poly_id(total[p], &poly[start[p]], v.az, v.el, &id);
+	  nid = poly_id(total[p], &poly[start[p]], v.az, v.el, &id, &weight);
 	}
 	
 	/* convert az and el from radians to output units */
@@ -284,7 +292,11 @@ int poly_ids(char *in_filename, char *out_filename, format *fmt, int npoly, poly
 	wrangle(v.el, fmt->outunit, fmt->outprecision, AZEL_STR_LEN, el_str);
 	fprintf(outfile, "%s %s", az_str, el_str);
 	for (i = 0; i < nid; i++) {
+	  if(polyid_weight==1){
+	    fprintf(outfile, " %.18Lg", weight[i]);
+	  } else{
 	    fprintf(outfile, " %*d", idwidth, id[i]);
+	  }
 	}
 	fprintf(outfile, "\n");
 	fflush(outfile);
@@ -304,7 +316,11 @@ int poly_ids(char *in_filename, char *out_filename, format *fmt, int npoly, poly
     if (nid2 > 0) msg("%d points were inside >= 2 polygons\n", nid2);
 
     if (outfile != stdout) {
+      if(polyid_weight==1){
+	msg("polyid: %d weights at %d positions written to %s\n", nids, np, out_fn);
+      } else {
 	msg("polyid: %d id numbers at %d positions written to %s\n", nids, np, out_fn);
+      }
     }
     
     free(start);
