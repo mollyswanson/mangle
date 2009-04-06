@@ -1178,7 +1178,7 @@ int wr_midpoint(char *filename, format *fmt, int npolys, polygon *polys[/*npolys
 int wr_weight(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/], int npolyw)
 {
 #undef	PRECISION
-#define	PRECISION	6
+#define	PRECISION	10
     int idmin, idmax, idwidth, ipoly, npoly, precision, width;
     long double weightmax;
     FILE *file;
@@ -1213,7 +1213,8 @@ int wr_weight(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/
 	if (weightmax < fabsl(polys[ipoly]->weight)) weightmax = fabsl(polys[ipoly]->weight);
     }
     precision = (fmt->outprecision >= 0)? fmt->outprecision : PRECISION;
-    width = ((weightmax >= 10.)? floorl(log10l(weightmax)) : 0) + precision + 3;
+    //   width = ((weightmax >= 10.)? floorl(log10l(weightmax)) : 0) + precision + 3; //for %f output
+    width = precision + 7; //for %g output
     if (precision == 0) width--;
 
     /* write header */
@@ -1226,7 +1227,7 @@ int wr_weight(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/
 	if (!polys[ipoly]) continue;
 
 	/* write weight */
-	fprintf(file, "% *.*Lf %*d\n", width, precision, polys[ipoly]->weight, idwidth, polys[ipoly]->id);
+	fprintf(file, "% *.*Lg %*d\n", width, precision, polys[ipoly]->weight, idwidth, polys[ipoly]->id);
 
 	/* increment polygon count */
 	npoly++;

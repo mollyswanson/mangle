@@ -1,3 +1,18 @@
+5 April 2009
+MANGLE 2.2 RELEASE
+Upgrades from mangle2.1:
+-Added option -B to balkanize to add weights together, or take the maximum or minimum weight instead of just using the last weight in the polygon file
+-Added option -W to polyid to write out the weights of the polygons containing each point rather than the id numbers
+-Snap now renormalizes input vectors to ensure that all vectors are exact unit vectors
+-Fixed bug in weight so that weights are not skipped in file when no midpoint is found
+-Upgraded matlab plotting script to allow for an arbitrary range of weights
+-Changed /dev/null paths in shell scripts to avoid bub in some linux flavors
+-Increased NPOLYSMAX to 90000000 
+-Added compile flags to allow mangle to write files larger than 2G
+
+--Molly Swanson
+--------------------------------------------------------------------------------
+
 25 July 2008
 MANGLE 2.1 RELEASE
 Upgrades from mangle2.0:

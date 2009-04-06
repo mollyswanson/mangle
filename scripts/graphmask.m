@@ -117,7 +117,9 @@ end
 ccw=~ispolycw(dec,ra);
 weight(ccw)=0;
 %normalize weights
-weight=(weight+min([weight; 0]))./(max([weight; 1])-min([weight; 0]));
+minweight=min([weight; 0]);
+maxweight=max([weight; 1]);
+weight=(weight+minweight)./(maxweight-minweight);
 %create cell array of colors with each element as grayscale weight
 color=[weight weight weight];
 cellcolor=num2cell(color,2);
@@ -153,15 +155,19 @@ end
 title(plottitle);
 
 %add colorbar
-%axes('Position',[0 0 1 1])
-%axis off
-%colormap('gray')
-%caxis([0 1]);
-%cbar_handle=colorbar;
-%set(cbar_handle,'YTick',[0 .1 .2 .3 .4 .5 .6 .7 .8 .9 1]);
-%set(cbar_handle,'Position',[0.92    0.127    0.025    0.781]);
-
+if(lims)
+    axes('Position',get(gca, 'Position'))
+else
+    axes('Position',[0 0 1 1])
+end
+axis off
+colormap('gray')
+caxis([minweight maxweight]);
+cbar_handle=colorbar;
 fprintf(1,'Done making mask image\n');
+if(~lims)
+     set(cbar_handle,'Position',[0.92    0.127    0.025    0.781]);
+end
 %export image as eps file
 if(~strcmp(outfile,'none'))
     set (gcf, 'Color', [1 1 1])
