@@ -9,7 +9,7 @@
 #If the above command doesn't work, try 'source setup_mangle_environment $PWD/' 
 #
 #
-#You can also use 'source <MANGLEDIR>setup_mangle_environment.sh <MANGLEDIR>'
+#You can also use 'source <MANGLEDIR>setup_mangle_environment <MANGLEDIR>'
 #where <MANGLEDIR> is the path to the base mangle directory, e.g., /home/username/mangle2.0/
 #
 #To automatically set up the mangle environment variables when you start your shell, 

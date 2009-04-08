@@ -185,7 +185,7 @@ int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
   
 	    if (poly) {
 		if (npoly >= npolys) {
-		    fprintf(stderr, "rdmask: number of polygons exceeds maximum %d\n", npolys);
+		    fprintf(stderr, "rdmask: number of polygons exceeds maximum %d\n", NPOLYSMAX);
 		    fprintf(stderr, " if you need more space, enlarge NPOLYSMAX in defines.h, and recompile\n");
 		    goto error;
 		}

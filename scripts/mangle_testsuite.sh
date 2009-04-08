@@ -74,7 +74,7 @@ tail +2 jazel > azel.dat
 ../../scripts/make_pixelmaps.sh 2qz_north_res4s.pol azel.dat 0
 rm azel.dat jazel
 
-if which matlab >& /dev/null ; then
+if which matlab >/dev/null 2>&1 ; then
     ../../bin/poly2poly -ol30 trimmed_mask.pol trimmed_mask.list
     ../../scripts/graphmask.sh trimmed_mask.list trimmed_mask.eps
     rm trimmed_mask.list*
@@ -90,7 +90,7 @@ if which matlab >& /dev/null ; then
       graphmask.sh jpix.list pixmap${i}.eps
       rm jpix.list*
     done
-elif which sm >& /dev/null ; then
+elif which sm >/dev/null 2>&1 ; then
     ../../bin/poly2poly -og30 trimmed_mask.pol trimmed_mask.grph
     ../../scripts/graphmasksm.sh trimmed_mask.grph trimmed_mask.eps
     rm trimmed_mask.grph

@@ -85,7 +85,7 @@ echo "each line is a sequence of az, el points delineating the perimeter of a po
 
 # for plotting with the matlab script
 
-if which matlab >& /dev/null ; then
+if which matlab >/dev/null 2>&1 ; then
 # name of output file to contain matlab graphics
 
     echo "$MANGLEBINDIR/poly2poly -ol$pts_per_twopi $quiet $pol $list"
@@ -97,7 +97,7 @@ if which matlab >& /dev/null ; then
     if [ $? -eq 0 ]; then
 	echo "Made a figure illustrating example slice of the SDSS $sample $cuts mask: $eps" 
 	echo "Type \"ggv $eps\" or \"gv $eps\" to view the figure."  
-    elif which sm >& /dev/null ; then
+    elif which sm >/dev/null 2>&1 ; then
 	echo "$MANGLEBINDIR/poly2poly -og12 -p3 $quiet $pol $grph"
 	$MANGLEBINDIR/poly2poly -og10 -p3 $quiet $pol $grph || exit
 	echo "Data suitable for plotting polygons for the example slice of the SDSS $sample $cuts mask are in $grph:"
@@ -122,7 +122,7 @@ if which matlab >& /dev/null ; then
 	echo "(with the mapping toolbox) or Supermongo, or you can plot $grph"
 	echo "using your own favorite plotting tool."
     fi
-elif which sm >& /dev/null ; then
+elif which sm >/dev/null 2>&1 ; then
     echo "$MANGLEBINDIR/poly2poly -og12 -p3 $quiet $pol $grph"
     $MANGLEBINDIR/poly2poly -og10 -p3 $quiet $pol $grph || exit
     echo "Data suitable for plotting polygons for the example slice of the SDSS $sample $cuts mask are in $grph:"

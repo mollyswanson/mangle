@@ -2,6 +2,7 @@
 © A J S Hamilton 2001
 ------------------------------------------------------------------------------*/
 #include <stdlib.h>
+#include <math.h>
 #include "manglefn.h"
 
 /* number of extra caps to allocate to polygon, to allow for expansion */
@@ -26,7 +27,8 @@
 		1 = poly2 fully encloses poly1;
 		2 = poly2 splits poly1 into two.
 */
-int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, double mtol)
+int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, double mtol, char bmethod)
+
 {
     static polygon *poly = 0x0, *poly4 = 0x0;
 
@@ -34,8 +36,27 @@ int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, double mtol)
     double area, area_tot, cm, tol;
 
     /* poly2 is whole sphere, therefore contains poly1 */
-    if (poly2->np == 0) return(1);
-
+    if (poly2->np == 0){
+      /* set weight according to balkanization scheme: */
+      if(bmethod=='l'){
+	//do nothing - this is the default behavior
+      }
+      else if(bmethod=='a'){
+	(*poly1)->weight=(*poly1)->weight + poly2->weight;
+      }
+      else if(bmethod=='n'){
+	(*poly1)->weight=((*poly1)->weight > poly2->weight)? poly2->weight : (*poly1)->weight ;
+      }
+      else if(bmethod=='x'){
+	(*poly1)->weight=((*poly1)->weight > poly2->weight)? (*poly1)->weight : poly2->weight ;
+      }
+      else{
+	fprintf(stderr, "error in split_poly: balkanize method %c not recognized.\n", bmethod);
+	return(-1);
+      }
+      return(1);
+    }
+    
     /* make sure poly contains enough space for intersection */
     np = (*poly1)->np + poly2->np;
     ier = room_poly(&poly, np, DNP, 0);
@@ -116,6 +137,24 @@ int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, double mtol)
 	  copy_poly(poly4, *poly1);
 	  
 	  /* poly1 successfully split into poly1 and poly3 */
+	  /* set weight according to balkanization scheme: */
+	  if(bmethod=='l'){
+	    //do nothing - this is the default behavior
+	  }
+	  else if(bmethod=='a'){
+	    (*poly3)->weight=(*poly1)->weight + poly2->weight;
+	  }
+	  else if(bmethod=='n'){
+	    (*poly3)->weight=((*poly1)->weight > poly2->weight)? poly2->weight : (*poly1)->weight ;
+	  }
+	  else if(bmethod=='x'){
+	    (*poly3)->weight=((*poly1)->weight > poly2->weight)? (*poly1)->weight : poly2->weight ;
+	  }
+	  else{
+	    fprintf(stderr, "error in split_poly: balkanize method %c not recognized.\n", bmethod);
+	    return(-1);
+	  }
+
 	  return(2);
 
 	} else if (area < area_tot) {
@@ -126,6 +165,23 @@ int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, double mtol)
     }
     
     /* poly2 contains poly1 */
+    /* set weight according to balkanization scheme: */
+    if(bmethod=='l'){
+      //do nothing - this is the default behavior
+    }
+    else if(bmethod=='a'){
+      (*poly1)->weight=(*poly1)->weight + poly2->weight;
+    }
+    else if(bmethod=='n'){
+      (*poly1)->weight=((*poly1)->weight > poly2->weight)? poly2->weight : (*poly1)->weight ;
+    }
+    else if(bmethod=='x'){
+      (*poly1)->weight=((*poly1)->weight > poly2->weight)? (*poly1)->weight : poly2->weight ;
+    }
+    else{
+      fprintf(stderr, "error in split_poly: balkanize method %c not recognized.\n", bmethod);
+      return(-1);
+    }
     return(1);
 
     /* ---------------- error returns ---------------- */
@@ -162,7 +218,8 @@ int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, double mtol)
   Return value: npoly = number of disjoint polygons, excluding poly1,
 			or -1 if error occurred in split_poly().
 */
-int fragment_poly(polygon **poly1, polygon *poly2, int discard, int npolys, polygon *polys[/*npolys*/], double mtol)
+int fragment_poly(polygon **poly1, polygon *poly2, int discard, int npolys, polygon *polys[/*npolys*/], double mtol, char bmethod)
+
 {
     int npoly, nsplit;
     polygon **poly;
@@ -174,7 +231,7 @@ int fragment_poly(polygon **poly1, polygon *poly2, int discard, int npolys, poly
 	/* check space is available */
 	if (npoly >= npolys) return(npoly + 1);
 	/* split */
-	nsplit = split_poly(poly, poly2, &polys[npoly], mtol);
+	nsplit = split_poly(poly, poly2, &polys[npoly], mtol, bmethod);
 	/* error */
 	if (nsplit == -1) return(-1);
 	/* done */

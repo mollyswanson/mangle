@@ -13,7 +13,7 @@
   If you are making zillions of polygons, chances are it's a silly mistake.
 */
 
-#define NPOLYSMAX	9000000
+#define NPOLYSMAX	90000000
 
 
 /* number of extra caps to allocate to polygon, to allow for later splitting */
@@ -108,5 +108,10 @@
 #define SCHEME          's'
 #define POLYS_PER_PIXEL  40
 #define RES_MAX          10
+
+/*list of balkanize methods */
+#define BMETHODS        "lanx" /*last, add, min, max */
+/*default balkanize method */
+#define BMETHOD         'l'
 
 #endif	/* DEFINES_H */

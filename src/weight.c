@@ -167,8 +167,10 @@ int weight(int npoly, polygon *poly[/*npoly*/], char *survey)
 	    if (poly[ipoly]->weight == 0.) nzero++;
 	/* failed to find a point */
 	} else {
+	  //call weight_fn to stay in right place in weight file if reading from weights from a file
+	    weight_fn(v.az, v.el, survey);
 	    if (nomid == 0) msg("weight: failed to find interior point for the following polygons:\n");
-	    msg(" %d", (fmt.newid == 'o')? ipoly : poly[ipoly]->id);
+	    msg(" %d", (fmt.newid == 'n')? ipoly : poly[ipoly]->id);
 	    nomid++;
 	}
     }

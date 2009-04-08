@@ -14,8 +14,8 @@
 //#define	CARRY_ON_REGARDLESS
 
 /* getopt options */
-//const char *optstr = "dqa:b:t:y:m:s:e:v:p:i:o:";
-const char *optstr = "dqm:s:e:v:p:i:o:";
+//const char *optstr = "B:dqa:b:t:y:m:s:e:v:p:i:o:";
+const char *optstr = "B:dqm:s:e:v:p:i:o:";
 
 /* allocate polygons as a global array */
 polygon *polys_global[NPOLYSMAX];
@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
 void usage(void)
 {
     printf("usage:\n");
-    printf("balkanize [-d] [-q] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn|-vp] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] polygon_infile1 [polygon_infile2 ...] polygon_outfile\n");
+    printf("balkanize [-d] [-q] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn|-vp] [-p[+|-][<n>]] [-Bl|-Ba|-Bn|-Bx] [-i<f>[<n>][u]] [-o<f>[u]] polygon_infile1 [polygon_infile2 ...] polygon_outfile\n");
 #include "usage.h"
 }
 
@@ -291,7 +291,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
 	  if (!polys[k] || (polys[k]->np > 0 && polys[k]->cm[0] == 0.)) continue;
 	  /* fragment */
 	  tol = mtol;
-	  dn = fragment_poly(&polys[k], poly[j], discard, npolys - n, &polys[n], tol);
+	  dn = fragment_poly(&polys[k], poly[j], discard, npolys - n, &polys[n], tol, bmethod);
 
 	  /* error */
 	  if (dn == -1) {

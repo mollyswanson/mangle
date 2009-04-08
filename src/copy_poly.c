@@ -123,7 +123,7 @@ void poly_polyn(polygon *poly1, polygon *poly2, int n, int scm, polygon *poly)
    Input: poly = pointer to polygon.
 	  gp[ip], ip=1,np = group number of cap ip.
 	  gpg = group to put in gpoly.
-	  gpoly = pointer to group polgyon.
+	  gpoly = pointer to group polygon.
 */
 void group_poly(polygon *poly, int gp[/*poly->np*/], int gpg, polygon *gpoly)
 {

@@ -69,8 +69,15 @@
       printf("  -P[scheme][<p>][,<r>]\tpixelization scheme: s simple or d sdsspix\n");
       printf("                       \tpixelize to max resolution of <r>, with <p> polys per pixel\n");
     }
+    if (strchr(optstr, 'B')) {
+      printf("  -B[bmethod]\tmethod for combining weights in balkanize: l=last weight in polygon list,\n");
+      printf("             \ta=add weights together, n=minimum weight, x=maximum weight\n");
+    }
     if(strchr(optstr, 'U')) {
       printf("  -U\t\tremove pixelization info by unifying across whole mask\n"); 
+    }
+    if(strchr(optstr, 'W')) {
+      printf("  -W\t\tprint weights in polyid output file rather than id numbers\n"); 
     }
     if (strchr(optstr, 'i')) printf("  -i<f>[<n>][u]\tread polygon_infile in format <f>, with <n> objects per line\n");
 

@@ -113,11 +113,13 @@ if (strcmp(outlines,'on'))
 else
     h=patchesm(dec,ra,'g','Edgecolor','none');
 end
+%normalize weights
+minweight=min(weight);
+maxweight=max(weight);
+weight=(weight-minweight)./(maxweight-minweight);
 %set holes (polygons with points wound counterclockwise) to have weight 0
 ccw=~ispolycw(dec,ra);
 weight(ccw)=0;
-%set polygons with weight >1 to have weight = 1
-weight(weight>1)=1;
 %create cell array of colors with each element as grayscale weight
 color=[weight weight weight];
 cellcolor=num2cell(color,2);
@@ -153,13 +155,16 @@ end
 title(plottitle);
 
 %add colorbar
-%axes('Position',[0 0 1 1])
-%axis off
-%colormap('gray')
-%caxis([0 1]);
-%cbar_handle=colorbar;
-%set(cbar_handle,'YTick',[0 .1 .2 .3 .4 .5 .6 .7 .8 .9 1]);
-%set(cbar_handle,'Position',[0.92    0.127    0.025    0.781]);
+pb=pbaspect;
+pos1=get(gca,'Position');
+axes('Position',pos1)
+axis off
+colormap('gray')
+caxis([minweight maxweight]);
+pbaspect(pb);
+pos1=get(gca,'Position');
+cbar_handle=colorbar('EastOutside');
+set(gca,'Position',pos1);
 
 fprintf(1,'Done making mask image\n');
 %export image as eps file

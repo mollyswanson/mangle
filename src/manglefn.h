@@ -220,7 +220,7 @@ double	places(double, int);
 int     poly_cmp(polygon **, polygon **);
 
 #ifdef	GCC
-int	poly_id(int npoly, polygon *[npoly], double, double, int **);
+int	poly_id(int npoly, polygon *[npoly], double, double, int **, double **);
 void	poly_sort(int npoly, polygon *[npoly], char);
 #else
 int	poly_id(int npoly, polygon *[/*npoly*/], double, double, int **);
@@ -262,11 +262,11 @@ int	snap_polys(format *fmt, int npoly, polygon *poly[/*npoly*/], int, double, do
 int	snap_poly(polygon *, polygon *, double, double);
 int	snap_polyth(polygon *, polygon *, double, double, double);
 
-int	split_poly(polygon **, polygon *, polygon **, double);
+int	split_poly(polygon **, polygon *, polygon **, double, char);
 #ifdef	GCC
-int	fragment_poly(polygon **, polygon *, int, int npolys, polygon *[npolys], double);
+int	fragment_poly(polygon **, polygon *, int, int npolys, polygon *[npolys], double, char);
 #else
-int	fragment_poly(polygon **, polygon *, int, int npolys, polygon *[/*npolys*/], double);
+int	fragment_poly(polygon **, polygon *, int, int npolys, polygon *[/*npolys*/], double, char);
 #endif
 
 int	strcmpl(const char *, const char *);
