@@ -117,6 +117,19 @@ end
 minweight=min(weight);
 maxweight=max(weight);
 weight=(weight-minweight)./(maxweight-minweight);
+%scale weight so that the minimum isn't black unless it's actually zero
+if(minweight~=0)
+     minscale=.1;
+     zeroscale=minweight-minscale./(1-minscale).*(maxweight-minweight);
+     if(minscale>0 && zeroscale<=0)
+        zeroscale=0;
+	minscale=minweight./maxweight;
+     end
+     weight=(1-minscale).*weight+minscale;
+else
+     zeroscale=minweight;
+end
+
 %set holes (polygons with points wound counterclockwise) to have weight 0
 ccw=~ispolycw(dec,ra);
 weight(ccw)=0;
@@ -160,7 +173,7 @@ pos1=get(gca,'Position');
 axes('Position',pos1)
 axis off
 colormap('gray')
-caxis([minweight maxweight]);
+caxis([zeroscale maxweight]);
 pbaspect(pb);
 pos1=get(gca,'Position');
 cbar_handle=colorbar('EastOutside');
