@@ -174,6 +174,8 @@ int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
 
 	/* look for keyword as first word in line */
 	word = get_keyword(file.line, &line_rest, fmt);
+        printf("keyword %s\n",word);
+
 	/* initialize to new format */
 	if (word) ird = new_fmt(word, &line_rest, fmt);
 	if (ird == -1) goto error;
@@ -318,7 +320,6 @@ char *get_keyword(char *str, char **str_rest, format *fmt)
 int new_fmt(char *keyword, char **line_rest, format *fmt)
 {
 
-  if (strcmp(keyword, "polygon") !=0 && strcmp(keyword, "spolygon") != 0) printf("keyword %s\n",keyword);
 
     /* const char *Region_fmt = "%d ( %d caps, %d holes):"; */
     const char *Region_fmt = "%d%*[^0-9]%d%*[^0-9]%d";
