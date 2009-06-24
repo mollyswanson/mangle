@@ -55,7 +55,7 @@ rm jgals
 #run polyid on galaxy file and assemble output galaxy files with polygon numbers
 echo "Running polyid to find galaxies from $gals in $mask  ... "
 $MANGLEBINDIR/polyid $mask $gals j1 || exit
-tail +2 j1 > j2
+tail -n +2 j1 > j2
 awk '{print $3}' j2 > j3
 paste $gals j3 > j4
 if [ $cut -ne 0 ] ; then
