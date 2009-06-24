@@ -174,8 +174,6 @@ int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
 
 	/* look for keyword as first word in line */
 	word = get_keyword(file.line, &line_rest, fmt);
-	//   printf("keyword %s\n",word);
-
 	/* initialize to new format */
 	if (word) ird = new_fmt(word, &line_rest, fmt);
 	if (ird == -1) goto error;
@@ -197,7 +195,6 @@ int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
 	}
     }
     infiles++;
-    printf("incrementing infiles\n");
 
     /* for HEALPix weights, only 1 input file allowed (if you have multiple files,
        just combine them)*/
@@ -212,11 +209,10 @@ int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
         fprintf(stderr, "error: the number of HEALPix weights in the input file is less than %d (or the file does not end in a newline)\n", fmt->nweights);
         goto error;
     }
-    printf("pixelized=%d, infiles=%d, foo\n",pixelized, infiles);
 
     /* if there are pixelized files, make sure all files are pixelized */ 
     if(pixelized>0 && infiles!=pixelized){
-         fprintf(stderr, "error: some input files are pixelized and some are not.\n");
+       fprintf(stderr, "error: some input files are pixelized and some are not.\n");
        fprintf(stderr, "all input files must have consistent pixelization.\n");
       goto error;
     }
@@ -319,8 +315,6 @@ char *get_keyword(char *str, char **str_rest, format *fmt)
 */
 int new_fmt(char *keyword, char **line_rest, format *fmt)
 {
-
-
     /* const char *Region_fmt = "%d ( %d caps, %d holes):"; */
     const char *Region_fmt = "%d%*[^0-9]%d%*[^0-9]%d";
     /* const char *generic_fmt = "%d ( %d caps, %Lf weight ...:"; */
@@ -560,7 +554,7 @@ int new_fmt(char *keyword, char **line_rest, format *fmt)
 
 	/*parse pixelization information (from line like "pixelization 7s" for example) */
     } else if (strcmp(keyword, "pixelization") == 0) {
-      printf("here\n");
+
 	ird = sscanf(*line_rest, pix_fmt, &res_max_temp, &scheme_temp);
 	if (ird != 2) {
 	    WHERE;
