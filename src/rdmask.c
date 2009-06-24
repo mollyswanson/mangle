@@ -212,6 +212,7 @@ int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
 
     /* if there are pixelized files, make sure all files are pixelized */ 
     if(pixelized>0 && infiles!=pixelized){
+      printf("pixelized=%d, infiles=%d, foo\n",pixelized, infiles);
        fprintf(stderr, "error: some input files are pixelized and some are not.\n");
        fprintf(stderr, "all input files must have consistent pixelization.\n");
       goto error;
@@ -554,7 +555,7 @@ int new_fmt(char *keyword, char **line_rest, format *fmt)
 
 	/*parse pixelization information (from line like "pixelization 7s" for example) */
     } else if (strcmp(keyword, "pixelization") == 0) {
-
+      printf("here\n");
 	ird = sscanf(*line_rest, pix_fmt, &res_max_temp, &scheme_temp);
 	if (ird != 2) {
 	    WHERE;
