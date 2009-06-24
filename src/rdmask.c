@@ -317,6 +317,9 @@ char *get_keyword(char *str, char **str_rest, format *fmt)
 */
 int new_fmt(char *keyword, char **line_rest, format *fmt)
 {
+
+  if (strcmp(keyword, "polygon") !=0 && strcmp(keyword, "spolygon") != 0) printf("keyword %s\n",keyword);
+
     /* const char *Region_fmt = "%d ( %d caps, %d holes):"; */
     const char *Region_fmt = "%d%*[^0-9]%d%*[^0-9]%d";
     /* const char *generic_fmt = "%d ( %d caps, %Lf weight ...:"; */
