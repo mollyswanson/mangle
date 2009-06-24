@@ -195,6 +195,7 @@ int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
 	}
     }
     infiles++;
+    printf("incrementing infiles\n");
 
     /* for HEALPix weights, only 1 input file allowed (if you have multiple files,
        just combine them)*/
@@ -209,11 +210,11 @@ int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
         fprintf(stderr, "error: the number of HEALPix weights in the input file is less than %d (or the file does not end in a newline)\n", fmt->nweights);
         goto error;
     }
+    printf("pixelized=%d, infiles=%d, foo\n",pixelized, infiles);
 
     /* if there are pixelized files, make sure all files are pixelized */ 
     if(pixelized>0 && infiles!=pixelized){
-      printf("pixelized=%d, infiles=%d, foo\n",pixelized, infiles);
-       fprintf(stderr, "error: some input files are pixelized and some are not.\n");
+         fprintf(stderr, "error: some input files are pixelized and some are not.\n");
        fprintf(stderr, "all input files must have consistent pixelization.\n");
       goto error;
     }
