@@ -174,7 +174,7 @@ int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
 
 	/* look for keyword as first word in line */
 	word = get_keyword(file.line, &line_rest, fmt);
-        printf("keyword %s\n",word);
+	//   printf("keyword %s\n",word);
 
 	/* initialize to new format */
 	if (word) ird = new_fmt(word, &line_rest, fmt);
