@@ -94,6 +94,10 @@
     if (strchr(optstr, 'H')) {
       printf("  -H\t\twrite output file in healpix_weight format\n");
     }
+    if (strchr(optstr, 'T')) {
+      printf("  -T\t\toutput the mask polygons sliced so each is in only one rasterizer polygon,rather\n");
+      printf("    \t\than the rasterizer polygons themselves. (T==Trim, a common use of this feature.)\n");
+    }
 
     if (strchr(optstr, 'a') || strchr(optstr, 'b') || strchr(optstr, 't') || strchr(optstr, 'i') || strchr(optstr, 'o'))
 	printf("  unit u:\tr radians, d degrees, m arcmin, s arcsec, h hms(RA) & dms(Dec)\n");

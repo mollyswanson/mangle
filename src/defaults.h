@@ -177,3 +177,9 @@ char bmethod=BMETHOD;
 //(bmethod=n) or the maximum (bmethod=x) of the weights 
 
 int polyid_weight=0;                     /*0= polyid prints id numbers, 1= polyid prints weights*/
+
+int sliceordice=0;                     /*switch for whether rasterize should return the rasterizer polygons 
+					 with weights averaged over their area (i.e. "dicing" - this is the 
+					 default, with sliceordice=0), or the input mask polygons sliced so 
+					 that each polygon is only in one rasterizer polygon, like in pixelize 
+					 (i.e. "slicing" - set sliceordice=1)*/

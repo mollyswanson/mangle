@@ -367,6 +367,9 @@ void parse_args(int argc, char *argv[])
 	case 'W':  //print out weights rather than id numbers in polyid
 	  polyid_weight=1;
 	  break;	  
+	case 'T':  //use rasterize to slice mask polygons rather than returning the average-weighted rasterizer polygons
+	  sliceordice=1;
+	  break;	  
 	case 'i':		/* format of input files */
 	    sscanf(optarg, " %c", &in);
 	    switch (in) {

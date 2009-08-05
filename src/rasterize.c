@@ -14,7 +14,7 @@
 #define DNP             4
 
 /* getopt options */
-const char *optstr = "dqa:b:t:y:m:s:e:p:i:o:H";
+const char *optstr = "dqa:b:t:y:m:s:e:v:p:i:o:HT";
 
 /* allocate polygons as a global array */
 polygon *polys_global[NPOLYSMAX];
@@ -22,9 +22,9 @@ polygon *polys_global[NPOLYSMAX];
 /* local functions */
 void     usage(void);
 #ifdef  GCC
-int     rasterize(int nhealpix_poly, int npoly, polygon *[npoly], int nweights, long double [nweights]);
+int     rasterize(int nhealpix_poly, int npoly, polygon *[npoly], int npolys, polygon *[npolys], int nweights, long double [nweights]);
 #else
-int     rasterize(int nhealpix_poly, int npoly, polygon *[/*npoly*/], int nweights, long double [/*nweights*/]);
+int     rasterize(int nhealpix_poly, int npoly, polygon *[/*npoly*/], int npolys, polygon *[/*npolys*/], int nweights, long double [/*nweights*/]);
 #endif
 
 /*--------------------------------------------------------------------
@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
   /* default output format */
   //fmt.out = keywords[HEALPIX_WEIGHT];
   fmt.out = keywords[POLYGON];
+  /* default is to renumber output polygons with old id numbers */
+  fmt.newid = 'o';
 
   /* parse arguments */
   parse_args(argc, argv);
@@ -85,6 +87,12 @@ int main(int argc, char *argv[])
 
   /* advise data format */
   advise_fmt(&fmt);
+
+  if (strcmp(fmt.out, "healpix_weight") == 0 && sliceordice){
+    fprintf(stderr, "rasterize: ERROR:  option to write out healpix weights (-H) and option to\n");
+    fprintf(stderr, "output mask polygons sliced by the rasterizer polygons (-T) are incompatible.\n");
+    exit(1);
+  }
 
   /* read polygons from polygon_infile1 (healpix pixels, or some other 'rasterizer' pixels) */
   /* the id numbers of these polygons should match the pixel numbers of this pixelization scheme;
@@ -149,8 +157,8 @@ int main(int argc, char *argv[])
   for (k = 0; k < nweights; k++) weights[k] = 0.;
 
   /* rasterize */
-  nweight = rasterize(nhealpix_poly, npoly, polys, nweights, weights);
-  if (nweight == -1) exit(1);
+  npolys = rasterize(nhealpix_poly, npoly, polys, NPOLYSMAX - npoly, &polys[npoly], nweights, weights);
+  if (npolys == -1) exit(1);
 
   /* copy new weights to original rasterizer polygons */
   for (k = 0; k < nhealpix_poly; k++) {
@@ -165,14 +173,20 @@ int main(int argc, char *argv[])
 
   ifile = argc - 1;
   if (strcmp(fmt.out, "healpix_weight") == 0) {
-    nweight = wr_healpix_weight(argv[ifile], &fmt, nweights, weights);
-    if (nweight == -1) exit(1);
+    npolys = wr_healpix_weight(argv[ifile], &fmt, nweights, weights);
+    if (npolys == -1) exit(1);
   }
   else {
-    nweight = wrmask(argv[ifile], &fmt, nhealpix_poly, polys);
-    if (nweight == -1) exit(1);
+    if(sliceordice){
+      npolys = wrmask(argv[ifile], &fmt, npolys, &polys[npoly]);
+      if (npolys == -1) exit(1);
+    }
+    else{
+      npolys = wrmask(argv[ifile], &fmt, npolys, polys);
+      if (npolys == -1) exit(1);
+    }
   }
-
+  
   /* free array */
   for(k = 0; k < npoly; k++){
     free_poly(polys[k]);
@@ -187,7 +201,7 @@ int main(int argc, char *argv[])
 void usage(void)
 {
      printf("usage:\n");
-     printf("rasterize [-d] [-q] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] [-H] polygon_infile1 polygon_infile2 [polygon_infile3 ...] polygon_outfile\n");
+     printf("rasterize [-d] [-q] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] [-H] [-T] polygon_infile1 polygon_infile2 [polygon_infile3 ...] polygon_outfile\n");
 #include "usage.h"
 }
 
@@ -200,24 +214,24 @@ void usage(void)
 
   Input: nhealpix_poly = number of rasterizer polygons.
          npoly = total number of polygons in input array.
-	 polys = array of pointers to polygons.
+	 poly = array of pointers to polygons.
 	 nweights = number of weights in output array.
   Output: weights = array of rasterizer weights.
   Return value: number of weights in array,
                 or -1 if error occurred.
 */
 
-int rasterize(int nhealpix_poly, int npoly, polygon *polys[/*npoly*/], int nweights, long double weights[/*nweights*/])
+int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*npolys*/], int nweights, long double weights[/*nweights*/])
 {
-  int min_pixel, max_pixel, ier, ier_h, ier_i, i, j, ipix, ipoly, begin_r, end_r, begin_m, end_m, verb, np, iprune;
+  int min_pixel, max_pixel, ier, ier_h, ier_i, i, j, ipix, ipoly, begin_r, end_r, begin_m, end_m, verb, np, iprune,n;
   int *start_r, *start_m, *total_r, *total_m;
   long double *areas, area_h, area_i, tol;
 
   static polygon *polyint = 0x0;
 
-  /* make sure weights are all zero for rasterizer pixels */
+   /* make sure weights are all zero for rasterizer pixels */
   for (i = 0; i < nhealpix_poly; i++) {
-      polys[i]->weight = 0.;
+      poly[i]->weight = 0.;
   }
 
   /* allocate memory for rasterizer areas array */
@@ -236,9 +250,9 @@ int rasterize(int nhealpix_poly, int npoly, polygon *polys[/*npoly*/], int nweig
   /* find areas of rasterizer pixels for later use */
   for (i = 1; i <= nweights; i++) {
     for (j = 0; j < nhealpix_poly; j++) {
-      if (polys[j]->id == i) {
+      if (poly[j]->id == i) {
         tol = mtol;
-        ier_h = garea(polys[j], &tol, verb, &area_h);
+        ier_h = garea(poly[j], &tol, verb, &area_h);
         if (ier_h == 1) {
           fprintf(stderr, "fatal error in garea\n");
           exit(1);
@@ -253,12 +267,12 @@ int rasterize(int nhealpix_poly, int npoly, polygon *polys[/*npoly*/], int nweig
   }
 
   /* sort arrays by pixel number */
-  poly_sort(nhealpix_poly, polys, 'p');
-  poly_sort(npoly-nhealpix_poly, &(polys[nhealpix_poly]), 'p');
+  poly_sort(nhealpix_poly, poly, 'p');
+  poly_sort(npoly-nhealpix_poly, &(poly[nhealpix_poly]), 'p');
 
   /* allocate memory for pixel info arrays start_r, start_m, total_r, and total_m */
-  min_pixel = polys[0]->pixel;
-  max_pixel = (polys[nhealpix_poly-1]->pixel+1>polys[npoly-1]->pixel+1)?(polys[nhealpix_poly-1]->pixel+1):(polys[npoly-1]->pixel+1);
+  min_pixel = poly[0]->pixel;
+  max_pixel = (poly[nhealpix_poly-1]->pixel+1>poly[npoly-1]->pixel+1)?(poly[nhealpix_poly-1]->pixel+1):(poly[npoly-1]->pixel+1);
   start_r = (int *) malloc(sizeof(int) * max_pixel);
   if (!start_r) {
     fprintf(stderr, "rasterize: failed to allocate memory for %d integers\n", max_pixel);
@@ -281,13 +295,13 @@ int rasterize(int nhealpix_poly, int npoly, polygon *polys[/*npoly*/], int nweig
   }
 
   /* build lists of starting indices of each pixel and total number of polygons in each pixel */
-  ier = pixel_list(nhealpix_poly, polys, max_pixel, start_r, total_r);
+  ier = pixel_list(nhealpix_poly, poly, max_pixel, start_r, total_r);
   if (ier == -1) {
     fprintf(stderr, "rasterize: error building pixel index lists for rasterizer polygons\n");
     return(-1);
   }
 
-  ier = pixel_list(npoly-nhealpix_poly, &(polys[nhealpix_poly]), max_pixel, start_m, total_m);
+  ier = pixel_list(npoly-nhealpix_poly, &(poly[nhealpix_poly]), max_pixel, start_m, total_m);
   if (ier == -1) {
     fprintf(stderr, "rasterize: error building pixel index lists for input mask polygons\n");
     return(-1);
@@ -298,6 +312,8 @@ int rasterize(int nhealpix_poly, int npoly, polygon *polys[/*npoly*/], int nweig
     start_m[i] += nhealpix_poly;
   }
 
+  j=0;
+
   /* compute intersection of each input mask polygon with each rasterizer polygon */
   for (ipix = min_pixel; ipix < max_pixel; ipix++) {
     begin_r = start_r[ipix];
@@ -307,21 +323,21 @@ int rasterize(int nhealpix_poly, int npoly, polygon *polys[/*npoly*/], int nweig
 
     for (ipoly = begin_m; ipoly < end_m; ipoly++) {
       /* disregard any null polygons */
-      if (!polys[ipoly]) continue;
+      if (!poly[ipoly]) continue;
 
       for (i = begin_r; i < end_r; i++) {
 
 	/* make sure polyint contains enough space for intersection */
-	np = polys[ipoly]->np + polys[i]->np;
+	np = poly[ipoly]->np + poly[i]->np;
 	ier = room_poly(&polyint, np, DNP, 0);
 	if (ier == -1) goto out_of_memory;
 
-	poly_poly(polys[ipoly], polys[i], polyint);
+	poly_poly(poly[ipoly], poly[i], polyint);
 
 	/* suppress coincident boundaries, to make garea happy */
 	iprune = trim_poly(polyint);
 
-	/* intersection of polys[ipoly] and polys[i] is null polygon */
+	/* intersection of poly[ipoly] and poly[i] is null polygon */
 	if (iprune >= 2) area_i = 0.;
 
 	else {
@@ -336,8 +352,24 @@ int rasterize(int nhealpix_poly, int npoly, polygon *polys[/*npoly*/], int nweig
 	    return(-1);
 	  }
 	}
-	    
-	weights[(polys[i]->id)-1] += (area_i)*(polys[ipoly]->weight);
+
+	/*if the "slicing" option is selected, write the intersection polygon into the output array */
+	if(area_i!=0 && sliceordice){
+	  /* make sure output polygon contains enough space */
+	  np = polyint->np;
+	  ier = room_poly(&polys[j], np, DNP, 0);
+	  if (ier == -1) goto out_of_memory;
+	  
+	  /* copy intersection into poly1 */
+	  copy_poly(polyint, polys[j]);
+	  /* if output id number option = p, set id number equal to id number of rasterizer polygon*/
+	  if (fmt.newid == 'p') {
+	    polys[j]->id = poly[i]->id;
+	  }	  
+	  j++;
+	}
+
+	weights[(poly[i]->id)-1] += (area_i)*(poly[ipoly]->weight);
       }
     }
   }
@@ -352,7 +384,23 @@ int rasterize(int nhealpix_poly, int npoly, polygon *polys[/*npoly*/], int nweig
     }
   }
 
-  return(i+1);
+  n=sliceordice ? j : nhealpix_poly;
+
+  /* assign new polygon id numbers in place of inherited ids */
+  if (fmt.newid == 'n') {
+    for (i = 0; i < n; i++) {
+      if(sliceordice) polys[i]->id = i; else poly[i]->id = i;
+    }
+  }
+  
+  if (fmt.newid == 'p' && !sliceordice) {
+    for (i = 0; i < n; i++) {
+      poly[i]->id = poly[i]->pixel;
+    }
+  }
+  
+  return(n);
+
 
   /* ----- error return ----- */
   out_of_memory:
