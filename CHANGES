@@ -1,3 +1,9 @@
+-Added option -T to rasterize to switch between "dicing", i.e., averaging the weights of 
+ the mask polygons within the rasterizer polygons and returning the weighted rasterizer polygons,
+ and "slicing", i.e., splitting each mask polygon so that is in only one rasterizer polygon
+ and returning the new mask polygons (same behavior as pixelize). Using -T will make rasterize
+ do slicing - this is quite useful for trimming a mask to a specified region, hence the "T".
+
 5 April 2009
 MANGLE 2.2 RELEASE
 Upgrades from mangle2.1:

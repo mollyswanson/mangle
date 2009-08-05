@@ -116,20 +116,24 @@ end
 %normalize weights
 minweight=min(weight);
 maxweight=max(weight);
-weight=(weight-minweight)./(maxweight-minweight);
-%scale weight so that the minimum isn't black unless it's actually zero
-if(minweight~=0)
-     minscale=.1;
-     zeroscale=minweight-minscale./(1-minscale).*(maxweight-minweight);
-     if(minscale>0 && zeroscale<=0)
-        zeroscale=0;
-	minscale=minweight./maxweight;
+if(minweight~=maxweight)
+     weight=(weight-minweight)./(maxweight-minweight);
+     %scale weight so that the minimum isn't black unless it's actually zero
+     if(minweight~=0)
+         minscale=.1;
+         zeroscale=minweight-minscale./(1-minscale).*(maxweight-minweight);
+         if(minscale>0 && zeroscale<=0)
+           zeroscale=0;
+	   minscale=minweight./maxweight;
+         end
+         weight=(1-minscale).*weight+minscale;
+     else
+	 zeroscale=minweight;
      end
-     weight=(1-minscale).*weight+minscale;
 else
-     zeroscale=minweight;
-end
-
+     zeroscale=0;
+     weight=weight./maxweight;
+end   
 %set holes (polygons with points wound counterclockwise) to have weight 0
 ccw=~ispolycw(dec,ra);
 weight(ccw)=0;

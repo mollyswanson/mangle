@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
   for (ifile = optind + 1; ifile < optind + 1 + nfiles; ifile++) {
       npolys = rdmask(argv[ifile], &fmt, NPOLYSMAX - npoly, &polys[npoly]);
       if (npolys == -1) exit(1);
-      npoly += npolys;
+      npoly += npolys;      
   }
   if (nfiles >= 2) {
     msg("total of %d polygons read from mask files\n", npoly-nhealpix_poly);
@@ -139,11 +139,15 @@ int main(int argc, char *argv[])
     exit(0);
   }
 
+  /*only check for snapped and balkanized if averaging within rasterizer polygons - if slicing input polygons
+    into the rasterizer polygons (sliceordice=1) it doesn't matter if input is snapped or balkanized.*/ 
+  if(!sliceordice){
     if (snapped==0 || balkanized==0) {
       fprintf(stderr, "Error: input polygons must be snapped and balkanized before rasterization.\n");
       fprintf(stderr, "If your polygons are already snapped and balkanized, add the 'snapped' and\n'balkanized' keywords at the beginning of each of your input polygon files.\n");
       exit(1);
     }
+  }
 
 
   /* allocate memory for weights array */
