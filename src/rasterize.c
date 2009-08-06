@@ -14,7 +14,7 @@
 #define DNP             4
 
 /* getopt options */
-const char *optstr = "dqa:b:t:y:m:s:e:v:p:i:o:HT";
+const char *optstr = "dqm:s:e:v:p:i:o:HT";
 
 /* allocate polygons as a global array */
 polygon *polys_global[NPOLYSMAX];
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
   axunit = 's';
   bunit = 's';
   thunit = 's';
-  msg("snap angles: axis %Lg%c latitude %Lg%c edge %Lg%c\n", axtol, axunit, btol, bunit, thtol, thunit);
+  // msg("snap angles: axis %Lg%c latitude %Lg%c edge %Lg%c\n", axtol, axunit, btol, bunit, thtol, thunit);
   scale(&axtol, axunit, 'r');
   scale(&btol, bunit, 'r');
   scale(&thtol, thunit, 'r');
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
 void usage(void)
 {
      printf("usage:\n");
-     printf("rasterize [-d] [-q] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] [-H] [-T] polygon_infile1 polygon_infile2 [polygon_infile3 ...] polygon_outfile\n");
+     printf("rasterize [-d] [-q] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] [-H] [-T] polygon_infile1 polygon_infile2 [polygon_infile3 ...] polygon_outfile\n");
 #include "usage.h"
 }
 

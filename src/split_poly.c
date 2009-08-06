@@ -27,7 +27,7 @@
 		1 = poly2 fully encloses poly1;
 		2 = poly2 splits poly1 into two.
 */
-int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, long double mtol, char bmethod)
+int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, long double mtol)
 {
     static polygon *poly = 0x0, *poly4 = 0x0;
 
@@ -36,23 +36,6 @@ int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, long double mto
 
     /* poly2 is whole sphere, therefore contains poly1 */
     if (poly2->np == 0){
-      /* set weight according to balkanization scheme: */
-      if(bmethod=='l'){
-	//do nothing - this is the default behavior
-      }
-      else if(bmethod=='a'){
-	(*poly1)->weight=(*poly1)->weight + poly2->weight;
-      }
-      else if(bmethod=='n'){
-	(*poly1)->weight=((*poly1)->weight > poly2->weight)? poly2->weight : (*poly1)->weight ;
-      }
-      else if(bmethod=='x'){
-	(*poly1)->weight=((*poly1)->weight > poly2->weight)? (*poly1)->weight : poly2->weight ;
-      }
-      else{
-	fprintf(stderr, "error in split_poly: balkanize method %c not recognized.\n", bmethod);
-	return(-1);
-      }
       return(1);
     }
     
@@ -136,24 +119,6 @@ int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, long double mto
 	  copy_poly(poly4, *poly1);
 	  
 	  /* poly1 successfully split into poly1 and poly3 */
-	  /* set weight according to balkanization scheme: */
-	  if(bmethod=='l'){
-	    //do nothing - this is the default behavior
-	  }
-	  else if(bmethod=='a'){
-	    (*poly3)->weight=(*poly1)->weight + poly2->weight;
-	  }
-	  else if(bmethod=='n'){
-	    (*poly3)->weight=((*poly1)->weight > poly2->weight)? poly2->weight : (*poly1)->weight ;
-	  }
-	  else if(bmethod=='x'){
-	    (*poly3)->weight=((*poly1)->weight > poly2->weight)? (*poly1)->weight : poly2->weight ;
-	  }
-	  else{
-	    fprintf(stderr, "error in split_poly: balkanize method %c not recognized.\n", bmethod);
-	    return(-1);
-	  }
-
 	  return(2);
 
 	} else if (area < area_tot) {
@@ -164,24 +129,7 @@ int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, long double mto
     }
     
     /* poly2 contains poly1 */
-    /* set weight according to balkanization scheme: */
-    if(bmethod=='l'){
-      //do nothing - this is the default behavior
-    }
-    else if(bmethod=='a'){
-      (*poly1)->weight=(*poly1)->weight + poly2->weight;
-    }
-    else if(bmethod=='n'){
-      (*poly1)->weight=((*poly1)->weight > poly2->weight)? poly2->weight : (*poly1)->weight ;
-    }
-    else if(bmethod=='x'){
-      (*poly1)->weight=((*poly1)->weight > poly2->weight)? (*poly1)->weight : poly2->weight ;
-    }
-    else{
-      fprintf(stderr, "error in split_poly: balkanize method %c not recognized.\n", bmethod);
-      return(-1);
-    }
-    return(1);
+     return(1);
 
     /* ---------------- error returns ---------------- */
     error:
@@ -229,7 +177,7 @@ int fragment_poly(polygon **poly1, polygon *poly2, int discard, int npolys, poly
 	/* check space is available */
 	if (npoly >= npolys) return(npoly + 1);
 	/* split */
-	nsplit = split_poly(poly, poly2, &polys[npoly], mtol, bmethod);
+	nsplit = split_poly(poly, poly2, &polys[npoly], mtol);
 	/* error */
 	if (nsplit == -1) return(-1);
 	/* done */
@@ -241,6 +189,45 @@ int fragment_poly(polygon **poly1, polygon *poly2, int discard, int npolys, poly
 		} else {
 		    npoly--;
 		}
+	    }
+	    if(discard==0){
+	      /* set weight according to balkanization scheme: */
+	      if(npolys>0){
+		if(bmethod=='l'){
+	      //do nothing - this is the default behavior
+		}
+		else if(bmethod=='a'){
+		  polys[npoly-1]->weight=(*poly1)->weight + poly2->weight;
+		}
+		else if(bmethod=='n'){
+		  polys[npoly-1]->weight=((*poly1)->weight > poly2->weight)? poly2->weight : (*poly1)->weight ;
+		}
+		else if(bmethod=='x'){
+		  polys[npoly-1]->weight=((*poly1)->weight > poly2->weight)? (*poly1)->weight : poly2->weight ;
+		}
+		else{
+		  fprintf(stderr, "error in fragment_poly: balkanize method %c not recognized.\n", bmethod);
+		  return(-1);
+		}
+	      }
+	      else{
+		if(bmethod=='l'){
+		  //do nothing - this is the default behavior
+		}
+		else if(bmethod=='a'){
+		  (*poly1)->weight=(*poly1)->weight + poly2->weight;
+		}
+		else if(bmethod=='n'){
+		  (*poly1)->weight=((*poly1)->weight > poly2->weight)? poly2->weight : (*poly1)->weight ;
+		}
+		else if(bmethod=='x'){
+		  (*poly1)->weight=((*poly1)->weight > poly2->weight)? (*poly1)->weight : poly2->weight ;
+		}
+		else{
+		  fprintf(stderr, "error in fragment_poly: balkanize method %c not recognized.\n", bmethod);
+		  return(-1);
+		}
+	      }
 	    }
 	    return(npoly);
 	}
