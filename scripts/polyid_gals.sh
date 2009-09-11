@@ -56,10 +56,10 @@ rm jgals
 echo "Running polyid to find galaxies from $gals in $mask  ... "
 $MANGLEBINDIR/polyid $mask $gals j1 || exit
 tail -n +2 j1 > j2
-awk '{print $3}' j2 > j3
+awk '{for (i=3; i<=NF; i++){printf "%d ", $i}; printf "\n"}' j2 > j3
 paste $gals j3 > j4
 if [ $cut -ne 0 ] ; then
-    awk "NF == ($numfields+1) {print \$0}" j4 > $outgals
+    awk "NF >= ($numfields+1) {print \$0}" j4 > $outgals
 else
     cp j4 $outgals
 fi
