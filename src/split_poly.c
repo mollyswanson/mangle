@@ -190,11 +190,11 @@ int fragment_poly(polygon **poly1, polygon *poly2, int discard, int npolys, poly
 		    npoly--;
 		}
 	    }
-	    if(discard==0){
-	      /* set weight according to balkanization scheme: */
-	      if(npolys>0){
+	    if(discard==0 && nsplit==1){
+	      if(npoly>0){
+		/* set weight according to balkanization scheme: */
 		if(bmethod=='l'){
-	      //do nothing - this is the default behavior
+		  //do nothing - this is the default behavior
 		}
 		else if(bmethod=='a'){
 		  polys[npoly-1]->weight=(*poly1)->weight + poly2->weight;
@@ -211,6 +211,7 @@ int fragment_poly(polygon **poly1, polygon *poly2, int discard, int npolys, poly
 		}
 	      }
 	      else{
+		/* set weight according to balkanization scheme: */
 		if(bmethod=='l'){
 		  //do nothing - this is the default behavior
 		}

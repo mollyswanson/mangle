@@ -117,10 +117,10 @@ int main(int argc, char *argv[])
     balkanized++;
   }
 
-  /* set nweights equal to maximum id number in rasterizer file */
+  /* set nweights equal to maximum id number in rasterizer file plus 1*/
   nweights = 0;
   for (k = 0; k < nhealpix_poly; k++) {
-    if (polys[k]->id > nweights) nweights = polys[k]->id;
+    if (polys[k]->id > nweights) nweights = polys[k]->id+1;
   }
 
   /* read polygons from polygon_infile2, polygon_infile3, etc. */
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
   /* copy new weights to original rasterizer polygons */
   for (k = 0; k < nhealpix_poly; k++) {
     for (j = 0; j < nweights; j++) {
-      if (polys[k]->id == j+1) {
+      if (polys[k]->id == j) {
 	polys[k]->weight = weights[j];
 	break;
       }
@@ -252,7 +252,7 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
   verb = 1;
 
   /* find areas of rasterizer pixels for later use */
-  for (i = 1; i <= nweights; i++) {
+  for (i = 0; i < nweights; i++) {
     for (j = 0; j < nhealpix_poly; j++) {
       if (poly[j]->id == i) {
         tol = mtol;
@@ -265,7 +265,7 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
           fprintf(stderr, "failed to allocate memory in garea\n");
           exit(1);
         }
-        areas[i-1] += area_h;
+        areas[i] += area_h;
       }
     }
   }
@@ -373,7 +373,7 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
 	  j++;
 	}
 
-	weights[(poly[i]->id)-1] += (area_i)*(poly[ipoly]->weight);
+	weights[(poly[i]->id)] += (area_i)*(poly[ipoly]->weight);
       }
     }
   }
