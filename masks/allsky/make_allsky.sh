@@ -16,6 +16,8 @@ fi
 
 res=$1
 scheme=$2
+mtol=$3
+snap="$4 $5 $6"
 
 #check command line arguments
 if [ "$res" = "" ] || [ "$scheme" = "" ] ; then
@@ -23,9 +25,11 @@ if [ "$res" = "" ] || [ "$scheme" = "" ] ; then
     echo >&2 "" 
     echo >&2 "USAGE: make_allsky.sh <r> <scheme>"
     echo >&2 "EXAMPLE: make_allsky.sh 6 d" 
+    echo >&2 "or to use non-default values for snap and multiple intersection tolerances:" 
+    echo >&2 "USAGE: make_allsky.sh <r> <scheme> mtol_argument snap_tol_arguments"
+    echo >&2 "EXAMPLE: make_allsky.sh 6 d -m1e-8 -a.027 -b.027 -t.027"
     exit 1
 fi
-
 
 allsky=$MANGLEDATADIR/allsky/allsky$res$scheme.pol
 echo "Generating allsky$res$scheme.pol..."
@@ -37,8 +41,8 @@ if [ ! -d "$MANGLEDATADIR/allsky" ] ; then
 fi
 currentdir=$PWD
 cd $MANGLEDATADIR/allsky
-$MANGLEBINDIR/pixelize -P${scheme}0,${res} allsky.pol ja 
-$MANGLEBINDIR/snap ja allsky$res$scheme.pol 
+$MANGLEBINDIR/pixelize $mtol -P${scheme}0,${res} allsky.pol ja 
+$MANGLEBINDIR/snap $snap $mtol ja allsky$res$scheme.pol 
 rm ja
 cd $currentdir
 

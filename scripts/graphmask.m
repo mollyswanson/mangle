@@ -66,22 +66,25 @@ latmax=maprange(4);
 %set spacing for tickmarks
 range=max(latmax-latmin, lonmax-lonmin);
 avrange=mean([latmax-latmin, lonmax-lonmin]);
-if(range<15)
-    sp=1;
-else if (range<30)
-        sp=2;
-    else if (range<90)
-            sp=5;
-        else if (range<150)
-                sp=10;
-            else if (range<300)
-                    sp=20;
-                else
-                    sp=50;
-                end
-            end
-        end
-    end
+rnd=0;
+if(range<.9)
+    sp=.1;
+    rnd=-1;
+elseif(range<2)
+    sp=.2;
+    rnd=-1;
+elseif(range<15)    
+    sp=1;        
+elseif (range<30)
+    sp=2;
+elseif (range<90)
+    sp=5;
+elseif (range<150)
+    sp=10;
+elseif (range<300)
+    sp=20;
+else
+    sp=50;
 end
         
 %read in files
@@ -97,7 +100,7 @@ axm=axesm('MapProjection', 'hammer','frame','on','FFaceColor','black','origin',1
 
 if (lims)
     axesm('MapProjection','mercator','frame','on','maplatlimit',[latmin latmax], 'maplonlimit',[lonmin lonmax])
-    setm(gca,'ParallelLabel','on','PLabelLocation',sp,'LabelFormat','none','fontsize',10);
+    setm(gca,'ParallelLabel','on','PLabelLocation',sp,'LabelFormat','none','fontsize',10,'MLabelRound',rnd,'PLabelRound',rnd);
     tightmap;
     ax1=gca;
     ax2=axes('Position',get(ax1,'Position'));
@@ -149,6 +152,7 @@ if (lims)
     gridm on;
     setm(gca,'MeridianLabel','on','MLabelLocation',sp,'MLineLocation',sp,'PLineLocation',sp,'MLabelParallel','south',...
         'LabelFormat','none', 'MLineLimit',[latmin latmin+.01*avrange],'PLineLimit',[lonmax-.01*avrange, lonmax],...
+        'MLabelRound',rnd,'PLabelRound',rnd,...
         'glinestyle','-','gcolor',[.5 .5 .5],'fontsize',10);
     tightmap;
     mlabelzero22pi

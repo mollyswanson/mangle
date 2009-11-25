@@ -18,6 +18,8 @@ fi
 
 mask=$1
 complement=$2
+mtol=$3
+snap="$4 $5 $6"
 dres=3
 dscheme="s"
 
@@ -27,6 +29,9 @@ if [ "$mask" = "" ] || [ "$complement" = "" ] ; then
     echo >&2 "" 
     echo >&2 "USAGE: find_complement.sh <mask> <complement>"
     echo >&2 "EXAMPLE:find_complement.sh holes.pol complement.pol"
+    echo >&2 "or to use non-default values for snap and multiple intersection tolerances:" 
+    echo >&2 "USAGE: find_complement.sh <mask> <complement> mtol_argument snap_tol_arguments"
+    echo >&2 "EXAMPLE:find_complement.sh holes.pol complement.pol -m1e-8 -a.027 -b.027 -t.027"
     exit 1
 fi
 
@@ -45,7 +50,7 @@ if [ "$res" = "" ]; then
     scheme=$dscheme
     echo ""
     echo "Pixelizing $1 ..."
-    $MANGLEBINDIR/pixelize -P${scheme}0,$res $mask jp || exit  
+    $MANGLEBINDIR/pixelize $mtol -P${scheme}0,$res $mask jp || exit  
     echo ""
 elif [ "$res" = -1 ] ; then
     res=$dres
@@ -54,7 +59,7 @@ elif [ "$res" = -1 ] ; then
     echo "Pixelizing your mask using a fixed resolution:"
     echo ""
     echo "Pixelizing $1 ..."
-    $MANGLEBINDIR/pixelize -P${scheme}0,$res $mask jp || exit   
+    $MANGLEBINDIR/pixelize $mtol -P${scheme}0,$res $mask jp || exit   
     echo ""
 else
     cp $mask jp
@@ -63,7 +68,7 @@ fi
 #check for appropriate allsky file, and generate it if it's not there:
 allsky=$MANGLEDATADIR/allsky/allsky$res$scheme.pol
 if [ ! -e $allsky ] ; then
-    $MANGLESCRIPTSDIR/make_allsky.sh $res $scheme
+     $MANGLESCRIPTSDIR/make_allsky.sh $res $scheme $mtol $snap
 fi
 
 #check if input file is snapped
@@ -72,7 +77,7 @@ snapped=`awk '/snapped/{print $1}' < $mask`
 #if input file isn't snapped, snap it
 if [ ! "$snapped" = "snapped" ]; then
     echo "Snapping $1 ..."
-    $MANGLEBINDIR/snap jp jps || exit
+    $MANGLEBINDIR/snap $snap $mtol jp jps || exit
     rm jp
 else
     mv jp jps
@@ -80,18 +85,18 @@ fi
 
 #set weight of all polygons in mask to zero
 echo 0 > jw0
-echo "$MANGLEBINDIR/weight -zjw0 $mask jw"
-$MANGLEBINDIR/weight -zjw0 jps jw || exit
+echo "$MANGLEBINDIR/weight $mtol -zjw0 $mask jw"
+$MANGLEBINDIR/weight $mtol -zjw0 jps jw || exit
 rm jps
 
 #balkanize the full sky with the zero-weighted mask to find the complement
-echo "$MANGLEBINDIR/balkanize $allsky jw jb"
-$MANGLEBINDIR/balkanize $allsky jw jb || exit
+echo "$MANGLEBINDIR/balkanize $mtol $allsky jw jb"
+$MANGLEBINDIR/balkanize $mtol $allsky jw jb || exit
 rm jw
 
 #unify to get rid of zero weight polygons
-echo "$MANGLEBINDIR/unify jb $complement"
-$MANGLEBINDIR/unify jb $complement || exit
+echo "$MANGLEBINDIR/unify $mtol jb $complement"
+$MANGLEBINDIR/unify $mtol jb $complement || exit
 rm jb
 
 echo "Complement of $mask written to ${complement}."

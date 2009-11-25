@@ -1,3 +1,5 @@
+-Updated matlab plotting script to work well for smaller regions of sky
+-Modified find_complement.sh and make_allsky.sh to take arguments for snap and multiple intersection tolerances
 -Added option -T to rasterize to switch between "dicing", i.e., averaging the weights of 
  the mask polygons within the rasterizer polygons and returning the weighted rasterizer polygons,
  and "slicing", i.e., splitting each mask polygon so that is in only one rasterizer polygon
