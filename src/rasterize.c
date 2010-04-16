@@ -371,7 +371,7 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
 	  }	  
 	  j++;
 	}
-	if((poly[i]->id)>=nweights) printf("(poly[i]->id)=%d\n", (poly[i]->id));
+	if((poly[i]->id)>=nweights) printf("(poly[i]->id)=%d, nweights=%d\n", (poly[i]->id),nweights);
 	weights[(poly[i]->id)] += (area_i)*(poly[ipoly]->weight);
       }
     }
