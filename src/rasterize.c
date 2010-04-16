@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
   nweights = 0;
   for (k = 0; k < nhealpix_poly; k++) {
     printf("nweights=%d\n",nweights);
-    if (polys[k]->id > nweights) nweights = polys[k]->id+1;
+    if (polys[k]->id >= nweights) nweights = polys[k]->id+1;
     printf("k=%d, polys[k]->id=%d, nweights=%d\n",k,polys[k]->id,nweights);
   }
 
