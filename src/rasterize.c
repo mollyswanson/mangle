@@ -193,10 +193,9 @@ int main(int argc, char *argv[])
   
   /* free array */
    for(k = 0; k < npoly; k++){
-    printf("k=%d, npoly=%d\n",k,npoly);
-    free_poly(polys[k]);
+     free_poly(polys[k]);
   }
-
+   printf("here\n");
   return(0);
 }
 
