@@ -192,12 +192,13 @@ int main(int argc, char *argv[])
   }
   
   /* free array */
+  printf("npoly=%d\n",npoly);
   for(k = 0; k < npoly; k++){
+    printf("k=%d\n",k);
     free_poly(polys[k]);
   }
 
   return(0);
-
 }
 
 /*-------------------------------------------------------------------------
