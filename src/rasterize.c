@@ -407,6 +407,7 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
   free(start_m); 
   free(total_r);
   free(total_m);
+  free(areas);
  
   return(n);
 
