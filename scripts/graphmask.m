@@ -154,6 +154,7 @@ if (lims)
         'LabelFormat','none', 'MLineLimit',[latmin latmin+.01*avrange],'PLineLimit',[lonmax-.01*avrange, lonmax],...
         'MLabelRound',rnd,'PLabelRound',rnd,...
         'glinestyle','-','gcolor',[.5 .5 .5],'fontsize',10);
+    axm=gca;
     tightmap;
     mlabelzero22pi
     xlabel('\newline Right Ascension')
@@ -186,6 +187,7 @@ pbaspect(pb);
 pos1=get(gca,'Position');
 cbar_handle=colorbar('EastOutside');
 set(gca,'Position',pos1);
+set(gcf,'CurrentAxes',axm);
 
 fprintf(1,'Done making mask image\n');
 %export image as eps file

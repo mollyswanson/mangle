@@ -264,7 +264,7 @@ int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
 char *get_keyword(char *str, char **str_rest, format *fmt)
 {
     const char *blank = " \t\n\r";
-    char c;
+    char *c=0;
     int id, ird, n;
 
     char *word;
@@ -285,14 +285,18 @@ char *get_keyword(char *str, char **str_rest, format *fmt)
 
     /* format not yet specified, or spolygon */
     if (!fmt->in || strcmp(fmt->in, "spolygon") == 0) {
-	/* check for line starting with 2 integers, indicating spolygon format */
-	ird = sscanf(str, "%d %d%[ \t\n]", &id, &n, &c);
-	if (ird == 3 && n >= 0) {
-	    *str_rest = word;
-	    return(keywords[SPOLYGON]);
-	}
+      /* check for line starting with 2 integers, indicating spolygon format */
+      //implemented fix from Guilhem Lavaux here  --Molly
+      c = (char *)malloc(1000);
+      ird = sscanf(str, "%d %d%[ \t\n]", &id, &n, c);
+      free(c);
+      c = 0;
+       if (ird == 3 && n >= 0) {
+	*str_rest = word;
+	return(keywords[SPOLYGON]);
+      }
     }
-
+    
     /* check for possibly truncated keyword */
     for (ikey = 0; keywords[ikey]; ikey++) {
 	if (strlen(word) >= 4 && strncmp(word, keywords[ikey], 4) == 0) {
