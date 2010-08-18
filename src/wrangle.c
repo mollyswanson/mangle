@@ -24,7 +24,7 @@
 void wrangle(long double angle, char unit, int precision, size_t str_len, char str[/*str_len*/])
 {
 /* default number of significant digits */
-#define DIGITS		9
+#define DIGITS		15
     char sign;
     int hour, min;
     int width;
