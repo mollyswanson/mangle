@@ -4,8 +4,8 @@
 
 	subroutine usage
 	implicit none
-	print *, 'Converts a CMBfast test file (or mangle healpix_weight file) into a fits file'
-c	print *, 'COMPILE: a f 'f77  dat2fits_binary.f -o dat2fits_binary.x libcfitsio.a'  
+	print *, 'dat2fits_binary.x converts a CMBfast test file (or mangle healpix_weight file) into a fits file'
+ 	print *, 'COMPILE: gfortran dat2fits_binary.f -o dat2fits_binary.x -lcfitsio -ffixed-line-length-none'  
 	print *, 'USAGE:   call dat2fits_binary.x <ptype> <nside> <in> <out>'
 	print *, 'EXAMPLE: call dat2fits_binary.x 1 512 qaz_map_data.dat mytest.fits'
 	return
@@ -28,7 +28,12 @@ c     ----------------------------------------------------------------
       read (2,*,err=777,end=777) polar_type, nside, infile, outfile  
       close(2)  						        
       npix = 12*nside**2
-      if (npix.gt.nnpix) pause 'npix TOO LARGE'					        
+      if (npix.gt.nnpix) then
+         write(0,*) 'ERROR: dat2fits_binary.f only supports resolution up to nside 1024.'
+         write(0,*) 'If you need a higher resolution, edit nnpix in dat2fits_binary.f and recompile.'
+         call usage
+         STOP
+      endif				        
       if (polar_type.eq.1) then 				        
     	 nmap = 1						        
       else							        

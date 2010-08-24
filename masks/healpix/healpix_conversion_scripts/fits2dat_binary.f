@@ -7,10 +7,10 @@
 	 
 	 subroutine usage
 	 implicit none
-	 print *, 'Converts a map from fits to text'
-	 print *, 'COMPILE: g77  fits2dat_binary.f -o fits2dat_binary.x /home3/max/healpix/cfitsio/libcfitsio.a'  
+	 print *, 'fits2dat_binary.x Converts a map from fits to text'
+	 print *, 'COMPILE: gfortran fits2dat_binary.f -o fits2dat_binary.x -lcfitsio -ffixed-line-length-none'  
 	 print *, 'USAGE:   call fits2dat_binary.x <PolarType> <Nside> <infile> <outfile>'
-	 print *, 'EXAMPLE: call fits2dat_binary.x 1 32 qaz_map???.fits qaz_map.dat'
+	 print *, 'EXAMPLE: call fits2dat_binary.x 1 32 qaz_map.fits qaz_map.dat'
 	 return
 	 end
 
@@ -43,7 +43,12 @@ c       ----------------------------------------------------------------
 	 read (2,*,err=777,end=777) polar_type, Nside, infile, outfile
 	 close(2)
 	 npixtot = 12*Nside**2
-	 if (npixtot.gt.nnpixtot) pause 'npixtot SIZE ERROR'
+	 if (npixtot.gt.nnpixtot) then
+            write(0,*) 'ERROR: fits2dat_binary.f only supports resolution up to nside 1024.'
+            write(0,*) 'If you need a higher resolution, edit nnpixtot in fits2dat_binary.f and recompile.'
+            call usage
+            STOP
+         endif
 	 if (polar_type.eq.1) then
 	    nmaps = 1
 	 else
