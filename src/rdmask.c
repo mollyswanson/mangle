@@ -802,6 +802,11 @@ polygon *get_poly(format *fmt)
 	poly->weight = fmt->weight;
     }
 
+    /* increment polygon number for healpix_weight input format */
+    if (strcmp(fmt->in, "healpix_weight") == 0 && poly) {
+      fmt->id++;
+    }
+
     return(poly);
 }
 
@@ -938,7 +943,6 @@ polygon *rd_hpix(format *fmt)
   poly->weight = weight;
   
   if(ird == 1 && (poly->cm[0] != 0 || poly->cm[1] != 0)) {
-    fmt->id++;
     fmt->pixel = 0;
     fmt->weight = poly->weight;
   }

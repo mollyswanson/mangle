@@ -174,7 +174,6 @@ int main(int argc, char *argv[])
     }
   }
 
-
   ifile = argc - 1;
   if (strcmp(fmt.out, "healpix_weight") == 0) {
     npolys = wr_healpix_weight(argv[ifile], &fmt, nweights, weights);
@@ -382,7 +381,9 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
     }
     else{
       weights[i]=0;
-      fprintf(stderr,"WARNING: rasterize: area of rasterizer polygon %d is zero.  Assigning zero weight.\n",i);
+      if (strcmp(fmt.out, "healpix_weight") == 0) {
+	fprintf(stderr,"WARNING: rasterize: area of rasterizer polygon %d is zero.  Assigning zero weight.\n",i);
+      }
     }
   }
 
