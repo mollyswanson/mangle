@@ -1,4 +1,4 @@
--Modified trim_mask.sh to use rasterize -T option
+-Modified trim_mask.sh to use rasterize -T option.
 -Fixed sscanf bug in rdmask (found and fixed by Guilhem Lavaux)
 -Updated matlab plotting script to work well for smaller regions of sky
 -Modified find_complement.sh and make_allsky.sh to take arguments for snap and multiple intersection tolerances
