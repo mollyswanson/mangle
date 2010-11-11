@@ -167,7 +167,7 @@ int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
     while (1) {
 	/* read line of data */
 	ird = rdline(&file);
-	if(npoly<0) printf("\n"); //include this line to stop problems of not detecting pixelization keyword on UIUC's bcs computer.  No idea why this should work, but it seems to.
+	//	if(npoly<0) printf("\n"); //include this line to stop problems of not detecting pixelization keyword on UIUC's bcs computer.  No idea why this should work, but it seems to.
 	/* serious error */
 	if (ird == -1) goto error;
 	/* EOF */
