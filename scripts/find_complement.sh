@@ -87,7 +87,7 @@ fi
 echo 0 > jw0
 echo "$MANGLEBINDIR/weight $mtol -zjw0 $mask jw"
 $MANGLEBINDIR/weight $mtol -zjw0 jps jw || exit
-rm jps
+rm jps jw0
 
 #balkanize the full sky with the zero-weighted mask to find the complement
 echo "$MANGLEBINDIR/balkanize $mtol $allsky jw jb"
