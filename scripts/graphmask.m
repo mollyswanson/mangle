@@ -96,7 +96,6 @@ ra=xymat(1:end,1);
 dec=xymat(1:end,2);
 weight=wmat(1:end,2);
 %set up map axes
-axm=axesm('MapProjection', 'hammer','frame','on','FFaceColor','black','origin',180);
 
 if (lims)
     axesm('MapProjection','mercator','frame','on','maplatlimit',[latmin latmax], 'maplonlimit',[lonmin lonmax])
@@ -104,12 +103,8 @@ if (lims)
     tightmap;
     ax1=gca;
     ax2=axes('Position',get(ax1,'Position'));
-    axesm('MapProjection','mercator','frame','on','maplatlimit',[latmin latmax], 'maplonlimit',[lonmin lonmax])
-    setm(gca,'FFaceColor','black')
-else
-   axm=axesm('MapProjection', 'hammer','frame','on','FFaceColor','black','origin',180);
 end
-
+axm=axesm('MapProjection', 'hammer','frame','on','FFaceColor', 'black','origin',180);
 %plot polygons in list as patches
 if (strcmp(outlines,'on'))
     h=patchesm(dec,ra,'g','Edgecolor','black','Linewidth',0.3);
@@ -145,6 +140,14 @@ color=[weight weight weight];
 cellcolor=num2cell(color,2);
 %apply weight colors to patch objects
 set(h,{'FaceColor'},cellcolor);
+
+%trim map to desired limits
+if (lims)
+    setm(gca,'MapProjection','mercator','frame','on','maplatlimit',[latmin latmax], 'maplonlimit',[lonmin lonmax])
+    setm(gca,'FFaceColor','black')
+else
+   axm=axesm('MapProjection', 'hammer','frame','on','FFaceColor','black','origin',180);
+end
 
 %tweak map display and add labels
 if (lims)
