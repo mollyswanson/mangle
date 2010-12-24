@@ -87,6 +87,8 @@ char thunit = THUNIT;		/* unit of snap angle for edge */
 long double ytol = YTOL;		/* edge to length tolerance */
 long double mtol = MTOL;		/* tolerance angle for multiple intersections */
 char munit = MUNIT;		/* unit of tolerance angle for multiple intersections */
+long double grow_angle = GROW_ANGLE;		/* angle defining borders to grow around polygons with the grow function */
+char gunit = GUNIT;		/* unit of grow angle */
 
 /* whether min, max weight are turned on */
 int is_weight_min = 0;

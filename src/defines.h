@@ -48,11 +48,15 @@
 #define YTOL		.01
 /* default snap angle for multiple intersections */
 #define MTOL		1.0e-11
+/* default angle for growing the border around a polygon */
+#define GROW_ANGLE     	5.
 /* default input units of snap angles */
 #define AXUNIT		's'
 #define BUNIT		's'
 #define THUNIT		's'
 #define MUNIT		's'
+/* default input units of grow angle */
+#define GUNIT           's'
 /* default seed for random number generator */
 #define SEED		1
 /* default number of random points to generate */

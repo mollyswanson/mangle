@@ -63,7 +63,6 @@ void	group_poly(polygon *poly, int [poly->np], int, polygon *);
 #else
 void	group_poly(polygon *poly, int [/*poly->np*/], int, polygon *);
 #endif
-
 void    assign_parameters();
 void    pix2ang(int, unsigned long, long double *, long double *);
 void    ang2pix(int, long double, long double, unsigned long *);
@@ -208,12 +207,15 @@ int	partition_poly(polygon **, int npolys, polygon *[npolys], long double, int, 
 int	partition_gpoly(polygon *, int npolys, polygon *[npolys], long double, int, int, int, int *);
 int	part_poly(polygon *, int npolys, polygon *[npolys], long double, int, int, int, int *, int *);
 int     pixel_list(int npoly, polygon *[npoly], int max_pixel, int [max_pixel], int [max_pixel]);
+int     grow_poly(polygon **, int npolys, polygon *[npolys], long double, long double, int *);
 #else
 int	partition_poly(polygon **, int npolys, polygon *[/*npolys*/], long double, int, int, int, int, int *);
 int	partition_gpoly(polygon *, int npolys, polygon *[/*npolys*/], long double, int, int, int, int *);
 int	part_poly(polygon *, int npolys, polygon *[/*npolys*/], long double, int, int, int, int *, int *);
 int     pixel_list(int npoly, polygon *[/*npoly*/], int max_pixel, int [/*max_pixel*/], int [/*max_pixel*/]);
+int     grow_poly(polygon **, int npolys, polygon *[/*npolys*/], long double, long double, int *);
 #endif
+
 int     pixel_start(int, char);
 
 long double	places(long double, int);

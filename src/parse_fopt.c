@@ -35,9 +35,9 @@ int parse_fopt(void)
 	    /* pole */
 	    az = 0.;	el = 90.;
 	    /* az, el of old pole wrt new frame */
-	    fframe_(&fmt.inframe, &az, &el, &fmt.outframe, &fmt.azp, &fmt.eln);
+	    //	    fframe_(&fmt.inframe, &az, &el, &fmt.outframe, &fmt.azp, &fmt.eln);
 	    /* az, el of new pole wrt old frame */
-	    fframe_(&fmt.outframe, &az, &el, &fmt.inframe, &fmt.azn, &fmt.eln);
+	    // fframe_(&fmt.outframe, &az, &el, &fmt.inframe, &fmt.azn, &fmt.eln);
 	}
     }
 

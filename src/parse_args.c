@@ -42,6 +42,7 @@ void parse_args(int argc, char *argv[])
 		if (strchr(optstr, 'p')) printf(" -p%c%s", OUTPHASE, "auto");
 		if (strchr(optstr, 'P')) printf(" -P%c%d,%d", SCHEME,POLYS_PER_PIXEL,RES_MAX);
 		if (strchr(optstr, 'B')) printf(" -B%c", BMETHOD);
+		if (strchr(optstr, 'G')) printf(" -G%.15g%c", GROW_ANGLE, GUNIT);
 		if (strchr(optstr, 'i')) {
 		    if (!fmt.in) {
 			printf(" -i?%c", INUNITP);
@@ -166,6 +167,17 @@ void parse_args(int argc, char *argv[])
 		exit(1);
 	    }
 	    break;
+	case 'G':		/* growth angle */
+	    iscan = sscanf(optarg, "%Lg %c", &grow_angle, &gunit);
+	    if (iscan < 1) {
+		iscan = sscanf(optarg, " %c", &gunit);
+	    }
+	    if (!strchr(UNITS, gunit)) {
+		fprintf(stderr, "-%c%s: unit %c must be one of %s\n", opt, optarg, gunit, UNITS);
+		exit(1);
+	    }
+	    break;
+
 	case 'j':		/* keep weights in interval [min, max] */
 	    iscan = sscanf(optarg, "%Lg %*[,] %Lg", &weight_min, &weight_max);
 	    if (iscan < 1) {

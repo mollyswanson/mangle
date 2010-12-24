@@ -271,7 +271,7 @@ void rotate_azel(format *fmt, azel *vi, azel *vf)
 
     /* built-ins */
     } else {
-	fframe_(&fmt->inframe, &vi->az, &vi->el, &fmt->outframe, &vf->az, &vf->el);
-
+      //fframe_(&fmt->inframe, &vi->az, &vi->el, &fmt->outframe, &vf->az, &vf->el);
+      msg("To use the built-in coordinate systems for rotation, mangle must be recompiled with linking the starlink libraries.\n");
     }
 }

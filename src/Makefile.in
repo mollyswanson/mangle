@@ -32,6 +32,9 @@ ddcount: ddcount.o libmangle.a Makefile
 drangle: drangle.o libmangle.a Makefile
 	$(F77) $(FFLAGS) -o drangle drangle.o $(ILIB) $(LLIB)
 
+grow: grow.o libmangle.a Makefile
+	$(F77) $(FFLAGS) -o grow grow.o $(ILIB) $(LLIB)
+
 harmonize: harmonize.o libmangle.a Makefile
 	$(F77) $(FFLAGS) -o harmonize harmonize.o $(ILIB) $(LLIB)
 
@@ -57,7 +60,7 @@ rasterize: rasterize.o libmangle.a Makefile
 	$(F77) $(FFLAGS) -o rasterize rasterize.o $(ILIB) $(LLIB)
 
 rotate: rotate.o libmangle.a Makefile
-	$(F77) $(FFLAGS) -o rotate rotate.o $(ILIB) $(LLIB) $(ISLIB) $(SLIB)
+	$(F77) $(FFLAGS) -o rotate rotate.o $(ILIB) $(LLIB) #$(ISLIB) $(SLIB)
 
 rrcoeffs: rrcoeffs.o libmangle.a Makefile
 	$(F77) $(FFLAGS) -o rrcoeffs rrcoeffs.o $(ILIB) $(LLIB)
@@ -115,6 +118,8 @@ gphi.o: manglefn.h gphi.c
 	$(CC) $(CFLAGS) -c gphi.c
 gptin.o: manglefn.h gptin.c
 	$(CC) $(CFLAGS) -c gptin.c
+grow.o: parse_args.c defaults.h manglefn.h usage.h grow.c
+	$(CC) $(CFLAGS) -c grow.c
 gspher.o: manglefn.h pi.h gspher.c
 	$(CC) $(CFLAGS) -c gspher.c
 gsphr.o: manglefn.h pi.h gsphr.c

@@ -34,6 +34,8 @@
 
     if (strchr(optstr, 'm')) printf("  -m<angle>[u]\tangle within which close vertices are coincident\n");
 
+    if (strchr(optstr, 'G')) printf("  -G<angle>[u]\tangle of borders to grow around polygons\n");
+
     if (strchr(optstr, 'j')) printf("  -j[min][,max]\tkeep only polygons with weight in [min, max]\n");
 
     if (strchr(optstr, 'J')) printf("  -J[min][,max]\tkeep only polygons with id numbers in [min, max]\n");
@@ -99,7 +101,7 @@
       printf("    \t\than the rasterizer polygons themselves. (T==Trim, a common use of this feature.)\n");
     }
 
-    if (strchr(optstr, 'a') || strchr(optstr, 'b') || strchr(optstr, 't') || strchr(optstr, 'i') || strchr(optstr, 'o'))
+    if (strchr(optstr, 'a') || strchr(optstr, 'b') || strchr(optstr, 't') || strchr(optstr, 'i') || strchr(optstr, 'o') || strchr(optstr, 'G'))
 	printf("  unit u:\tr radians, d degrees, m arcmin, s arcsec, h hms(RA) & dms(Dec)\n");
 
     printf("  - for infile\tmeans read from stdin\n");
