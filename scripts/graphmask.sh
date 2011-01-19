@@ -33,7 +33,9 @@ if [ $# -eq 2 ]; then
 	if [ -e $2 ]; then
 	    rm $2
 	fi
-	matlab -nodisplay -r addpath\(\'$MANGLESCRIPTSDIR\'\)\;graphmask\(\'$1\',\'$2\'\)
+	echo "addpath('$MANGLESCRIPTSDIR'); graphmask1('$1','$2')" > jgraphtemp.m
+	matlab -nodisplay -nosplash < jgraphtemp.m
+	rm jgraphtemp.m
     else
 	echo >&2 "ERROR: file $1 not found."
 	exit 1

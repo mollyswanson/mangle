@@ -164,12 +164,14 @@ int main(int argc, char *argv[])
   npolys = rasterize(nhealpix_poly, npoly, polys, NPOLYSMAX - npoly, &polys[npoly], nweights, weights);
   if (npolys == -1) exit(1);
 
-  /* copy new weights to original rasterizer polygons */
-  for (k = 0; k < nhealpix_poly; k++) {
-    for (j = 0; j < nweights; j++) {
-      if (polys[k]->id == j) {
-	polys[k]->weight = weights[j];
-	break;
+  if(!sliceordice){
+    /* copy new weights to original rasterizer polygons */
+    for (k = 0; k < nhealpix_poly; k++) {
+      for (j = 0; j < nweights; j++) {
+	if (polys[k]->id == j) {
+	  polys[k]->weight = weights[j];
+	  break;
+	}
       }
     }
   }
@@ -231,39 +233,41 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
 
   static polygon *polyint = 0x0;
 
-   /* make sure weights are all zero for rasterizer pixels */
+  /* make sure weights are all zero for rasterizer pixels */
   for (i = 0; i < nhealpix_poly; i++) {
-      poly[i]->weight = 0.;
+    poly[i]->weight = 0.;
   }
-
+  
   /* allocate memory for rasterizer areas array */
   areas = (long double *) malloc(sizeof(long double) * (nweights));
   if (!areas) {
     fprintf(stderr, "rasterize: failed to allocate memory for %d long doubles\n", nweights);
     exit(1);
   }
-
+  
   /* initialize rasterizer areas array to 0 */
   for (i = 0; i < nweights; i++) areas[i] = 0.;
 
   /* allow error messages from garea */
   verb = 1;
-
-  /* find areas of rasterizer pixels for later use */
-  for (i = 0; i < nweights; i++) {
-    for (j = 0; j < nhealpix_poly; j++) {
-      if (poly[j]->id == i) {
-        tol = mtol;
-        ier_h = garea(poly[j], &tol, verb, &area_h);
-        if (ier_h == 1) {
-          fprintf(stderr, "fatal error in garea\n");
-          exit(1);
-        }
-        if (ier_h == -1) {
-          fprintf(stderr, "failed to allocate memory in garea\n");
-          exit(1);
-        }
-        areas[i] += area_h;
+  
+  if(!sliceordice){ 
+    /* find areas of rasterizer pixels for later use */
+    for (i = 0; i < nweights; i++) {
+      for (j = 0; j < nhealpix_poly; j++) {
+	if (poly[j]->id == i) {
+	  tol = mtol;
+	  ier_h = garea(poly[j], &tol, verb, &area_h);
+	  if (ier_h == 1) {
+	    fprintf(stderr, "fatal error in garea\n");
+	    exit(1);
+	  }
+	  if (ier_h == -1) {
+	    fprintf(stderr, "failed to allocate memory in garea\n");
+	    exit(1);
+	  }
+	  areas[i] += area_h;
+	}
       }
     }
   }
@@ -370,19 +374,23 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
 	  }	  
 	  j++;
 	}
-	weights[(poly[i]->id)] += (area_i)*(poly[ipoly]->weight);
+	if(!sliceordice){
+	  weights[(poly[i]->id)] += (area_i)*(poly[ipoly]->weight);
+	}
       }
     }
   }
 
-  for (i=0; i<nweights; i++) {
-    if(areas[i]!=0){
-      weights[i] = weights[i]/areas[i];
-    }
-    else{
-      weights[i]=0;
-      if (strcmp(fmt.out, "healpix_weight") == 0) {
-	fprintf(stderr,"WARNING: rasterize: area of rasterizer polygon %d is zero.  Assigning zero weight.\n",i);
+  if(!sliceordice){
+    for (i=0; i<nweights; i++) {
+      if(areas[i]!=0){
+	weights[i] = weights[i]/areas[i];
+      }
+      else{
+	weights[i]=0;
+	if (strcmp(fmt.out, "healpix_weight") == 0) {
+	  fprintf(stderr,"WARNING: rasterize: area of rasterizer polygon %d is zero.  Assigning zero weight.\n",i);
+	}
       }
     }
   }
