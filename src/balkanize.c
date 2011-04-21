@@ -206,7 +206,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
     if (iprune >= 2) {
       if (WARNMAX > 0 && inull == 0) msg("warning from balkanize: following polygons have zero area & are being discarded:\n");
       if (inull < WARNMAX) {
-	msg(" %d", (fmt.newid == 'o')? poly[i]->id : i);
+	msg(" %d", (fmt.newid == 'o')? poly[i]->id : i+fmt.idstart);
       } else if (inull == WARNMAX) {
 	msg(" ... more\n");
       }
@@ -295,7 +295,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
 
 	  /* error */
 	  if (dn == -1) {
-	    fprintf(stderr, "balkanize: UHOH at polygon %d; continuing ...\n", (fmt.newid == 'o')? polys[i]->id : ip);
+	    fprintf(stderr, "balkanize: UHOH at polygon %d; continuing ...\n", (fmt.newid == 'o')? polys[i]->id+fmt.idstart : ip);
 	    continue;
 	    /* return(-1); */
 	  }
@@ -367,12 +367,12 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
     ier = partition_poly(&polys[i], npolys - n, &polys[n], tol, ALL_ONEBOUNDARY, ADJUST_LASSO, FORCE_SPLIT, OVERWRITE_ORIGINAL, &dn);
     // error
     if (ier == -1) {
-      fprintf(stderr, "balkanize: UHOH at polygon %d; continuing ...\n", (fmt.newid == 'o')? polys[i]->id : ip);
+      fprintf(stderr, "balkanize: UHOH at polygon %d; continuing ...\n", (fmt.newid == 'o')? polys[i]->id : ip+fmt.idstart);
       continue;
       // return(-1);
       // failed to partition polygon into desired number of parts
     } else if (ier == 1) {
-      fprintf(stderr, "balkanize: failed to partition polygon %d fully; partitioned it into %d parts\n", (fmt.newid == 'o')? polys[i]->id : ip, dn + 1);
+      fprintf(stderr, "balkanize: failed to partition polygon %d fully; partitioned it into %d parts\n", (fmt.newid == 'o')? polys[i]->id : ip+fmt.idstart, dn + 1);
       failed++;
     }
     // increment index of next subset of fragments
@@ -422,7 +422,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
     tol = mtol;
     iprune = prune_poly(polys[i], tol);
     if (iprune == -1) {
-      fprintf(stderr, "balkanize: failed to prune polygon %d; continuing ...\n", (fmt.newid == 'o')? polys[i]->id : j);
+      fprintf(stderr, "balkanize: failed to prune polygon %d; continuing ...\n", (fmt.newid == 'o')? polys[i]->id : j+fmt.idstart);
       /* return(-1); */
     }
     if (iprune >= 2) {
@@ -465,7 +465,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
         if (snapped_polys[i]) {
             iprune = prune_poly(polys[i], mtol);
             if (iprune == -1) {
-                fprintf(stderr, "balkanize: failed to prune polygon %d; continuing ...\n", (fmt.newid == 'o')? polys[i]->id : j);
+                fprintf(stderr, "balkanize: failed to prune polygon %d; continuing ...\n", (fmt.newid == 'o')? polys[i]->id : j+fmt.idstart);
                 // return(-1);
             }
             if (iprune >= 2) {
@@ -498,7 +498,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
   /* assign new polygon id numbers in place of inherited ids */
   if (fmt.newid == 'n') {
     for (i = 0; i < n; i++) {
-      polys[i]->id = i;
+      polys[i]->id = i+fmt.idstart;
     }
   }
 

@@ -272,7 +272,7 @@ int pixelmap(int *npoly, polygon *poly[/**npoly*/])
   /* assign new polygon id numbers */
   if (fmt.newid == 'n') {
     for (i = 0; i < *npoly; i++) {
-      poly[i]->id = i;
+      poly[i]->id = i+fmt.idstart;
     }
   }
   

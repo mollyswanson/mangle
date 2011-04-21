@@ -150,7 +150,7 @@ int grow(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*npoly
   for (ipoly = 0; ipoly < n; ipoly++) {
     /* assign new polygon id numbers in place of inherited ids */
     if (fmt.newid == 'n') {
-      poly[ipoly]->id = ipoly;
+      poly[ipoly]->id = ipoly+fmt.idstart;
     }      
     if (fmt.newid == 'p') {
       poly[ipoly]->id = poly[ipoly]->pixel;

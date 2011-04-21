@@ -170,7 +170,7 @@ int weight(int npoly, polygon *poly[/*npoly*/], char *survey)
 	  //call weight_fn to stay in right place in weight file if reading from weights from a file
 	    weight_fn(v.az, v.el, survey);
 	    if (nomid == 0) msg("weight: failed to find interior point for the following polygons:\n");
-	    msg(" %d", (fmt.newid == 'n')? ipoly : poly[ipoly]->id);
+	    msg(" %d", (fmt.newid == 'n')? ipoly+fmt.idstart : poly[ipoly]->id);
 	    nomid++;
 	}
     }
@@ -184,7 +184,7 @@ int weight(int npoly, polygon *poly[/*npoly*/], char *survey)
     /* assign new polygon id numbers in place of inherited ids */
     if (fmt.newid == 'n') {
 	for (ipoly = 0; ipoly < npoly; ipoly++) {
-	    poly[ipoly]->id = ipoly;
+	    poly[ipoly]->id = ipoly+fmt.idstart;
 	}
     }
 

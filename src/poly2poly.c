@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
     /* apply new id numbers to output polygons */
     if (fmt.newid == 'n') {
 	for (ipoly = 0; ipoly < npoly; ipoly++) {
-	    polys[ipoly]->id = ipoly;
+	    polys[ipoly]->id = ipoly+fmt.idstart;
 	}
     }
 
@@ -222,7 +222,7 @@ int intersect_poly(int npoly1, polygon *poly1[/*npoly1*/], int npoly2, polygon *
     for (i = 0; i < npoly1; i++) {
           iprune = prune_poly(poly1[i], mtol);
         if (iprune == -1) {
-	    fprintf(stderr, "intersect_poly: failed to prune polygon %d; continuing ...\n", (fmt.newid == 'o')? poly1[i]->id : j);
+	    fprintf(stderr, "intersect_poly: failed to prune polygon %d; continuing ...\n", (fmt.newid == 'o')? poly1[i]->id : j+fmt.idstart);
 	}
 	if (iprune >= 2) {
 	    free_poly(poly1[i]);

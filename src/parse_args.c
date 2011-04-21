@@ -277,6 +277,15 @@ void parse_args(int argc, char *argv[])
 		}
 		exit(1);
 	    }
+	    // check for argument after -vn to start new polygon numbers at non-zero value
+	    optarg++;  
+	    if (*optarg) {
+	      iscan = sscanf(optarg, "%d", &fmt.idstart);
+	      if (iscan != 1) {
+		fprintf(stderr, "-%c%s: expecting integer argument\n", opt, optarg);
+		exit(1);
+	      }
+	    }
 	    break;
 	case 'B':		/* set balkanize method */
 	    iscan = sscanf(optarg, " %c", &bmethod);

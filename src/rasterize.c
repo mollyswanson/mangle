@@ -400,7 +400,7 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
   /* assign new polygon id numbers in place of inherited ids */
   if (fmt.newid == 'n') {
     for (i = 0; i < n; i++) {
-      if(sliceordice) polys[i]->id = i; else poly[i]->id = i;
+      if(sliceordice) polys[i]->id = i+fmt.idstart; else poly[i]->id = i+fmt.idstart;
     }
   }
   

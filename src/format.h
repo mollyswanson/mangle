@@ -25,6 +25,7 @@ typedef struct {
     int outnve;		/* the output number of points per edge */
     int id;		/* id number of current polygon */
     char newid;		/* whether to use old or new id number */
+  int idstart;          /* new id number to use for first polygon in file*/
     int pixel;          /* pixel that current polygon is in */ 
     long double weight;	/* weight of current polygon */
     char inunitp;	/* angular units of input polygon data */
@@ -40,7 +41,7 @@ typedef struct {
 			 = elevation of original pole wrt new frame */
     long double azp;		/* azimuth of original pole wrt new frame */
     char trunit;	/* angular units of transformation angles */
-    int nweights;       /* the total number of weights/polygons, for use with healpix_weight input files and rasterize */
+    int nweights;       /* the total number of weights/polygons, for use with healpix_weight input files and rasterize */      
 } format;
 
 #endif	/* FORMAT_H */

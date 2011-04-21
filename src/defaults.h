@@ -48,6 +48,7 @@ static format fmt = {
 	NVE,		/* the output number of points per edge */
 	0,		/* id number of current polygon */
 	'o',		/* whether to use old or new id number */
+	0,              /* default initial id number */
         0,              /* default pixel number */
 	1.,		/* weight of current polygon */
 	INUNITP,	/* default unit of angles in input polygon data */
