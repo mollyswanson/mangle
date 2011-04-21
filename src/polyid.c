@@ -131,35 +131,48 @@ int poly_ids(char *in_filename, char *out_filename, format *fmt, int npoly, poly
     int *start;
     int *total;
     int *parent_pixels;
-    int p, res, max_pixel, ier;
-    max_pixel= poly[npoly-1]->pixel; 
-    res_max=get_res(max_pixel, scheme);
-    max_pixel=pixel_start(res_max+1,scheme);
-    
-    /* allocate memory for pixel info arrays start and total */ 
-    printf("res_max=%d, max_pixel=%d\n",res_max,max_pixel);
-    start = (int *) malloc(sizeof(int) * max_pixel);
-    if (!start) {
-      fprintf(stderr, "polyid: failed to allocate memory for %d integers\n", max_pixel);
-      return(-1);
-    }
-    total = (int *) malloc(sizeof(int) * max_pixel);
-    if (!total) {
-      fprintf(stderr, "polyid: failed to allocate memory for %d integers\n", max_pixel);
-      return(-1);
-    }
-    parent_pixels = (int *) malloc(sizeof(int) * (res_max+1));
-    if (!parent_pixels) {
-      fprintf(stderr, "polyid: failed to allocate memory for %d integers\n", res_max+1);
-      return(-1);
-    }
+    int p, res, max_pixel, ier, sorted;
 
-    /* build lists of starting indices of each pixel and total number of polygons in each pixel*/
-    
-    ier=pixel_list(npoly, poly, max_pixel, start, total);
-    if (ier == -1) {
-      fprintf(stderr, "poly_ids: error building pixel index lists\n");
-      return(-1);
+    ier=-1;
+    sorted=0;
+    while(ier!=0){
+      max_pixel= poly[npoly-1]->pixel; 
+      res_max=get_res(max_pixel, scheme);
+      max_pixel=pixel_start(res_max+1,scheme);
+      
+      /* allocate memory for pixel info arrays start and total */ 
+      printf("res_max=%d, max_pixel=%d\n",res_max,max_pixel);
+      start = (int *) malloc(sizeof(int) * max_pixel);
+      if (!start) {
+	fprintf(stderr, "polyid: failed to allocate memory for %d integers\n", max_pixel);
+	return(-1);
+      }
+      total = (int *) malloc(sizeof(int) * max_pixel);
+      if (!total) {
+	fprintf(stderr, "polyid: failed to allocate memory for %d integers\n", max_pixel);
+	return(-1);
+      }
+      parent_pixels = (int *) malloc(sizeof(int) * (res_max+1));
+      if (!parent_pixels) {
+	fprintf(stderr, "polyid: failed to allocate memory for %d integers\n", res_max+1);
+	return(-1);
+      }
+      
+      /* build lists of starting indices of each pixel and total number of polygons in each pixel*/
+      
+      ier=pixel_list(npoly, poly, max_pixel, start, total);
+      if (ier == -1) {
+	// if pixel_list returns an error, try sorting the polygons and trying again
+	if(!sorted){
+	  msg("sorting polygons...\n");
+	  poly_sort(npoly,poly,'p');
+	  sorted=1;
+	}
+	else{
+	  fprintf(stderr, "poly_ids: error building pixel index lists\n");
+	  return(-1);
+	}
+      } 
     }
     
     /* open in_filename for reading */
