@@ -14,7 +14,7 @@
 #define DNP             4
 
 /* getopt options */
-const char *optstr = "dqm:s:e:v:p:i:o:HT";
+const char *optstr = "B:dqm:s:e:v:p:i:o:HT";
 
 /* allocate polygons as a global array */
 polygon *polys_global[NPOLYSMAX];
@@ -233,9 +233,11 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
 
   static polygon *polyint = 0x0;
 
-  /* make sure weights are all zero for rasterizer pixels */
-  for (i = 0; i < nhealpix_poly; i++) {
-    poly[i]->weight = 0.;
+  if(!sliceordice){
+    /* make sure weights are all zero for rasterizer pixels */
+    for (i = 0; i < nhealpix_poly; i++) {
+      poly[i]->weight = 0.;
+    }
   }
   
   /* allocate memory for rasterizer areas array */
@@ -361,18 +363,46 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
 
 	/*if the "slicing" option is selected, write the intersection polygon into the output array */
 	if(area_i!=0 && sliceordice){
-	  /* make sure output polygon contains enough space */
-	  np = polyint->np;
-	  ier = room_poly(&polys[j], np, DNP, 0);
-	  if (ier == -1) goto out_of_memory;
+	  tol = mtol;
+	  iprune = prune_poly(polyint, tol);
+	  if (iprune == -1) {
+	    fprintf(stderr, "rasterize: failed to prune polygon %d; continuing ...\n", (fmt.newid == 'o')? polys[i]->id : j+fmt.idstart);
+	    /* return(-1); */
+	  }
+	  if (iprune >= 2) {
+	    fprintf(stderr, "rasterize: polygon %d is NULL; continuing ...\n", (fmt.newid == 'o')? polys[i]->id : j+fmt.idstart);
+	  } 
+	  else {
+	    /* make sure output polygon contains enough space */
+	    np = polyint->np;
+	    ier = room_poly(&polys[j], np, DNP, 0);
+	    if (ier == -1) goto out_of_memory;
 	  
-	  /* copy intersection into poly1 */
-	  copy_poly(polyint, polys[j]);
+	    /* copy intersection into poly1 */
+	    copy_poly(polyint, polys[j]);
 	  /* if output id number option = p, set id number equal to id number of rasterizer polygon*/
-	  if (fmt.newid == 'p') {
-	    polys[j]->id = poly[i]->id;
-	  }	  
-	  j++;
+	    if (fmt.newid == 'p') {
+	      polys[j]->id = poly[i]->id;
+	    }	  
+	    /* set weight according to balkanization scheme: */
+	    if(bmethod=='l'){
+	      //do nothing - this is the default behavior
+	    }
+	    else if(bmethod=='a'){
+	      polys[j]->weight=polys[j]->weight + poly[i]->weight;
+	    }
+	    else if(bmethod=='n'){
+	      polys[j]->weight=(polys[j]->weight > poly[i]->weight)? poly[i]->weight : polys[j]->weight ;
+	    }
+	    else if(bmethod=='x'){
+	      polys[j]->weight=(polys[j]->weight > poly[i]->weight)? polys[j]->weight : poly[i]->weight ;
+	    }
+	    else{
+	      fprintf(stderr, "error in fragment_poly: balkanize method %c not recognized.\n", bmethod);
+	      return(-1);
+	    }
+	    j++;
+	  }
 	}
 	if(!sliceordice){
 	  weights[(poly[i]->id)] += (area_i)*(poly[ipoly]->weight);
