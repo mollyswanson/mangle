@@ -40,11 +40,6 @@ if [ "$mask" = "" ] || [ "$trimmer" = "" ] || [ "$outfile" = "" ] ; then
     exit 1
 fi
 
-#if no argument for pixelize is given, pixelize to resolution 6 with the simple scheme:
-if [ "$pixargs" = "" ] ; then
-    pixargs="-Ps0,6"
-fi
-
 head -n 100 $mask > jmaskhead
 head -n 100 $trimmer > jtrimmerhead
 
@@ -92,7 +87,7 @@ elif [ "$res1" = "" ] && [ ! "$res2" = "" ] ; then
     echo "$MANGLEBINDIR/pixelize -P${scheme2}0,$res2 $mtol $mask mask_pix"
     $MANGLEBINDIR/pixelize -P${scheme2}0,$res2 $mtol $mask mask_pix || exit
     mask="mask_pix"
-else
+elif [ ! "$pixargs" = "" ] ; then
     echo "$MANGLEBINDIR/pixelize $pixargs $mtol $trimmer trimmer_pix"
     $MANGLEBINDIR/pixelize $pixargs $mtol $trimmer trimmer_pix || exit
     echo "$MANGLEBINDIR/pixelize $pixargs $mtol $mask mask_pix"

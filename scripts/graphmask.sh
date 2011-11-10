@@ -33,7 +33,7 @@ if [ $# -eq 2 ]; then
 	if [ -e $2 ]; then
 	    rm $2
 	fi
-	echo "addpath('$MANGLESCRIPTSDIR'); graphmask1('$1','$2')" > jgraphtemp.m
+	echo "addpath('$MANGLESCRIPTSDIR'); graphmask('$1','$2')" > jgraphtemp.m
 	matlab -nodisplay -nosplash < jgraphtemp.m
 	rm jgraphtemp.m
     else
