@@ -41,6 +41,8 @@ extern int pixelized;                /*switch indicating whether input has been 
 extern int snapped;                /*switch indicating whether input has been snapped */
 extern int balkanized;                /*switch indicating whether input has been balkanized */
 
+extern int real;             /*equal to either '8' or '10' depending on whether doubles (real*8) or long doubles (real*10) are used*/
+
 /*------------------------------------------------------------------------------
   Write mask data.
 
@@ -149,6 +151,8 @@ int wr_circ(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 
     /* write angular unit */
     fprintf(file, "unit %c\n", fmt->outunitp);
+
+    fprintf(file, "real %d\n",real);
 
     if(pixelized>0){
       fprintf(file, "pixelization %d%c\n", res_max, scheme);
@@ -412,17 +416,16 @@ int wr_list(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
     const int per = 0;
     const int nve = 2;
     char az_str[AZEL_STR_LEN], el_str[AZEL_STR_LEN];
-    char az_str_first[AZEL_STR_LEN], el_str_first[AZEL_STR_LEN];
-    int firstpoint;
-    int do_vcirc, i, ier, imid, ipoly, iv, ive, ivm, jv, manybounds, nbadverts, nev, nev0, npoly, npt, nv, nvm;
+    char az_str_mid[AZEL_STR_LEN], el_str_mid[AZEL_STR_LEN];
+    int do_vcirc, i, ier, imid, ipoly, iv, ive, ivm, jv, manybounds, nbadverts, nev, nev0, npoly, npt, nv, nvm,firstpoint;
     int *ipv, *gp, *ev;
-    long double azo, tol;
+    long double azo, tol,az1,el1;
     long double *angle;
     vec *ve, *vm;
     azel v;
     FILE *file;
     FILE *weightfile;
-    char weightfilename[100];
+    char weightfilename[1000];
 
 
     /* open filename for writing */
@@ -439,7 +442,7 @@ int wr_list(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
       sprintf(weightfilename,"%s.weight",filename);
     }
     
-    if (!weightfilename || strcmp(weightfilename, "-") == 0) {
+    if (!weightfilename || strcmp(filename, "-") == 0) {
 	weightfile = stdout;
     } else {
 	weightfile = fopen(weightfilename, "w");
@@ -495,6 +498,10 @@ int wr_list(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 	    scale_azel(&v, 'r', fmt->outunitp);
 	}
 
+	/* number of edges, weight, and midpoint of polygon */
+	wrangle(v.az, fmt->outunitp, fmt->outprecision, AZEL_STR_LEN, az_str_mid);
+	wrangle(v.el, fmt->outunitp, fmt->outprecision, AZEL_STR_LEN, el_str_mid);
+
 	/* points on edges of polygon */
 	tol = mtol;
         ier = gverts(polys[ipoly], do_vcirc, &tol, fmt->outper, fmt->outnve, &nv, &ve, &angle, &ipv, &gp, &nev, &nev0, &ev);
@@ -549,25 +556,32 @@ int wr_list(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 			case '+':	if (v.az < 0.) v.az += TWOPI;	break;
 			case '-':	if (v.az > PI) v.az -= TWOPI;	break;
 			}
+			az1=v.az;
+			el1=v.el;
 		    /* phase azimuth of each subsequent point to the previous point */
 		    } else {
 			v.az -= rint((v.az - azo) / TWOPI) * TWOPI;
 		    }
 		    azo = v.az;
+		    if(firstpoint){
+		      az1=v.az;
+		      el1=v.el;
+		      firstpoint=0;
+		    }
 		    scale_azel(&v, 'r', fmt->outunitp);
 		    wrangle(v.az, fmt->outunitp, fmt->outprecision, AZEL_STR_LEN, az_str);
 		    wrangle(v.el, fmt->outunitp, fmt->outprecision, AZEL_STR_LEN, el_str);
 		    fprintf(file, " %s %s\n", az_str, el_str);
-		    if(firstpoint){
-		      sprintf(az_str_first, "%s", az_str);
-		      sprintf(el_str_first, "%s", el_str);
-		      firstpoint=0;
-		    }
 		}
 	    }
-	    fprintf(file, " %s %s\n", az_str_first, el_str_first);
+	    v.az = az1-rint((az1 - azo) / TWOPI) * TWOPI;
+	    v.el=el1;
+	    scale_azel(&v, 'r', fmt->outunitp);
+	    wrangle(v.az, fmt->outunitp, fmt->outprecision, AZEL_STR_LEN, az_str);
+	    wrangle(v.el, fmt->outunitp, fmt->outprecision, AZEL_STR_LEN, el_str);
+	    fprintf(file, " %s %s\n", az_str, el_str);
 	    fprintf(file, "NaN NaN\n");
-	    fprintf(weightfile,"%d %.18Lg\n", polys[ipoly]->id,polys[ipoly]->weight); 
+	    fprintf(weightfile,"%d %.18Lg %s %s\n", polys[ipoly]->id,polys[ipoly]->weight,az_str_mid,el_str_mid); 
 	}
 	//fprintf(file, "NaN NaN\n");
 
@@ -739,8 +753,8 @@ int wr_poly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
     long double area, tol;
     FILE *file;
     char *poly_fmt;
-    char *polygon_fmt = "polygon %d ( %d caps, %.18Lg weight, %d pixel, %.18Lf str):\n";
-    char *spolygon_fmt = "%d %d %.18Lg %d %.18Lf\n";
+    char *polygon_fmt = "polygon %d ( %d caps, %.19Lg weight, %d pixel, %.19Lg str):\n";
+    char *spolygon_fmt = "%d %d %.19Lg %d %.19Lg\n";
 
     /* open filename for writing */
     if (!filename || strcmp(filename, "-") == 0) {
@@ -762,6 +776,8 @@ int wr_poly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 
     /* write number of polygons */
     fprintf(file, "%d polygons\n", npolyw);
+    
+    fprintf(file, "real %d\n",real);
 
     if(pixelized>0){
       fprintf(file, "pixelization %d%c\n", res_max, scheme);
@@ -794,7 +810,7 @@ int wr_poly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 
 	/* write boundaries of polygon */
 	for (ip = 0; ip < polys[ipoly]->np; ip++) {
-	    fprintf(file, " %21.19Lf %21.19Lf %21.19Lf %.19Lg\n",
+	    fprintf(file, " %.19Lg %.19Lg %.19Lg %.19Lg\n",
 		polys[ipoly]->rp[ip][0], polys[ipoly]->rp[ip][1], polys[ipoly]->rp[ip][2], polys[ipoly]->cm[ip]);
 	}
 

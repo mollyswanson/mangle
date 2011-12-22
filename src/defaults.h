@@ -145,6 +145,7 @@ char *keywords[] = {
     "unit",
     "balkanized",
     "snapped",
+    "real",
     '\0'
 };
 
@@ -186,3 +187,4 @@ int sliceordice=0;                     /*switch for whether rasterize should ret
 					 default, with sliceordice=0), or the input mask polygons sliced so 
 					 that each polygon is only in one rasterizer polygon, like in pixelize 
 					 (i.e. "slicing" - set sliceordice=1)*/
+int real=REAL;

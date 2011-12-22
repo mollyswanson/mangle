@@ -102,6 +102,7 @@ extern char scheme;
 extern int pixelized;
 extern int snapped;
 extern int balkanized;
+extern int real;
 
 /* counter for input files*/
 extern int infiles;
@@ -329,6 +330,7 @@ int new_fmt(char *keyword, char **line_rest, format *fmt)
     const char *end_fmt = "%d";
     const char *unit_fmt = " %c";
     const char *pix_fmt = "%d%c";
+    const char *real_fmt = " %d";
     char *word;
     char *blank = " \t\n\r";
     int ird, iscan, nholes, i, flag;
@@ -597,10 +599,23 @@ int new_fmt(char *keyword, char **line_rest, format *fmt)
       snapped++;
     } else if (strcmp(keyword, "balkanized") == 0) {
       balkanized++;
+    } else if (strcmp(keyword, "real") == 0) {
+      ird = sscanf(*line_rest, real_fmt,&real);
+      if (ird != 1) {
+	WHERE;
+	fprintf(stderr, " expecting integer following keyword real\n");
+	return(-1);
+      }
+      if(real==8){
+	fprintf(stderr,"WARNING: this polygon file was produced with the real*8 version of mangle and could produce bugs if used with the real*10 version.\n");
+      } else if(real!=10){
+	WHERE;
+	fprintf(stderr," integer following keyword real should be either 8 or 10 to denote a file made with the real*8 or real*10 version of mangle.\n");
+	return(-1);
+      }
+
     }
-
-
-
+    
     return(0);
 }
 

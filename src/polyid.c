@@ -141,7 +141,7 @@ int poly_ids(char *in_filename, char *out_filename, format *fmt, int npoly, poly
       max_pixel=pixel_start(res_max+1,scheme);
       
       /* allocate memory for pixel info arrays start and total */ 
-      printf("res_max=%d, max_pixel=%d\n",res_max,max_pixel);
+      msg("res_max=%d, max_pixel=%d\n",res_max,max_pixel);
       start = (int *) malloc(sizeof(int) * max_pixel);
       if (!start) {
 	fprintf(stderr, "polyid: failed to allocate memory for %d integers\n", max_pixel);

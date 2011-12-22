@@ -118,4 +118,7 @@
 /*default balkanize method */
 #define BMETHOD         'l'
 
+/*this is the real*10 version of mangle, so set value of real to 10*/
+#define REAL 10
+
 #endif	/* DEFINES_H */
