@@ -300,7 +300,7 @@ BIN=../bin
 ILIB = -L.
 LLIB = -lmangle
 
-PROGS = balkanize drangle harmonize grow map pixelize pixelmap polyid poly2poly ransack rasterize snap unify weight test rotate
+PROGS = balkanize drangle harmonize grow map pixelize pixelmap polyid poly2poly ransack rasterize snap unify weight test rotate rotatepolys
 #ddcount rrcoeffs
 
 COBJ = advise_fmt.o braktop_.o cmminf.o convert.o copy_format.o copy_poly.o drandom.o drangle_polys.o dranglepolys_.o dump_poly.o findtop_.o get_pixel.o garea.o gcmlim.o gphbv.o gphi.o gptin.o grow.o gspher.o gsphr.o gvert.o gvlim.o gvphi.o harmonize_polys.o harmonizepolys_.o healpix_ang2pix_nest.o healpixpolys.o ikrand.o msg.o new_poly.o new_vert.o partition_poly.o places.o poly_id.o poly_sort.o prune_poly.o rasterize.o rdangle.o rdline.o rdmask.o rdmask_.o rdspher.o rrcoeffs.o scale.o sdsspix.o search.o snap_poly.o split_poly.o strcmpl.o strdict.o vmid.o weight_fn.o which_pixel.o wrangle.o wrho.o wrmask.o wrrrcoeffs.o wrspher.o

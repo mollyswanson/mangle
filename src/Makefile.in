@@ -62,6 +62,9 @@ rasterize: rasterize.o libmangle.a Makefile
 rotate: rotate.o libmangle.a Makefile
 	$(F77) $(FFLAGS) -o rotate rotate.o $(ILIB) $(LLIB) #$(ISLIB) $(SLIB)
 
+rotatepolys: rotatepolys.o libmangle.a Makefile
+	$(F77) $(FFLAGS) -o rotatepolys rotatepolys.o $(ILIB) $(LLIB)
+
 rrcoeffs: rrcoeffs.o libmangle.a Makefile
 	$(F77) $(FFLAGS) -o rrcoeffs rrcoeffs.o $(ILIB) $(LLIB)
 
@@ -184,6 +187,8 @@ rdspher.o: manglefn.h rdspher.c
 	$(CC) $(CFLAGS) -c rdspher.c
 rotate.o: parse_args.c parse_fopt.c angunit.h defaults.h inputfile.h manglefn.h usage.h rotate.c
 	$(CC) $(CFLAGS) -c rotate.c
+rotatepolys.o: parse_args.c parse_fopt.c angunit.h defaults.h inputfile.h manglefn.h usage.h rotatepolys.c
+	$(CC) $(CFLAGS) -c rotatepolys.c
 rrcoeffs.o: parse_args.c defaults.h manglefn.h usage.h rrcoeffs.c
 	$(CC) $(CFLAGS) -c rrcoeffs.c
 scale.o: manglefn.h scale.c

@@ -184,7 +184,7 @@ int snap(int npoly, polygon *poly[/*npoly*/])
       r = 0.;
       for (j = 0; j < 3; j++) r += poly[i]->rp[ip][j] * poly[i]->rp[ip][j];
       if (r != 1.) {
-	r = sqrt(r);
+	r = sqrtl(r);
 	for (j = 0; j < 3; j++) poly[i]->rp[ip][j] /= r;
       }
     }
