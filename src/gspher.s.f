@@ -27,9 +27,10 @@ c        local (automatic) variables
 C     logical warn
       logical whole
       real*10 bik,ci,cmi,cmik,cmk,cti,ctk,ctpsi,
-     *  d,darea,dbound(2),dph,dvert(2),ikchk,ikran,
+     *  d,darea,dbound(2),dph,dvert(2),
      *  ph,phi,phii,phm,php,psi,psip,ri,rii,si,sk,sqrt4pi,t,tolin,
      *  xi(3),yi(3)
+      real*8 ikchk,ikran
 c *
 c * Spherical transform of region W of sphere of unit radius bounded by
 c *    1 - r.rp(i) < cm(i)  (if cm(i).ge.0)

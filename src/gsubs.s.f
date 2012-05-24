@@ -839,14 +839,14 @@ c
 c-----------------------------------------------------------------------
       subroutine gvtrail(scmi,np,i,km,kp,vtrail,vik,nvmax,nv,ik,ikchk)
       integer scmi,np,i,km,kp,nvmax,vtrail(nvmax),vik(nvmax,2),nv,ik
-      real*10 ikchk
+      real*8 ikchk
 c
 c        externals
       integer ik2ik
 c     integer ik2i,ik2k
 c        local (automatic) variables
       integer iv,k,l
-      real*10 ikran
+      real*8 ikran
 c *
 c * Record endpoints of edge.
 c *

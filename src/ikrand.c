@@ -10,9 +10,9 @@
       ikrand(ik,ikran)
 
   Pseudo-random unsigned long or unsigned long long associated with integer ik,
-  returned as a long double.
+  returned as a double.
 */
-void ikrand_(int *ik, long double *ikran)
+void ikrand_(int *ik, double *ikran)
 {
     unsigned long *likran;
     unsigned long long *llikran;
@@ -21,7 +21,7 @@ void ikrand_(int *ik, long double *ikran)
     srandom((unsigned int) *ik);
 
     /* generate pseudo-random unsigned long */
-    if (sizeof(long long) > sizeof(long double)) {
+    if (sizeof(long long) > sizeof(double)) {
 	likran = (unsigned long *)ikran;
 	*likran = random();
     /* generate pseudo-random unsigned long long */
@@ -38,14 +38,14 @@ void ikrand_(int *ik, long double *ikran)
       ikrandp(ikchk,ikran)
 
   ikchk = ikchk + ikran
-  passed as long double's, but treated as unsigned long's or unsigned long long's.
+  passed as double's, but treated as unsigned long's or unsigned long long's.
 */
-void ikrandp_(long double *ikchk, long double *ikran)
+void ikrandp_(double *ikchk, double *ikran)
 {
     unsigned long *likchk;
     unsigned long long *llikchk;
 
-    if (sizeof(long long) > sizeof(long double)) {
+    if (sizeof(long long) > sizeof(double)) {
 	likchk = (unsigned long *)ikchk;
 	*likchk += *(unsigned long *)ikran;
     } else {
@@ -59,14 +59,14 @@ void ikrandp_(long double *ikchk, long double *ikran)
       ikrandm(ikchk,ikran)
 
   ikchk = ikchk - ikran
-  passed as long double's, but treated as unsigned long's or unsigned long long's.
+  passed as double's, but treated as unsigned long's or unsigned long long's.
 */
-void ikrandm_(long double *ikchk, long double *ikran)
+void ikrandm_(double *ikchk, double *ikran)
 {
     unsigned long *likchk;
     unsigned long long *llikchk;
 
-    if (sizeof(long long) > sizeof(long double)) {
+    if (sizeof(long long) > sizeof(double)) {
 	likchk = (unsigned long *)ikchk;
 	*likchk -= *(unsigned long *)ikran;
     } else {

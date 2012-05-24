@@ -25,8 +25,9 @@ c        local variables
      *  nbd,nbd0m,nbd0p,ni,nmult,retry,scmi
 C     logical warn
       logical whole
-      real*10 bik,cmi,cmik,cmk,d,darea,dph,ikchk,ikran,
+      real*10 bik,cmi,cmik,cmk,d,darea,dph,
      *  ph,phm,php,psi,si,tolin,xi(3),yi(3)
+      real*8 ikchk,ikran
 c *
 c * Area of surface of sphere of unit radius bounded by
 c *    1 - r.rp(i) < cm(i)  (if cm(i).ge.0)

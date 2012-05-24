@@ -184,9 +184,9 @@ int	harmonize_polys(int npoly, polygon *poly[/*npoly*/], long double, int lmax, 
 
 void	harmonizepolys_(long double *, int *, harmonic []);
 
-void	ikrand_(int *, long double *);
-void	ikrandp_(long double *, long double *);
-void	ikrandm_(long double *, long double *);
+void	ikrand_(int *, double *);
+void	ikrandp_(double *, double *);
+void	ikrandm_(double *, double *);
 
 void	msg(char *, ...);
 
