@@ -33,6 +33,19 @@ else
     BYTES=$3
 fi
 
+if [ "$ARCH" = "x86_64" ] || [ "$ARCH" = "ia64" ] || [ "$ARCH" = "amd64" ] ; then
+    MFLAG="-m64"
+elif [ "$OS" = "Darwin" ] ; then
+    mac_64bit_compatible=`ioreg -l -p IODeviceTree | grep firmware-abi | awk '/64/{print "y"}'`
+    if [ "$mac_64bit_compatible" = "y" ] ; then
+	MFLAG="-m64"
+    else
+	MFLAG='-m32'
+    fi
+else
+    MFLAG='-m32'
+fi
+
 #Warnings
 if [ "$ARCH" = "ppc" ]; then
     OS=$OS$ARCH
@@ -83,10 +96,10 @@ cat <<EOF >> Makefile
 # Gnu
 
 CC = gcc
-CFLAGS = -g -O3 -Wall -DLINUX -DGCC -m32 -D_FILE_OFFSET_BITS=64
+CFLAGS = -g -O3 -Wall -DLINUX -DGCC $MFLAG -D_FILE_OFFSET_BITS=64
 
 F77 = gfortran
-FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c -m32 -D_FILE_OFFSET_BITS=64
+FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c $MFLAG -D_FILE_OFFSET_BITS=64
 STATICFLAGS:= -static
 
 #MAKE=gmake
@@ -102,10 +115,10 @@ cat <<EOF >> Makefile
 # Gnu
 
 CC = gcc
-CFLAGS = -g -O3 -Wall -DMACOSX -DGCC -m32 -D_FILE_OFFSET_BITS=64
+CFLAGS = -g -O3 -Wall -DMACOSX -DGCC $MFLAG -D_FILE_OFFSET_BITS=64
 
 F77 = gfortran
-FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c -m32 -D_FILE_OFFSET_BITS=64
+FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c $MFLAG -D_FILE_OFFSET_BITS=64
 #STATICFLAGS:= -static-libgfortran
 STATICFLAGS:= -nodefaultlibs -lSystem -lgcc -lm -lgfortran_static
 # static linking of gfortran library to compile for distribution.
@@ -192,7 +205,7 @@ cat <<EOF >> Makefile
 # Gnu
 
 CC = gcc
-CFLAGS = -g -O3 -Wall -DLINUX -DGCC -m32 -D_FILE_OFFSET_BITS=64
+CFLAGS = -g -O3 -Wall -DLINUX -DGCC $MFLAG -D_FILE_OFFSET_BITS=64
 
 ## f2c
 #F77 = fort77
@@ -202,7 +215,7 @@ CFLAGS = -g -O3 -Wall -DLINUX -DGCC -m32 -D_FILE_OFFSET_BITS=64
 
 # gnu g77 (which assumes no SAVE)
 F77 = g77
-FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 -m32 -D_FILE_OFFSET_BITS=64
+FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 $MFLAG -D_FILE_OFFSET_BITS=64
 
 #MAKE=gmake
 
@@ -217,11 +230,11 @@ cat <<EOF >> Makefile
 # Gnu
 
 CC = gcc
-CFLAGS = -g -O3 -Wall -DMACOSX -DGCC -m32 -D_FILE_OFFSET_BITS=64
+CFLAGS = -g -O3 -Wall -DMACOSX -DGCC $MFLAG -D_FILE_OFFSET_BITS=64
 
 # gnu g77 (which assumes no SAVE)
 F77 = g77
-FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 -m32 -D_FILE_OFFSET_BITS=64
+FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 $MFLAG -D_FILE_OFFSET_BITS=64
 
 #MAKE=gmake
 
@@ -256,14 +269,14 @@ cat <<EOF >> Makefile
 # Sun
 
 CC = cc
-CFLAGS = -O -DSUN -m32 -D_FILE_OFFSET_BITS=64
+CFLAGS = -O -DSUN $MFLAG -D_FILE_OFFSET_BITS=64
 
 #CC = gcc
 #CFLAGS = -g -O3 -DGCC
 
 F77 = f77
 #FFLAGS = -u -O -pg -DSUN
-FFLAGS = -u -O -DSUN -m32 -D_FILE_OFFSET_BITS=64
+FFLAGS = -u -O -DSUN $MFLAG -D_FILE_OFFSET_BITS=64
 
 ## gnu g77 (which assumes no SAVE)
 #F77 = g77

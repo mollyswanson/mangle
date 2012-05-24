@@ -27,9 +27,9 @@ void ikrand_(int *ik, double *ikran)
     /* generate pseudo-random unsigned long long */
     } else {
 	llikran = (unsigned long long *)ikran;
-	*llikran = random();
-	*llikran <<= (8 * sizeof(unsigned long));
-	*llikran |= random();
+	*llikran = (unsigned int)random();
+	*llikran <<= (8 * sizeof(unsigned int));
+	*llikran |= (unsigned int)random();
     }
 }
 
