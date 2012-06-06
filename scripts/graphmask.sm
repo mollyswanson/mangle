@@ -29,7 +29,9 @@ graphmask 28	# © M E C Swanson 2008
 		#defined range, outlines: sm -m graphmask.sm sdss_slice.grph sdss_slice.eps "SDSS slice" 10 20 10 20 1
 		#
 		data $1
-		device postfilecolour $2
+		device postencap $2
+                define nx 1
+                define ny 1
 		#location $gx1 $gx2 $gy1 $(.77*($gx2-$gx1))
 		if($?3) { define title $3 }
 		if($?3 && $?4) { 
