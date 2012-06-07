@@ -25,7 +25,7 @@ extern long double area_min, area_max;
 
 /* min, max ids to keep */
 extern int is_id_min, is_id_max;
-extern int id_min, id_max;
+extern long long id_min, id_max;
 
 /* min, max pixels to keep */
 extern int is_pixel_min, is_pixel_max;
@@ -133,7 +133,7 @@ int wr_circ(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
     int i, ier, ip, ipoly, nbadarea, npoly;
     long double area, angle[3], tol;
     FILE *file;
-    char *circle_fmt = "circle %d ( %d caps, %.18Lg weight, %.18Lf str):\n";
+    char *circle_fmt = "circle %lld ( %d caps, %.18Lg weight, %.18Lf str):\n";
 
     /* open filename for writing */
     if (!filename || strcmp(filename, "-") == 0) {
@@ -174,7 +174,7 @@ int wr_circ(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 	ier = garea(polys[ipoly], &tol, verb, &area);
 	if (ier == -1) return(-1);
 	if (ier) {
-	    fprintf(stderr, "wr_circ: area of polygon %d is incorrect\n", polys[ipoly]->id);
+	    fprintf(stderr, "wr_circ: area of polygon %lld is incorrect\n", polys[ipoly]->id);
 	    nbadarea++;
 	}
 	/* number of caps, weight, and area of polygon */
@@ -233,9 +233,9 @@ int wr_edge(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 {
     const int per = 0;
     const int nve = 2;
-    const char *edges_fmt = "edges %d ( %d points/edge, %d edges, %.18Lg weight, %s %s mid):\n";
-    const char *graphics_fmt = "graphics %d ( %d points, %d edges, %.18Lg weight, %s %s mid):\n";
-    const char *vertices_fmt = "vertices %d ( %d vertices, %.18Lg weight, %s %s mid):\n";
+    const char *edges_fmt = "edges %lld ( %d points/edge, %d edges, %.18Lg weight, %s %s mid):\n";
+    const char *graphics_fmt = "graphics %lld ( %d points, %d edges, %.18Lg weight, %s %s mid):\n";
+    const char *vertices_fmt = "vertices %lld ( %d vertices, %.18Lg weight, %s %s mid):\n";
     char az_str[AZEL_STR_LEN], el_str[AZEL_STR_LEN];
     int do_vcirc, i, ier, imid, ipoly, iv, ive, ivm, jv, manybounds, nbadverts, nev, nev0, npoly, npt, nv, nvm;
     int *ipv, *gp, *ev;
@@ -317,7 +317,7 @@ int wr_edge(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 		msg("   separate boundaries will be split over separate lines:\n");
 	    }
 	    if (manybounds < WARNMAX) {
-		msg(" %d", polys[ipoly]->id);
+		msg(" %lld", polys[ipoly]->id);
 	    } else if (manybounds == WARNMAX) {
 		msg(" ... more\n");
 	    }
@@ -518,7 +518,7 @@ int wr_list(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 		msg("   separate boundaries will be split over separate lines:\n");
 	    }
 	    if (manybounds < WARNMAX) {
-		msg(" %d", polys[ipoly]->id);
+		msg(" %lld", polys[ipoly]->id);
 	    } else if (manybounds == WARNMAX) {
 		msg(" ... more\n");
 	    }
@@ -581,7 +581,7 @@ int wr_list(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 	    wrangle(v.el, fmt->outunitp, fmt->outprecision, AZEL_STR_LEN, el_str);
 	    fprintf(file, " %s %s\n", az_str, el_str);
 	    fprintf(file, "NaN NaN\n");
-	    fprintf(weightfile,"%d %.18Lg %s %s\n", polys[ipoly]->id,polys[ipoly]->weight,az_str_mid,el_str_mid); 
+	    fprintf(weightfile,"%lld %.18Lg %s %s\n", polys[ipoly]->id,polys[ipoly]->weight,az_str_mid,el_str_mid); 
 	}
 	//fprintf(file, "NaN NaN\n");
 
@@ -632,7 +632,7 @@ int wr_rect(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
     int ier, ipoly, isrect, nbadarea, nrect;
     long double area, azmin, azmax, elmin, elmax, tol;
     FILE *file;
-    char *rect_fmt = "rectangle %d ( %d caps, %.18Lg weight, %.18Lf str):\n";
+    char *rect_fmt = "rectangle %lld ( %d caps, %.18Lg weight, %.18Lf str):\n";
 
     /* count how many polygons are rectangles */
     nrect = 0;
@@ -692,7 +692,7 @@ int wr_rect(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 	ier = garea(polys[ipoly], &tol, verb, &area);
 	if (ier == -1) return(-1);
 	if (ier) {
-	    fprintf(stderr, "wr_rect: area of polygon %d is incorrect\n", polys[ipoly]->id);
+	    fprintf(stderr, "wr_rect: area of polygon %lld is incorrect\n", polys[ipoly]->id);
 	    nbadarea++;
 	}
 
@@ -753,8 +753,8 @@ int wr_poly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
     long double area, tol;
     FILE *file;
     char *poly_fmt;
-    char *polygon_fmt = "polygon %d ( %d caps, %.19Lg weight, %d pixel, %.19Lg str):\n";
-    char *spolygon_fmt = "%d %d %.19Lg %d %.19Lg\n";
+    char *polygon_fmt = "polygon %lld ( %d caps, %.19Lg weight, %d pixel, %.19Lg str):\n";
+    char *spolygon_fmt = "%lld %d %.19Lg %d %.19Lg\n";
 
     /* open filename for writing */
     if (!filename || strcmp(filename, "-") == 0) {
@@ -800,7 +800,7 @@ int wr_poly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 	ier = garea(polys[ipoly], &tol, verb, &area);
 	if (ier == -1) return(-1);
 	if (ier) {
-	    fprintf(stderr, "wr_poly: area of polygon %d is incorrect\n", polys[ipoly]->id);
+	    fprintf(stderr, "wr_poly: area of polygon %lld is incorrect\n", polys[ipoly]->id);
 	    nbadarea++;
 	}
 
@@ -851,7 +851,7 @@ int wr_Reg(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/], 
     FILE *file;
     /* there are no holes in our treatment */
     int nholes = 0;
-    char *Region_fmt = " Region %d ( %d caps, %d holes):\n";
+    char *Region_fmt = " Region %lld ( %d caps, %d holes):\n";
 
     /* open filename for writing */
     if (!filename || strcmp(filename, "-") == 0) {
@@ -930,7 +930,8 @@ int wr_area(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 {
 #undef	PRECISION
 #define	PRECISION	18
-    int idmin, idmax, idwidth, ier, ipoly, nbadarea, npoly, precision, width;
+    int idwidth, ier, ipoly, nbadarea, npoly, precision, width;
+    long long idmin,idmax;
     long double area, tol;
     FILE *file;
 
@@ -977,12 +978,12 @@ int wr_area(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 	ier = garea(polys[ipoly], &tol, verb, &area);
 	if (ier == -1) return(-1);
 	if (ier) {
-	    fprintf(stderr, "wr_poly: area of polygon %d is incorrect\n", polys[ipoly]->id);
+	    fprintf(stderr, "wr_poly: area of polygon %lld is incorrect\n", polys[ipoly]->id);
 	    nbadarea++;
 	}
 
 	/* write area */
-	fprintf(file, "% *.*Lf %*d\n", width, precision, area, idwidth, polys[ipoly]->id);
+	fprintf(file, "% *.*Lf %*lld\n", width, precision, area, idwidth, polys[ipoly]->id);
 
 	/* increment polygon count */
 	npoly++;
@@ -1016,7 +1017,8 @@ int wr_area(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 */
 int wr_id(char *filename, int npolys, polygon *polys[/*npolys*/], int npolyw)
 {
-    int idmin, idmax, idwidth, ipoly, npoly;
+    int idwidth, ipoly, npoly;
+    long long idmin,idmax;
     FILE *file;
 
     /* open filename for writing */
@@ -1052,7 +1054,7 @@ int wr_id(char *filename, int npolys, polygon *polys[/*npolys*/], int npolyw)
 	if (!polys[ipoly]) continue;
 
 	/* write id */
-	fprintf(file, "%*d\n", idwidth, polys[ipoly]->id);
+	fprintf(file, "%*lld\n", idwidth, polys[ipoly]->id);
 
 	/* increment polygon count */
 	npoly++;
@@ -1086,7 +1088,8 @@ int wr_midpoint(char *filename, format *fmt, int npolys, polygon *polys[/*npolys
     const int nve = 2;
     const int do_vcirc = 0;
     char az_str[AZEL_STR_LEN], el_str[AZEL_STR_LEN];
-    int i, idmin, idmax, idwidth, ier, imid, ipoly, ivm, nev, nev0, npoly, nv, nvm, width;
+    int i, idwidth, ier, imid, ipoly, ivm, nev, nev0, npoly, nv, nvm, width;
+    long long idmin,idmax;
     int *ipv, *gp, *ev;
     long double tol;
     long double *angle;
@@ -1163,7 +1166,7 @@ int wr_midpoint(char *filename, format *fmt, int npolys, polygon *polys[/*npolys
 	/* write midpoint of polygon */
 	wrangle(v.az, fmt->outunitp, fmt->outprecision, AZEL_STR_LEN, az_str);
 	wrangle(v.el, fmt->outunitp, fmt->outprecision, AZEL_STR_LEN, el_str);
-	fprintf(file, "%s %s %*d\n", az_str, el_str, idwidth, polys[ipoly]->id);
+	fprintf(file, "%s %s %*lld\n", az_str, el_str, idwidth, polys[ipoly]->id);
 
 	/* increment polygon count */
 	npoly++;
@@ -1195,7 +1198,8 @@ int wr_weight(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/
 {
 #undef	PRECISION
 #define	PRECISION	10
-    int idmin, idmax, idwidth, ipoly, npoly, precision, width;
+    int idwidth, ipoly, npoly, precision, width;
+    long long idmin,idmax;
     long double weightmax;
     FILE *file;
 
@@ -1243,7 +1247,7 @@ int wr_weight(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/
 	if (!polys[ipoly]) continue;
 
 	/* write weight */
-	fprintf(file, "% *.*Lg %*d\n", width, precision, polys[ipoly]->weight, idwidth, polys[ipoly]->id);
+	fprintf(file, "% *.*Lg %*lld\n", width, precision, polys[ipoly]->weight, idwidth, polys[ipoly]->id);
 
 	/* increment polygon count */
 	npoly++;

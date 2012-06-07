@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
       n=(ipoly-m)/powl(2,res);
       
       // polys[ipoly]->weight=(n+m) % 2;
-      polys[ipoly]->id=ipoly;
+      polys[ipoly]->id=(long long)ipoly;
       polys[ipoly]->weight=(long double)ipoly/(long double)npoly;
     }
     */

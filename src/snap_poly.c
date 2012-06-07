@@ -73,9 +73,9 @@ int snap_polys(format *fmt, int npoly, polygon *poly[/*npoly*/], int selfsnap, l
 			    msg("snap_polys stage 1 pass %d: caps of the following polygons were snapped together:\n", pass);
 			  if (warn < warnmax) {
 			    if (selfsnap) {
-			      msg(" %d", (fmt->newid == 'o')? poly[i]->id : i);
+			      msg(" %lld", (fmt->newid == 'o')? poly[i]->id : (long long)i);
 			    } else {
-			      msg(" (%d %d)", (fmt->newid == 'o')? poly[i]->id : i, (fmt->newid == 'o')? poly[j]->id : j);
+			      msg(" (%lld %lld)", (fmt->newid == 'o')? poly[i]->id : (long long)i, (fmt->newid == 'o')? poly[j]->id : (long long)j);
 			    }
 			  } else if (warn == warnmax) {
 			    msg(" ... more\n");
@@ -135,9 +135,9 @@ int snap_polys(format *fmt, int npoly, polygon *poly[/*npoly*/], int selfsnap, l
 				msg("snap_polys stage 2 pass %d: caps of the following polygons were snapped together:\n", pass);
 			    if (warn < warnmax) {
 				if (selfsnap) {
-				    msg(" %d", (fmt->newid == 'o')? poly[i]->id : i);
+				  msg(" %lld", (fmt->newid == 'o')? poly[i]->id : (long long)i);
 				} else {
-				    msg(" (%d %d)", (fmt->newid == 'o')? poly[i]->id : i, (fmt->newid == 'o')? poly[j]->id : j);
+				  msg(" (%lld %lld)", (fmt->newid == 'o')? poly[i]->id : (long long)i, (fmt->newid == 'o')? poly[j]->id : (long long)j);
 				}
 			    } else if (warn == warnmax) {
 				msg(" ... more\n");

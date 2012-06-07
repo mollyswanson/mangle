@@ -74,7 +74,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
 	if (iprune >= 2) {
 	    if (WARNMAX > 0 && inull == 0) msg("warning from balkanize: following polygons have zero area & are being discarded:\n");
 	    if (inull < WARNMAX) {
-		msg(" %d", (fmt->newid == 'o')? poly[i]->id : i);
+	      msg(" %lld", (fmt->newid == 'o')? poly[i]->id : (long long)i);
 	    } else if (inull == WARNMAX) {
 		msg(" ... more\n");
 	    }
@@ -163,7 +163,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
  
 	    /* error */
 	    if (dn == -1) {
-	      fprintf(stderr, "balkanize: UHOH at polygon %d; continuing ...\n", (fmt->newid == 'o')? polys[i]->id : ip);
+	      fprintf(stderr, "balkanize: UHOH at polygon %lld; continuing ...\n", (fmt->newid == 'o')? polys[i]->id : (long long)ip);
 	      continue;
 	      /* return(-1); */
 	    }
@@ -183,7 +183,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
 	    if (n > npolys) {
 	      fprintf(stderr, "(1) balkanize: total number of polygons (= %d) exceeded maximum %d\n", npoly + n, npoly + npolys);
 	      fprintf(stderr, "if you need more space, enlarge NPOLYSMAX in defines.h, and recompile\n");
-              fprintf(stderr, "currently, dn = %d, np = %d, dnp = %d, poly[%d]->id = %d, poly[%d]->pixel = %d\n", dn, np, dnp, i, poly[i]->id, i, poly[i]->pixel);
+              fprintf(stderr, "currently, dn = %d, np = %d, dnp = %d, poly[%d]->id = %lld, poly[%d]->pixel = %d\n", dn, np, dnp, i, poly[i]->id, i, poly[i]->pixel);
 	      n = npolys;
 #ifdef	CARRY_ON_REGARDLESS
 	      break;
@@ -235,12 +235,12 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
 	ier = partition_poly(&polys[i], npolys - n, &polys[n], tol, ALL_ONEBOUNDARY, ADJUST_LASSO, FORCE_SPLIT, OVERWRITE_ORIGINAL, &dn);
 	// error
 	if (ier == -1) {
-	    fprintf(stderr, "balkanize: UHOH at polygon %d; continuing ...\n", (fmt->newid == 'o')? polys[i]->id : ip);
+	  fprintf(stderr, "balkanize: UHOH at polygon %lld; continuing ...\n", (fmt->newid == 'o')? polys[i]->id : (long long)ip);
 	    continue;
 	    // return(-1);
 	// failed to partition polygon into desired number of parts
 	} else if (ier == 1) {
-	    fprintf(stderr, "balkanize: failed to partition polygon %d fully; partitioned it into %d parts\n", (fmt->newid == 'o')? polys[i]->id : ip, dn + 1);
+	  fprintf(stderr, "balkanize: failed to partition polygon %lld fully; partitioned it into %d parts\n", (fmt->newid == 'o')? polys[i]->id : (long long)ip, dn + 1);
 	    failed++;
 	}
 	// increment index of next subset of fragments 
@@ -290,7 +290,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
         tol = mtol;
 	iprune = prune_poly(polys[i], tol);
 	if (iprune == -1) {
-	    fprintf(stderr, "balkanize: failed to prune polygon %d; continuing ...\n", (fmt->newid == 'o')? polys[i]->id : j);
+	  fprintf(stderr, "balkanize: failed to prune polygon %lld; continuing ...\n", (fmt->newid == 'o')? polys[i]->id : (long long)j);
 	    /* return(-1); */
 	}
 	if (iprune >= 2) {
@@ -333,7 +333,7 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
 	if (snapped_polys[i]) {
 	    iprune = prune_poly(polys[i], mtol);
 	    if (iprune == -1) {
-		fprintf(stderr, "balkanize: failed to prune polygon %d; continuing ...\n", (fmt->newid == 'o')? polys[i]->id : j);
+		fprintf(stderr, "balkanize: failed to prune polygon %lld; continuing ...\n", (fmt->newid == 'o')? polys[i]->id : (long long)j);
 		// return(-1); 
 	    }
 	    if (iprune >= 2) {
@@ -366,13 +366,13 @@ int balkanize(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*
     /* assign new polygon id numbers in place of inherited ids */
     if (fmt->newid == 'n') {
 	for (i = 0; i < n; i++) {
-	    polys[i]->id = i;
+	  polys[i]->id = (long long)i;
 	}
     }
 
     if (fmt->newid == 'p') {
       for (i = 0; i < n; i++) {
-	polys[i]->id = polys[i]->pixel;
+	polys[i]->id = (long long)polys[i]->pixel;
       }
     }
 

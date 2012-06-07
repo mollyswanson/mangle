@@ -11,7 +11,7 @@ typedef struct {		/* polygon structure */
   int npmax;			/* dimension of allocated rp and cm arrays */
   vec *rp;			/* pointer to array rp[np][3] of axis coords */
   long double *cm;			/* pointer to array cm[np] of 1 - cosl(theta) */
-  int id;			/* id number of polygon */
+  long long id;			/* id number of polygon */
   int pixel;                    /* pixel that polygon is in */
   long double weight;		/* weight of polygon */
 } polygon;

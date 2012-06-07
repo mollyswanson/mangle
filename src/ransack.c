@@ -138,7 +138,8 @@ int ransack(char *out_filename, format *fmt, int npoly, int npolysmax, polygon *
 #define AZEL_STR_LEN		32
     char output[] = "output";
     char az_str[AZEL_STR_LEN], el_str[AZEL_STR_LEN];
-    int dnp, dnwl, i, idmin, idmax, idwidth, ier, in, inull, ip, ipmin, ipoly, iprune, irandom, lassoed, np, nwl, tries, verb, width, k;
+    int dnp, dnwl, i, idwidth, ier, in, inull, ip, ipmin, ipoly, iprune, irandom, lassoed, np, nwl, tries, verb, width, k;
+    long long idmin,idmax;
     int *dlasso=0x0, *lasso=0x0;
     long double area, cmmin, cmi, phi, rpoly, si, tol, w, wcum, x, y, z;
     long double *wpoly;
@@ -246,7 +247,7 @@ int ransack(char *out_filename, format *fmt, int npoly, int npolysmax, polygon *
 	for (ipoly = 0; ipoly < npoly; ipoly++) {
 	    ier = lasso_poly(&poly[ipoly], npolysmax - np, &poly[np], mtol, &dnp);
 	    if (ier == -1) {
-		fprintf(stderr, "ransack: UHOH at polygon %d; continuing ...\n", poly[ipoly]->id);
+		fprintf(stderr, "ransack: UHOH at polygon %lld; continuing ...\n", poly[ipoly]->id);
 	    }
 
 	    /* lassoed polygons are an improvement over original polygon */
@@ -380,7 +381,7 @@ int ransack(char *out_filename, format *fmt, int npoly, int npolysmax, polygon *
 		/* lasso polygon */
 		ier = lasso_poly(&poly[ipoly], npolysmax - np, &poly[np], mtol, &dnp);
 		if (ier == -1) {
-		    fprintf(stderr, "ransack: UHOH at polygon %d; continuing ...\n", poly[ipoly]->id);
+		    fprintf(stderr, "ransack: UHOH at polygon %lld; continuing ...\n", poly[ipoly]->id);
 		}
 
 		/* go with original polygon */
@@ -523,7 +524,7 @@ int ransack(char *out_filename, format *fmt, int npoly, int npolysmax, polygon *
 	/* write result */
 	wrangle(v.az, fmt->outunit, fmt->outprecision, AZEL_STR_LEN, az_str);
 	wrangle(v.el, fmt->outunit, fmt->outprecision, AZEL_STR_LEN, el_str);
-	fprintf(outfile, "%s\t%s\t%*d\n", az_str, el_str, idwidth, poly[ipoly]->id);
+	fprintf(outfile, "%s\t%s\t%*lld\n", az_str, el_str, idwidth, poly[ipoly]->id);
 	/* fprintf(outfile, "%s %s %d %d %d %Lg %Lg %Lg %Lg %d %d\n", az_str, el_str, irandom, ipoly, tries, wcum, rpoly / wcum, area, TWOPI * cmmin / area, ipmin, poly[ipoly]->np); */
 
     }

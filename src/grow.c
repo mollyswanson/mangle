@@ -150,10 +150,10 @@ int grow(int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*npoly
   for (ipoly = 0; ipoly < n; ipoly++) {
     /* assign new polygon id numbers in place of inherited ids */
     if (fmt.newid == 'n') {
-      poly[ipoly]->id = ipoly+fmt.idstart;
+      poly[ipoly]->id = (long long)ipoly+fmt.idstart;
     }      
     if (fmt.newid == 'p') {
-      poly[ipoly]->id = poly[ipoly]->pixel;
+      poly[ipoly]->id = (long long)poly[ipoly]->pixel;
     }
   }
   return(n);
@@ -184,11 +184,11 @@ int grow_poly(polygon **poly, int npolys, polygon *polys[/*npolys*/], long doubl
   ier = partition_poly(poly, npolys, polys, tol, ALL_ONEBOUNDARY, ADJUST_LASSO, FORCE_SPLIT, OVERWRITE_ORIGINAL, &dn); 
   // error
   if (ier == -1) {
-    fprintf(stderr, "grow: UHOH at polygon %d; continuing ...\n",polys[i]->id);
+    fprintf(stderr, "grow: UHOH at polygon %lld; continuing ...\n",polys[i]->id);
     // return(-1);
       // failed to partition polygon into desired number of parts
   } else if (ier == 1) {
-    fprintf(stderr, "grow: failed to partition polygon %d fully; partitioned it into %d parts\n", (*poly)->id, dn + 1);
+    fprintf(stderr, "grow: failed to partition polygon %lld fully; partitioned it into %d parts\n", (*poly)->id, dn + 1);
   }  
   *np+=dn;
   

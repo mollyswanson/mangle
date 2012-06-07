@@ -94,16 +94,16 @@ int main(int argc, char *argv[])
     if (is_id_min && is_id_max) {
 	/* min <= max */
 	if (id_min < id_max) {
-	    msg("will keep only polygons with ids inside [%d, %d]\n", id_min, id_max);
+	    msg("will keep only polygons with ids inside [%lld, %lld]\n", id_min, id_max);
 	/* min > max */
 	} else {
-	    msg("will keep only polygons with ids >= %d or <= %d\n", id_min, id_max);
-	    msg("         (only polygons with ids outside (%d, %d))\n", id_max, id_min);
+	    msg("will keep only polygons with ids >= %lld or <= %lld\n", id_min, id_max);
+	    msg("         (only polygons with ids outside (%lld, %lld))\n", id_max, id_min);
 	}
     } else if (is_id_min) {
-	msg("will keep only polygons with areas >= %d\n", id_min);
+	msg("will keep only polygons with areas >= %lld\n", id_min);
     } else if (is_id_max) {
-	msg("will keep only polygons with areas <= %d\n", id_max);
+	msg("will keep only polygons with areas <= %lld\n", id_max);
     }
     /* pixel limits */
     if (is_pixel_min && is_pixel_max) {
@@ -150,13 +150,13 @@ int main(int argc, char *argv[])
     /* apply new id numbers to output polygons */
     if (fmt.newid == 'n') {
 	for (ipoly = 0; ipoly < npoly; ipoly++) {
-	    polys[ipoly]->id = ipoly+fmt.idstart;
+	  polys[ipoly]->id = (long long)ipoly+fmt.idstart;
 	}
     }
 
     if (fmt.newid == 'p') {
       for (ipoly = 0; ipoly < npoly; ipoly++) {
-	polys[ipoly]->id = polys[ipoly]->pixel;
+	polys[ipoly]->id = (long long)polys[ipoly]->pixel;
       }
     }
 
@@ -222,7 +222,7 @@ int intersect_poly(int npoly1, polygon *poly1[/*npoly1*/], int npoly2, polygon *
     for (i = 0; i < npoly1; i++) {
           iprune = prune_poly(poly1[i], mtol);
         if (iprune == -1) {
-	    fprintf(stderr, "intersect_poly: failed to prune polygon %d; continuing ...\n", (fmt.newid == 'o')? poly1[i]->id : j+fmt.idstart);
+	  fprintf(stderr, "intersect_poly: failed to prune polygon %lld; continuing ...\n", (fmt.newid == 'o')? poly1[i]->id : (long long)j+fmt.idstart);
 	}
 	if (iprune >= 2) {
 	    free_poly(poly1[i]);

@@ -226,7 +226,7 @@ int pixelmap(int *npoly, polygon *poly[/**npoly*/])
       tol=mtol;
       ier = garea(poly[i], &tol, verb, &area);
       if(ier==1 || ier == -1){
-	fprintf(stderr, "error %d in garea in polygon %d\n", ier, poly[i]->id);
+	fprintf(stderr, "error %d in garea in polygon %lld\n", ier, poly[i]->id);
 	continue;
       }
       
@@ -272,13 +272,13 @@ int pixelmap(int *npoly, polygon *poly[/**npoly*/])
   /* assign new polygon id numbers */
   if (fmt.newid == 'n') {
     for (i = 0; i < *npoly; i++) {
-      poly[i]->id = i+fmt.idstart;
+      poly[i]->id = (long long)i+fmt.idstart;
     }
   }
   
   if (fmt.newid == 'p') {
     for (i = 0; i < *npoly; i++) {
-      poly[i]->id = poly[i]->pixel;
+      poly[i]->id = (long long)poly[i]->pixel;
     }
   }
   

@@ -222,10 +222,10 @@ long double	places(long double, int);
 int     poly_cmp(polygon **, polygon **);
 
 #ifdef	GCC
-int	poly_id(int npoly, polygon *[npoly], long double, long double, int **, long double **);
+int	poly_id(int npoly, polygon *[npoly], long double, long double, long long **, long double **);
 void	poly_sort(int npoly, polygon *[npoly], char);
 #else
-int	poly_id(int npoly, polygon *[/*npoly*/], long double, long double, int **);
+int	poly_id(int npoly, polygon *[/*npoly*/], long double, long double, long long **, long double **);
 void	poly_sort(int npoly, polygon *[/*npoly*/], char);
 #endif
 

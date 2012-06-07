@@ -79,7 +79,7 @@ int snap(int npoly, polygon *poly[/*npoly*/], long double mtol, format *fmt, lon
       if (WARNMAX > 0 && inull == 0)
 	msg("warning from snap: the following polygons have zero area:\n");
       if (inull < WARNMAX) {
-	msg(" %d", (fmt->newid == 'o')? poly[i]->id : i);
+	msg(" %lld", (fmt->newid == 'o')? poly[i]->id : (long long)i);
       } else if (inull == WARNMAX) {
 	msg(" ... more\n");
       }
@@ -92,13 +92,13 @@ int snap(int npoly, polygon *poly[/*npoly*/], long double mtol, format *fmt, lon
   /* assign new polygon id numbers */
   if (fmt->newid == 'n') {
     for (i = 0; i < npoly; i++) {
-      poly[i]->id = i;
+      poly[i]->id = (long long)i;
     }
   }
 
   if (fmt->newid == 'p') {
     for (i = 0; i < npoly; i++) {
-      poly[i]->id = poly[i]->pixel;
+      poly[i]->id = (long long)poly[i]->pixel;
     }
   }
 

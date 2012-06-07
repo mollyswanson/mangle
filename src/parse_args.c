@@ -211,9 +211,9 @@ void parse_args(int argc, char *argv[])
 	    }
 	    break;
 	case 'J':		/* keep ids in interval [min, max] */
-	    iscan = sscanf(optarg, "%d %*[,] %d", &id_min, &id_max);
+	    iscan = sscanf(optarg, "%lld %*[,] %lld", &id_min, &id_max);
 	    if (iscan < 1) {
-		iscan = sscanf(optarg, " %*[,] %d", &id_max);
+		iscan = sscanf(optarg, " %*[,] %lld", &id_max);
 		if (iscan < 1) {
 		    fprintf(stderr, "-%c%s: expecting -%c<min> or -%c<min>,<max> or -%c,<max>\n", opt, optarg, opt, opt, opt);
 		    exit(1);
@@ -280,7 +280,7 @@ void parse_args(int argc, char *argv[])
 	    // check for argument after -vn to start new polygon numbers at non-zero value
 	    optarg++;  
 	    if (*optarg) {
-	      iscan = sscanf(optarg, "%d", &fmt.idstart);
+	      iscan = sscanf(optarg, "%lld", &fmt.idstart);
 	      if (iscan != 1) {
 		fprintf(stderr, "-%c%s: expecting integer argument\n", opt, optarg);
 		exit(1);

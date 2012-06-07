@@ -197,7 +197,7 @@ int partition_poly(polygon **poly, int npolys, polygon *polys[/*npolys*/], long 
 
 		    /* paranoid check: group polygon gpoly does not intersect cumulative polygon polys[ipoly]: should not happen */
 		    if (areag == 0.) {
-			fprintf(stderr, "partition_poly: group %d does not intersect part %d of polygon with input id %d; should not happen; continuing ...\n", igp, ipoly, polys[ipoly]->id);
+			fprintf(stderr, "partition_poly: group %d does not intersect part %d of polygon with input id %lld; should not happen; continuing ...\n", igp, ipoly, polys[ipoly]->id);
 			/* goto error; */
 			/* group polygon gpoly encloses cumulative polygon polys[ipoly], so offers no further constraint */
 		    } else if (areag == area) {
@@ -431,11 +431,11 @@ int partition_gpoly(polygon *gpoly, int npolys, polygon *polys[/*npolys*/], long
 		    /* prune polygon that needs further partitioning */
 		    iprune = prune_poly(polys[ipoly], mtol);
 		    if (iprune == -1) {
-			fprintf(stderr, "partition_gpoly: failed to prune forcibly split part %d of polygon with input id %d\n", nforce, polys[ipoly]->id);
+			fprintf(stderr, "partition_gpoly: failed to prune forcibly split part %d of polygon with input id %lld\n", nforce, polys[ipoly]->id);
 			goto error;
 		    }
 		    if (iprune >= 2) {
-			fprintf(stderr, "partition_poly: forcibly split part %d of polygon with input id %d has zero area; should not happen; continuing ...\n", nforce, polys[ipoly]->id);
+			fprintf(stderr, "partition_poly: forcibly split part %d of polygon with input id %lld has zero area; should not happen; continuing ...\n", nforce, polys[ipoly]->id);
 			dump_poly(2, &polys[*npoly - 2]);
 			continue;
 		    }

@@ -122,8 +122,9 @@ int poly_ids(char *in_filename, char *out_filename, format *fmt, int npoly, poly
     char input[] = "input", output[] = "output";
     char *word, *next;
     char az_str[AZEL_STR_LEN], el_str[AZEL_STR_LEN];
-    int i, idmax, idmin, idwidth, ird, len, nid, nids, nid0, nid2, np;
-    int *id;
+    int i, idwidth, ird, len, nid, nids, nid0, nid2, np;
+    long long idmin, idmax;
+    long long *id;
     long double *weight;
     azel v;
     char *out_fn;
@@ -308,7 +309,7 @@ int poly_ids(char *in_filename, char *out_filename, format *fmt, int npoly, poly
 	  if(polyid_weight==1){
 	    fprintf(outfile, " %.18Lg", weight[i]);
 	  } else{
-	    fprintf(outfile, " %*d", idwidth, id[i]);
+	    fprintf(outfile, " %*lld", idwidth, id[i]);
 	  }
 	}
 	fprintf(outfile, "\n");

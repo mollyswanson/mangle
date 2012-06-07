@@ -16,12 +16,12 @@
 		 the required memory is allocated.
   Return value: number of polygons that contain az, el position.
 */
-int poly_id(int npoly, polygon *poly[/*npoly*/], long double az, long double el, int **id_p, long double **weight_p)
+int poly_id(int npoly, polygon *poly[/*npoly*/], long double az, long double el, long long **id_p, long double **weight_p)
 {
 /* number of extra polygon id numbers to allocate, to allow for expansion */
 #define DNID		16
     static int nidmax = 0;
-    static int *id = 0x0;
+    static long long *id = 0x0;
     static long double *weight = 0x0;
 
     int ipoly, nid;
@@ -40,10 +40,10 @@ int poly_id(int npoly, polygon *poly[/*npoly*/], long double az, long double el,
         if (!id || nid > nidmax) {
             if (id) free(id);
             if (weight) free(weight);
-            id = (int *) malloc(sizeof(int) * (nid + DNID));
+            id = (long long *) malloc(sizeof(long long) * (nid + DNID));
 	    weight = (long double *) malloc(sizeof(long double) * (nid + DNID));
             if (!id) {
-                fprintf(stderr, "poly_id: failed to allocate memory for %d ints\n", nid + DNID);
+                fprintf(stderr, "poly_id: failed to allocate memory for %d long longs\n", nid + DNID);
                 return(-1);
             }
             if (!weight) {

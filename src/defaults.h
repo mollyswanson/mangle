@@ -109,8 +109,8 @@ long double area_max;
 int is_id_min = 0;
 int is_id_max = 0;
 /* min, max id to keep */
-int id_min;
-int id_max;
+long long id_min;
+long long id_max;
 
 /* whether min, max pixel are turned on */
 int is_pixel_min = 0;

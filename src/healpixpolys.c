@@ -133,7 +133,7 @@ polygon *get_healpix_poly(int nside, int hpix)
     ev[0] = 8;
 
     edge_to_poly(vert, 2, &ev[0], pixel);
-    pixel->id = hpix;
+    pixel->id = (long long)hpix;
 
     pixelbetter=new_poly(5);
     
@@ -153,7 +153,7 @@ polygon *get_healpix_poly(int nside, int hpix)
     }
 
     pixelbetter->rp[4][0] = center[0]; pixelbetter->rp[4][1] = center[1]; pixelbetter->rp[4][2] = center[2];
-    pixelbetter->id = hpix;
+    pixelbetter->id = (long long)hpix;
 
     dist_n = cmrpirpj(center, vertices_vec[0]);
     dist_w = cmrpirpj(center, vertices_vec[3]);

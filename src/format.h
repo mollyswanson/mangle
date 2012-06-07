@@ -23,9 +23,9 @@ typedef struct {
     int innve;		/* the input number of points per edge */
     int outper;		/* controls interpretation of outnve */
     int outnve;		/* the output number of points per edge */
-    int id;		/* id number of current polygon */
+    long long id;		/* id number of current polygon */
     char newid;		/* whether to use old or new id number */
-  int idstart;          /* new id number to use for first polygon in file*/
+    long long idstart;          /* new id number to use for first polygon in file*/
     int pixel;          /* pixel that current polygon is in */ 
     long double weight;	/* weight of current polygon */
     char inunitp;	/* angular units of input polygon data */

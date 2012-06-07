@@ -96,7 +96,7 @@ int garea(polygon *poly, long double *tol, int verb, long double *area)
 
     /* fatal error */
     if (ldegen){
-      fprintf(stderr,"garea: fatal error in polygon %d, pixel %d\n", poly->id,poly->pixel);
+      fprintf(stderr,"garea: fatal error in polygon %lld, pixel %d\n", poly->id,poly->pixel);
       return(1);
     }
     return(0);

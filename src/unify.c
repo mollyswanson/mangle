@@ -295,7 +295,7 @@ int unify(int *npoly, polygon *poly[/**npoly*/])
 	  if (WARNMAX > 0 && dnadj == 0)
 	    msg("unify: the following polygons have zero weight and are being discarded:\n");
 	  if (dnadj < WARNMAX) {
-	    msg(" %d", poly[i]->id);
+	    msg(" %lld", poly[i]->id);
 	  } else if (dnadj == WARNMAX) {
 	    msg(" ... more\n");
 	  }
@@ -314,14 +314,14 @@ int unify(int *npoly, polygon *poly[/**npoly*/])
 	if (!poly[i]) continue;
 	/* prune polygon (should really already have been done by balkanize) */
 	if (prune_poly(poly[i], mtol) == -1) {
-	    fprintf(stderr, "unify_poly: failed to prune polygon %d; continuing\n", poly[i]->id);
+	    fprintf(stderr, "unify_poly: failed to prune polygon %lld; continuing\n", poly[i]->id);
 	    continue;
 	}
 	if (poly[i]->np > 0 && poly[i]->cm[0] == 0.) {
 	  if (WARNMAX > 0 && dnadj == 0)
 	    msg("unify: the following polygons have zero area and are being discarded:\n");
 	  if (dnadj < WARNMAX) {
-	    msg(" %d", poly[i]->id);
+	    msg(" %lld", poly[i]->id);
 	  } else if (dnadj == WARNMAX) {
 	    msg(" ... more\n");
 	  }
@@ -362,7 +362,7 @@ int unify(int *npoly, polygon *poly[/**npoly*/])
 	    unified = unify_poly(&poly[i], poly[j]);
 	    if (unified == -1) {
 	      if (warnmax/2 > 0 && dnadj > 0 && dnadj <= warnmax/2) msg("\n");
-	      fprintf(stderr, "unify_poly: failed to unify polygons %d & %d; continuing\n", poly[i]->id, poly[j]->id);
+	      fprintf(stderr, "unify_poly: failed to unify polygons %lld & %lld; continuing\n", poly[i]->id, poly[j]->id);
 	      continue;
 	    }
 	    /* polygons were unified */
@@ -371,7 +371,7 @@ int unify(int *npoly, polygon *poly[/**npoly*/])
 		if (warnmax/2 > 0 && dnadj == 0)
 		  msg("unify pass %d: the following polygons are being unified:\n", pass);
 		if (dnadj < warnmax/2) {
-		  msg(" (%d %d)", poly[i]->id, poly[j]->id);
+		  msg(" (%lld %lld)", poly[i]->id, poly[j]->id);
 		} else if (dnadj == warnmax/2) {
 		  msg(" ... more\n");
 		}
@@ -405,13 +405,13 @@ int unify(int *npoly, polygon *poly[/**npoly*/])
     /* assign new polygon id numbers */
     if (fmt.newid == 'n') {
 	for (i = 0; i < *npoly; i++) {
-	    poly[i]->id = i+fmt.idstart;
+	  poly[i]->id = (long long)i+fmt.idstart;
 	}
     }
 
     if (fmt.newid == 'p') {
       for (i = 0; i < *npoly; i++) {
-	poly[i]->id = poly[i]->pixel;
+	poly[i]->id = (long long)poly[i]->pixel;
       }
     }
 

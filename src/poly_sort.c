@@ -12,13 +12,29 @@ int poly_cmp_pixel(polygon **poly1, polygon **poly2)
 }
 int poly_cmp_id(polygon **poly1, polygon **poly2)
 {
-  int id=(*poly1)->id - (*poly2)->id;
-  return(id);
+  int intid;
+  long long id=(*poly1)->id - (*poly2)->id;
+  if(id>0){
+    intid=1;
+  } else if(id<0){
+    intid=-1;
+  } else {
+    intid=0;
+  }
+  return(intid);
 }
 int poly_cmp_weight(polygon **poly1, polygon **poly2)
 {
+  int intweight;
   long double weight=(*poly1)->weight - (*poly2)->weight;
-  return(weight);
+  if(weight>0){
+    intweight=1;
+  } else if(weight<0){
+    intweight=-1;
+  } else {
+    intweight=0;
+  }
+  return(intweight);
 }
 
 /*polygon sorting function

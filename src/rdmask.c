@@ -355,7 +355,7 @@ int new_fmt(char *keyword, char **line_rest, format *fmt)
 	    word = get_word(word, blank, 0, &word_len);
 	    if (!word) break;
 	    switch (ird) {
-	    case 0:	iscan = sscanf(word, "%d", &fmt->id);	break;
+	    case 0:	iscan = sscanf(word, "%lld", &fmt->id);	break;
 	    case 1:	iscan = sscanf(word, "%d", &fmt->n);	break;
 	    case 2:	iscan = sscanf(word, "%d", &nholes);	break;
 	    }
@@ -443,7 +443,7 @@ int new_fmt(char *keyword, char **line_rest, format *fmt)
 		word = get_word(word, blank, 0, &word_len);
 		if (!word) break;
 		switch (ird) {
-		case 0:	iscan = sscanf(word, "%d", &fmt->id);		break;
+		case 0:	iscan = sscanf(word, "%lld", &fmt->id);		break;
 		case 1:	iscan = sscanf(word, "%d", &fmt->innve);	break;
 		case 2:	iscan = sscanf(word, "%d", &fmt->n);		break;
 		case 3:	iscan = sscanf(word, "%Lf", &fmt->weight);	break;
@@ -462,7 +462,7 @@ int new_fmt(char *keyword, char **line_rest, format *fmt)
 		word = get_word(word, blank, 0, &word_len);
 		if (!word) break;
 		switch (ird) {
-		case 0:	iscan = sscanf(word, "%d", &fmt->id);          break;
+		case 0:	iscan = sscanf(word, "%lld", &fmt->id);          break;
 		case 1:	iscan = sscanf(word, "%d", &fmt->n);           break;
 		case 2:	iscan = sscanf(word, "%Lf", &fmt->weight);     break;
 		case 3:	
@@ -1288,7 +1288,7 @@ polygon *rd_edge(format *fmt)
     if (anti == 1) {
 	WHERE;
 	fprintf(stderr, " warning:");
-	fprintf(stderr, " polygon %d may have its vertices ordered left- instead of right-handedly\n", fmt->id);
+	fprintf(stderr, " polygon %lld may have its vertices ordered left- instead of right-handedly\n", fmt->id);
     }
 
     return(poly);

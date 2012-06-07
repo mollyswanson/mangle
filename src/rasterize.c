@@ -14,7 +14,7 @@
 #define DNP             4
 
 /* getopt options */
-const char *optstr = "B:dqm:s:e:v:p:i:o:HT";
+const char *optstr = "B:dqm:a:b:t:y:s:e:v:p:i:o:HT";
 
 /* allocate polygons as a global array */
 polygon *polys_global[NPOLYSMAX];
@@ -22,9 +22,9 @@ polygon *polys_global[NPOLYSMAX];
 /* local functions */
 void     usage(void);
 #ifdef  GCC
-int     rasterize(int nhealpix_poly, int npoly, polygon *[npoly], int npolys, polygon *[npolys], int nweights, long double [nweights]);
+int     rasterize(int nhealpix_poly, int npoly, polygon *[npoly], int npolys, polygon *[npolys], int nweights, long long rastid_min, long double [nweights]);
 #else
-int     rasterize(int nhealpix_poly, int npoly, polygon *[/*npoly*/], int npolys, polygon *[/*npolys*/], int nweights, long double [/*nweights*/]);
+int     rasterize(int nhealpix_poly, int npoly, polygon *[/*npoly*/], int npolys, polygon *[/*npolys*/], int nweights, long long rastid_min, long double [/*nweights*/]);
 #endif
 
 /*--------------------------------------------------------------------
@@ -33,6 +33,7 @@ int     rasterize(int nhealpix_poly, int npoly, polygon *[/*npoly*/], int npolys
 int main(int argc, char *argv[])
 {
   int ifile, nfiles, npoly, npolys, nhealpix_poly, nhealpix_polys, j, k, nweights, nweight;
+  long long rastid_min, rastid_max;
   long double *weights;
   
   polygon **polys;
@@ -68,7 +69,7 @@ int main(int argc, char *argv[])
   axunit = 's';
   bunit = 's';
   thunit = 's';
-  // msg("snap angles: axis %Lg%c latitude %Lg%c edge %Lg%c\n", axtol, axunit, btol, bunit, thtol, thunit);
+  msg("snap angles: axis %Lg%c latitude %Lg%c edge %Lg%c\n", axtol, axunit, btol, bunit, thtol, thunit);
   scale(&axtol, axunit, 'r');
   scale(&btol, bunit, 'r');
   scale(&thtol, thunit, 'r');
@@ -117,12 +118,21 @@ int main(int argc, char *argv[])
     balkanized++;
   }
 
-  /* set nweights equal to maximum id number in rasterizer file plus 1*/
-  nweights = 0;
+  /* find maximum id number in rasterizer file*/
+  rastid_max = 0;
   for (k = 0; k < nhealpix_poly; k++) {
-    if (polys[k]->id >= nweights) nweights = polys[k]->id+1;
+    if (polys[k]->id >= rastid_max) rastid_max = polys[k]->id;
   }
 
+  /* find minimum id number in rasterizer file*/
+  rastid_min=rastid_max;
+  for (k = 0; k < nhealpix_poly; k++) {
+    if (polys[k]->id <= rastid_min) rastid_min = polys[k]->id;
+  }
+
+  /* set nweights equal to max id in rasterizer file - min id in rasterizer file plus 1*/
+  nweights=rastid_max-rastid_min+1;
+  
   /* read polygons from polygon_infile2, polygon_infile3, etc. */
   npoly = nhealpix_poly;
   nfiles = argc - 2 - optind;
@@ -161,14 +171,14 @@ int main(int argc, char *argv[])
   for (k = 0; k < nweights; k++) weights[k] = 0.;
 
   /* rasterize */
-  npolys = rasterize(nhealpix_poly, npoly, polys, NPOLYSMAX - npoly, &polys[npoly], nweights, weights);
+  npolys = rasterize(nhealpix_poly, npoly, polys, NPOLYSMAX - npoly, &polys[npoly], nweights, rastid_min, weights);
   if (npolys == -1) exit(1);
 
   if(!sliceordice){
     /* copy new weights to original rasterizer polygons */
     for (k = 0; k < nhealpix_poly; k++) {
       for (j = 0; j < nweights; j++) {
-	if (polys[k]->id == j) {
+	if (polys[k]->id == (long long)j+rastid_min) {
 	  polys[k]->weight = weights[j];
 	  break;
 	}
@@ -205,7 +215,7 @@ int main(int argc, char *argv[])
 void usage(void)
 {
      printf("usage:\n");
-     printf("rasterize [-d] [-q] [-m<a>[u]] [-s<n>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] [-H] [-T] polygon_infile1 polygon_infile2 [polygon_infile3 ...] polygon_outfile\n");
+     printf("rasterize [-d] [-q] [-m<a>[u]] [-s<n>] [-a<a>[u]] [-b<a>[u]] [-t<a>[u]] [-y<r>] [-e<n>] [-vo|-vn] [-p[+|-][<n>]] [-i<f>[<n>][u]] [-o<f>[u]] [-H] [-T] polygon_infile1 polygon_infile2 [polygon_infile3 ...] polygon_outfile\n");
 #include "usage.h"
 }
 
@@ -225,12 +235,15 @@ void usage(void)
                 or -1 if error occurred.
 */
 
-int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*npolys*/], int nweights, long double weights[/*nweights*/])
+int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*npolys*/], int nweights, long long rastid_min, long double weights[/*nweights*/])
 {
-  int min_pixel, max_pixel, ier, ier_h, ier_i, i, j, ipix, ipoly, begin_r, end_r, begin_m, end_m, verb, np, iprune,n;
+#define WARNMAX                 0
+
+  int min_pixel, max_pixel, ier, ier_h, ier_i, i, j,k, ipix, ipoly, begin_r, end_r, begin_m, end_m, verb, np, iprune,n,selfsnap,nadj;
   int *start_r, *start_m, *total_r, *total_m;
   long double *areas, area_h, area_i, tol;
-
+  polygon *rasterizer_and_poly[2];
+  char snapped_polys[2];
   static polygon *polyint = 0x0;
 
   if(!sliceordice){
@@ -257,7 +270,7 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
     /* find areas of rasterizer pixels for later use */
     for (i = 0; i < nweights; i++) {
       for (j = 0; j < nhealpix_poly; j++) {
-	if (poly[j]->id == i) {
+	if (poly[j]->id == (long long)i+rastid_min) {
 	  tol = mtol;
 	  ier_h = garea(poly[j], &tol, verb, &area_h);
 	  if (ier_h == 1) {
@@ -340,6 +353,16 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
 	ier = room_poly(&polyint, np, DNP, 0);
 	if (ier == -1) goto out_of_memory;
 
+	    //snap edges of mask polygon to rasterizer
+	rasterizer_and_poly[0]=poly[i];
+	rasterizer_and_poly[1]=poly[ipoly];
+	selfsnap = 0;
+	nadj = snap_polys(&fmt, 2, rasterizer_and_poly, selfsnap, axtol, btol, thtol, ytol, mtol, WARNMAX, snapped_polys);
+	if(nadj==-1){
+	  msg("rasterize: error snapping mask and rasterizer polygons together\n");
+	  return(-1);
+	}
+
 	poly_poly(poly[ipoly], poly[i], polyint);
 
 	/* suppress coincident boundaries, to make garea happy */
@@ -366,11 +389,11 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
 	  tol = mtol;
 	  iprune = prune_poly(polyint, tol);
 	  if (iprune == -1) {
-	    fprintf(stderr, "rasterize: failed to prune polygon %d; continuing ...\n", (fmt.newid == 'o')? polys[i]->id : j+fmt.idstart);
+	    fprintf(stderr, "rasterize: failed to prune polygon %lld; continuing ...\n", (fmt.newid == 'o')? polys[i]->id : (long long)j+fmt.idstart);
 	    /* return(-1); */
 	  }
 	  if (iprune >= 2) {
-	    fprintf(stderr, "rasterize: polygon %d is NULL; continuing ...\n", (fmt.newid == 'o')? polys[i]->id : j+fmt.idstart);
+	    fprintf(stderr, "rasterize: polygon %lld is NULL; continuing ...\n", (fmt.newid == 'o')? polys[i]->id : (long long)j+fmt.idstart);
 	  } 
 	  else {
 	    /* make sure output polygon contains enough space */
@@ -405,7 +428,8 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
 	  }
 	}
 	if(!sliceordice){
-	  weights[(poly[i]->id)] += (area_i)*(poly[ipoly]->weight);
+	  k=(int)((poly[i]->id)-rastid_min);
+	  weights[k] += (area_i)*(poly[ipoly]->weight);
 	}
       }
     }
@@ -430,13 +454,13 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
   /* assign new polygon id numbers in place of inherited ids */
   if (fmt.newid == 'n') {
     for (i = 0; i < n; i++) {
-      if(sliceordice) polys[i]->id = i+fmt.idstart; else poly[i]->id = i+fmt.idstart;
+      if(sliceordice) polys[i]->id = (long long)i+fmt.idstart; else poly[i]->id = (long long)i+fmt.idstart;
     }
   }
   
   if (fmt.newid == 'p' && !sliceordice) {
     for (i = 0; i < n; i++) {
-      poly[i]->id = poly[i]->pixel;
+      poly[i]->id =(long long)poly[i]->pixel;
     }
   }
   
