@@ -88,7 +88,7 @@
 /* list of possible input formats */
 #define RFMTS		"cehprRsv"
 /* list of possible output formats */
-#define WFMTS		"acegimprRsvwl"
+#define WFMTS		"acegimprRsvwld"
 
 /* possible polygon file formats */
 #define AREA		0
@@ -105,6 +105,7 @@
 #define	VERTICES	11
 #define	WEIGHT		12
 #define	LIST		13
+#define	DPOLYGON	14
 
 /*list of allowed pixelization schemes*/
 #define SCHEMES		"sd"

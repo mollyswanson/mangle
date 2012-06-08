@@ -515,6 +515,7 @@ void parse_args(int argc, char *argv[])
 	    case 'r':	fmt.out = keywords[RECTANGLE];	break;
 	    case 'R':	fmt.out = keywords[REGION];	break;
 	    case 's':	fmt.out = keywords[SPOLYGON];	break;
+	    case 'd':	fmt.out = keywords[DPOLYGON];	break;
 	    case 'v':
 		fmt.out = keywords[VERTICES];
 		fmt.outper = 0;	/* outnve interpreted as number of points/edge */

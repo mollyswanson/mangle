@@ -5,6 +5,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "manglefn.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 
 #define WARNMAX		8
 #define	AZEL_STR_LEN	32
@@ -66,6 +70,10 @@ int wrmask(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/])
     if (!fmt || strcmp(fmt->out, "polygon") == 0
 	|| strcmp(fmt->out, "spolygon") == 0) {
 	npoly = wr_poly(filename, fmt, npolys, polys, npoly);
+
+    /* circle format */
+    } else if (strcmp(fmt->out, "dpolygon") == 0) {
+	npoly = wr_dpoly(filename, fmt, npolys, polys, npoly);
 
     /* circle format */
     } else if (strcmp(fmt->out, "circle") == 0) {
@@ -832,6 +840,126 @@ int wr_poly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 
     return(npoly);
 }
+
+
+/*------------------------------------------------------------------------------
+  Write mask data in distributed polygon format.
+
+   Input: filename = name of file to write to;
+		     "" or "-" means write to standard output.
+	  fmt = pointer to format structure.
+	  polys = polygons to write.
+	  npolys = number of polygons.
+	  npolyw = number of polygons to write.
+  Return value: number of polygons written,
+		or -1 if error occurred.
+*/
+int wr_dpoly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/], int npolyw)
+{
+  int ier, ip, ipoly, nbadarea, npoly;
+  long double area, tol;
+  FILE *file;
+  FILE *file_exists;
+  char subfilename[1000];
+  char *poly_fmt;
+  char *polygon_fmt = "polygon %lld ( %d caps, %.19Lg weight, %d pixel, %.19Lg str):\n";
+  char *spolygon_fmt = "%lld %d %.19Lg %d %.19Lg\n";
+  
+  /* make directory for output files */
+  if (!filename || strcmp(filename, "-") == 0) {
+    file = stdout;
+    fprintf(stderr, "wr_dpoly: cannot write distributed polygon format to stdout\n");
+    return(-1);
+  } else {
+    ier=mkdir(filename,0777);
+      if (ier) {
+	fprintf(stderr, "wr_dpoly: cannot make directory %s\n", filename);
+	return(-1);
+      }
+  }
+  
+  /* format */
+  if (fmt && strcmp(fmt->out, "spolygon") == 0) {
+    poly_fmt = spolygon_fmt;
+  } else {
+    poly_fmt = polygon_fmt;
+  }
+  
+  npoly = 0;
+  nbadarea = 0;
+  for (ipoly = 0; ipoly < npolys; ipoly++) {
+    
+    sprintf(subfilename, "%s/%s.%lld.pol",filename,filename,polys[ipoly]->id);
+
+    file_exists = fopen(subfilename,"r");
+    if (!file_exists) {
+      file=fopen(subfilename,"w");
+      if (!file) {
+	fprintf(stderr, "wr_dpoly: cannot open %s for writing\n", subfilename);
+	return(-1);
+      }
+      /* write number of polygons */
+      fprintf(file, "%d polygons\n", npolyw);
+      
+      fprintf(file, "real %d\n",real);
+      
+      if(pixelized>0){
+	fprintf(file, "pixelization %d%c\n", res_max, scheme);
+      }
+      if(snapped>0){
+	fprintf(file, "snapped\n");
+      }
+      if(balkanized>0){
+	fprintf(file, "balkanized\n");
+      }
+    } else{
+      fclose(file_exists);
+      file=fopen(subfilename,"a");
+      if (!file) {
+	fprintf(stderr, "wr_dpoly: cannot open %s for writing\n", subfilename);
+	return(-1);
+      }
+    }
+    
+    /* discard null polygons */
+    if (!polys[ipoly]) continue;
+    
+    /* area of polygon */
+    tol = mtol;
+    ier = garea(polys[ipoly], &tol, verb, &area);
+    if (ier == -1) return(-1);
+    if (ier) {
+      fprintf(stderr, "wr_poly: area of polygon %lld is incorrect\n", polys[ipoly]->id);
+      nbadarea++;
+    }
+    
+    /* number of caps, weight, and area of polygon */
+    fprintf(file, poly_fmt,
+	    polys[ipoly]->id, polys[ipoly]->np, polys[ipoly]->weight, polys[ipoly]->pixel, area);
+    
+    /* write boundaries of polygon */
+    for (ip = 0; ip < polys[ipoly]->np; ip++) {
+      fprintf(file, " %.19Lg %.19Lg %.19Lg %.19Lg\n",
+	      polys[ipoly]->rp[ip][0], polys[ipoly]->rp[ip][1], polys[ipoly]->rp[ip][2], polys[ipoly]->cm[ip]);
+    }
+    
+    /* increment polygon count */
+    npoly++;
+    fclose(file);
+  }
+  
+  /* warn about polygons with incorrect area */
+  if (nbadarea > 0) {
+    msg("%d polygons have incorrect area, but kept\n", nbadarea);
+  }
+  
+  /* advise */
+  msg("%d polygons written to %s\n",
+      npoly, (file == stdout)? "output": filename);
+  
+  return(npoly);
+}
+
 
 /*------------------------------------------------------------------------------
   Write mask data in Max Tegmark's Region format.

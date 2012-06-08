@@ -139,6 +139,7 @@ char *keywords[] = {
     "vertices",
     "weight",
     "list",
+    "dpolygon",
     "pixelization",
     "skip",
     "end",

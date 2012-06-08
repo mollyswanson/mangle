@@ -314,6 +314,7 @@ int	wr_circ(char *, format *, int npolys, polygon *[npolys], int);
 int	wr_edge(char *, format *, int npolys, polygon *[npolys], int);
 int	wr_rect(char *, format *, int npolys, polygon *[npolys], int);
 int	wr_poly(char *, format *, int npolys, polygon *[npolys], int);
+int	wr_dpoly(char *, format *, int npolys, polygon *[npolys], int);
 int	wr_Reg(char *, format *, int npolys, polygon *[npolys], int);
 int	wr_area(char *, format *, int npolys, polygon *[npolys], int);
 int	wr_id(char *, int npolys, polygon *[npolys], int);
