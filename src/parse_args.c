@@ -55,10 +55,12 @@ void parse_args(int argc, char *argv[])
 		    }
 		}
 		if (strchr(optstr, 'o')) {
-		    if (fmt.out[0] == 'e' || fmt.out[0] == 'g') {
+		    if (fmt.out[0] == 'e' || fmt.out[0] == 'g' || fmt.out[0] == 'l') {
 			printf(" -o%c%d%c", fmt.out[0], NVE, OUTUNITP);
 		    } else if (fmt.out[0] == 'i' || fmt.out[0] == 'w') {
-			printf(" -o%c", fmt.out[0]);
+		        printf(" -o%c", fmt.out[0]);
+		    } else if (fmt.out[0] == 'd'){
+		      printf(" -o%c%c",fmt.out[0],DMETHOD);
 		    } else {
 			printf(" -o%c%c", fmt.out[0], OUTUNITP);
 		    }
@@ -290,7 +292,7 @@ void parse_args(int argc, char *argv[])
 	case 'B':		/* set balkanize method */
 	    iscan = sscanf(optarg, " %c", &bmethod);
 	    if (!strchr(BMETHODS, bmethod)) {
-		if (fmt.newid == '-') {
+		if (bmethod == '-') {
 		    fprintf(stderr, "-%c: expecting option l (last weight), a (add weights together), n (use minimum weight) or x (use maximum weight)\n", opt);
 		} else {
 		    fprintf(stderr, "-%c%s: option %c should be l (last weight), a (add weights together), n (use minimum weight) or x (use maximum weight)\n", opt, optarg, bmethod);
@@ -532,6 +534,21 @@ void parse_args(int argc, char *argv[])
 		if (out == 'e' || out == 'g' || out == 'l') {
 		    iscan = sscanf(optarg, "%d %c", &fmt.outnve, &fmt.outunitp);
 		}
+
+		if (out == 'd') {
+		  iscan = sscanf(optarg, " %c", &fmt.dmethod);
+		  if (!strchr(DMETHODS, fmt.dmethod)) {
+		    if (fmt.dmethod == '-') {
+		      fprintf(stderr, "-%c: expecting option i (id numbers), p (pixel numbers), or r (rasterizer ids)\n", opt);
+		    } else {
+		      fprintf(stderr, "-%c%s: option %c should be i (id numbers), p (pixel numbers), or r (rasterizer ids)\n", opt, optarg, fmt.dmethod);
+		    }
+		    exit(1);
+		  }
+		}
+
+
+
 		if (iscan <= 0) {
 		    iscan = sscanf(optarg, " %c", &fmt.outunitp);
 		}

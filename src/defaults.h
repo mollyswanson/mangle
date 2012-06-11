@@ -64,6 +64,7 @@ static format fmt = {
 	AZP,		/* 		between angular frames */
 	TRUNIT,		/* unit of transformation angles */
 	0,              /* default number of weights in healpix_weight input file */
+	DMETHOD,        /* default method to split up polygons into separate files */
 };
 
 /* GLOBAL VARIABLES */

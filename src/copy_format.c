@@ -37,4 +37,5 @@ void copy_format(format *fmt1, format *fmt2)
     fmt2->azp = fmt1->azp;
     fmt2->trunit = fmt1->trunit;
     fmt2->nweights = fmt2->nweights;
+    fmt2->dmethod = fmt2->dmethod;
 }

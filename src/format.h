@@ -41,7 +41,8 @@ typedef struct {
 			 = elevation of original pole wrt new frame */
     long double azp;		/* azimuth of original pole wrt new frame */
     char trunit;	/* angular units of transformation angles */
-    int nweights;       /* the total number of weights/polygons, for use with healpix_weight input files and rasterize */      
+    int nweights;       /* the total number of weights/polygons, for use with healpix_weight input files and rasterize */ 
+    char dmethod;         /* for distributed polygon output file, define id to use for splitting into separate files */
 } format;
 
 #endif	/* FORMAT_H */

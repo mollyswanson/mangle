@@ -119,6 +119,11 @@
 /*default balkanize method */
 #define BMETHOD         'l'
 
+/*list of distributed polygon (dpoly) indexing methods */
+#define DMETHODS        "ipr" /*id, pixel, rasterizer */
+/*default balkanize method */
+#define DMETHOD         'i'
+
 /*this is the real*10 version of mangle, so set value of real to 10*/
 #define REAL 10
 

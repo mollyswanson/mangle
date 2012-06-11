@@ -71,9 +71,9 @@ int wrmask(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/])
 	|| strcmp(fmt->out, "spolygon") == 0) {
 	npoly = wr_poly(filename, fmt, npolys, polys, npoly);
 
-    /* circle format */
+    /* distributed format */
     } else if (strcmp(fmt->out, "dpolygon") == 0) {
-	npoly = wr_dpoly(filename, fmt, npolys, polys, npoly);
+      npoly = wr_dpoly(filename, fmt, npolys, polys, npoly,0x0);
 
     /* circle format */
     } else if (strcmp(fmt->out, "circle") == 0) {
@@ -843,10 +843,11 @@ int wr_poly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
 
 
 /*------------------------------------------------------------------------------
-  Write mask data in distributed polygon format.
+  Write mask data in distributed polygon format.  This is a directory which contains several individual polygon files.
+  Polygons can be split into separate files based on their polygon id number (-odi), their pixel number (-odp), or their
+  rasterizer polygon id number (for rasterize only) (-odr). 
 
-   Input: filename = name of file to write to;
-		     "" or "-" means write to standard output.
+   Input: filename = name of directory to write to;
 	  fmt = pointer to format structure.
 	  polys = polygons to write.
 	  npolys = number of polygons.
@@ -854,16 +855,25 @@ int wr_poly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/],
   Return value: number of polygons written,
 		or -1 if error occurred.
 */
-int wr_dpoly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/], int npolyw)
+int wr_dpoly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/], int npolyw, long long raster_ids[/*npolys*/])
 {
-  int ier, ip, ipoly, nbadarea, npoly;
+  int ier, ip, ipoly, jpoly,nbadarea, npoly,npolysub;
   long double area, tol;
   FILE *file;
   FILE *file_exists;
   char subfilename[1000];
+  int nchars;
+  char *stringbegin;
+  char *stringend;
   char *poly_fmt;
   char *polygon_fmt = "polygon %lld ( %d caps, %.19Lg weight, %d pixel, %.19Lg str):\n";
   char *spolygon_fmt = "%lld %d %.19Lg %d %.19Lg\n";
+
+  //if using raster ids, make sure raster_id array exists
+  if(fmt->dmethod=='r' && (!raster_ids)){
+    fprintf(stderr,"wr_dpoly: option to write dpolygon format using rasterizer ids to divide polygons into separate files is only available for the rasterize function.\n");
+    return(-1);
+  }
   
   /* make directory for output files */
   if (!filename || strcmp(filename, "-") == 0) {
@@ -884,13 +894,34 @@ int wr_dpoly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/]
   } else {
     poly_fmt = polygon_fmt;
   }
-  
+
+  // strip off any leading directories and extensions to get the base filename to use for the individual subfiles
+  stringbegin=strrchr(filename,'/');
+  if(!stringbegin){
+    stringbegin=&filename[0];
+  } else {
+    stringbegin++;
+  }  
+  stringend=strrchr(filename,'.');
+  if(!stringend){
+    stringend=&filename[0]+strlen(filename);
+  } 
+  nchars=(int)(stringend-stringbegin);
+
   npoly = 0;
   nbadarea = 0;
   for (ipoly = 0; ipoly < npolys; ipoly++) {
+    if (fmt->dmethod=='i') {
+      sprintf(subfilename, "%s/%.*s.%lld.pol",filename,nchars,stringbegin,polys[ipoly]->id);
+    } else if (fmt->dmethod=='p') {
+      sprintf(subfilename, "%s/%.*s.%d.pol",filename,nchars,stringbegin,polys[ipoly]->pixel);
+    } else if (fmt->dmethod=='r') {
+      sprintf(subfilename, "%s/%.*s.%lld.pol",filename,nchars,stringbegin,raster_ids[ipoly]);
+    } else {
+      fprintf(stderr, "wr_dpoly: indexing method %c not recognized\n",fmt->dmethod);
+      return(-1);
+    }
     
-    sprintf(subfilename, "%s/%s.%lld.pol",filename,filename,polys[ipoly]->id);
-
     file_exists = fopen(subfilename,"r");
     if (!file_exists) {
       file=fopen(subfilename,"w");
@@ -898,8 +929,26 @@ int wr_dpoly(char *filename, format *fmt, int npolys, polygon *polys[/*npolys*/]
 	fprintf(stderr, "wr_dpoly: cannot open %s for writing\n", subfilename);
 	return(-1);
       }
+      
+      /* count polygons that will go into this subfile */
+      npolysub = 0;
+      for (jpoly = ipoly; jpoly < npolys; jpoly++) {
+	if(polys[jpoly]){
+	  if (fmt->dmethod=='i') {
+	    if(polys[jpoly]->id==polys[ipoly]->id) npolysub++;
+	  } else if (fmt->dmethod=='p') {
+	    if(polys[jpoly]->pixel==polys[ipoly]->pixel) npolysub++;
+	  } else if (fmt->dmethod=='r') {
+	    if(raster_ids[jpoly]==raster_ids[ipoly]) npolysub++;
+	  } else {
+	    fprintf(stderr, "wr_dpoly: indexing method %c not recognized\n",fmt->dmethod);
+	    return(-1);
+	  }
+	}
+      }
+      
       /* write number of polygons */
-      fprintf(file, "%d polygons\n", npolyw);
+      fprintf(file, "%d polygons\n", npolysub);
       
       fprintf(file, "real %d\n",real);
       

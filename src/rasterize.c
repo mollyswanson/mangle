@@ -18,13 +18,14 @@ const char *optstr = "B:dqm:a:b:t:y:s:e:v:p:i:o:HT";
 
 /* allocate polygons as a global array */
 polygon *polys_global[NPOLYSMAX];
+long long raster_ids[NPOLYSMAX];
 
 /* local functions */
 void     usage(void);
 #ifdef  GCC
-int     rasterize(int nhealpix_poly, int npoly, polygon *[npoly], int npolys, polygon *[npolys], int nweights, long long rastid_min, long double [nweights]);
+int     rasterize(int nhealpix_poly, int npoly, polygon *[npoly], int npolys, polygon *[npolys], int nweights, long long rastid_min, long double [nweights], long long raster_ids[npolys]);
 #else
-int     rasterize(int nhealpix_poly, int npoly, polygon *[/*npoly*/], int npolys, polygon *[/*npolys*/], int nweights, long long rastid_min, long double [/*nweights*/]);
+int     rasterize(int nhealpix_poly, int npoly, polygon *[/*npoly*/], int npolys, polygon *[/*npolys*/], int nweights, long long rastid_min, long double [/*nweights*/], long long raster_ids[/*npolys*/]);
 #endif
 
 /*--------------------------------------------------------------------
@@ -32,10 +33,15 @@ int     rasterize(int nhealpix_poly, int npoly, polygon *[/*npoly*/], int npolys
 */
 int main(int argc, char *argv[])
 {
-  int ifile, nfiles, npoly, npolys, nhealpix_poly, nhealpix_polys, j, k, nweights, nweight;
+  int ifile, nfiles, npoly, npolys, nhealpix_poly, nhealpix_polys, j, k, nweights, nweight,npolyw;
   long long rastid_min, rastid_max;
   long double *weights;
-  
+  char *filename;
+  char subfilename[1000];
+  int nchars;
+  char *stringbegin;
+  char *stringend;
+
   polygon **polys;
   polys=polys_global;
 
@@ -159,7 +165,6 @@ int main(int argc, char *argv[])
     }
   }
 
-
   /* allocate memory for weights array */
   weights = (long double *) malloc(sizeof(long double) * (nweights));
   if (!weights) {
@@ -171,7 +176,7 @@ int main(int argc, char *argv[])
   for (k = 0; k < nweights; k++) weights[k] = 0.;
 
   /* rasterize */
-  npolys = rasterize(nhealpix_poly, npoly, polys, NPOLYSMAX - npoly, &polys[npoly], nweights, rastid_min, weights);
+  npolys = rasterize(nhealpix_poly, npoly, polys, NPOLYSMAX - npoly, &polys[npoly], nweights, rastid_min, weights,raster_ids);
   if (npolys == -1) exit(1);
 
   if(!sliceordice){
@@ -189,6 +194,32 @@ int main(int argc, char *argv[])
   ifile = argc - 1;
   if (strcmp(fmt.out, "healpix_weight") == 0) {
     npolys = wr_healpix_weight(argv[ifile], &fmt, nweights, weights);
+    if (npolys == -1) exit(1);
+  }
+  else if (strcmp(fmt.out, "dpolygon") == 0) {
+    npolyw = discard_poly(npolys, &polys[npoly]);
+    npolys = wr_dpoly(argv[ifile], &fmt, npolys, &polys[npoly],npolyw,raster_ids);
+    if (npolys == -1) exit(1);
+
+    filename=argv[ifile];
+    
+    // strip off any leading directories and extensions to get the base filename to use for the individual subfiles
+    stringbegin=strrchr(filename,'/');
+    if(!stringbegin){
+      stringbegin=&filename[0];
+    } else {
+      stringbegin++;
+    }  
+    stringend=strrchr(filename,'.');
+    if(!stringend){
+      stringend=&filename[0]+strlen(filename);
+    } 
+    nchars=(int)(stringend-stringbegin);
+    sprintf(subfilename, "%s/%.*s_index.pol",filename,nchars,stringbegin);
+
+    //write rasterizer polygons as index file
+    fmt.out="polygon";
+    npolys = wrmask(subfilename, &fmt, nhealpix_poly, polys);
     if (npolys == -1) exit(1);
   }
   else {
@@ -235,7 +266,7 @@ void usage(void)
                 or -1 if error occurred.
 */
 
-int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*npolys*/], int nweights, long long rastid_min, long double weights[/*nweights*/])
+int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys, polygon *polys[/*npolys*/], int nweights, long long rastid_min, long double weights[/*nweights*/],long long raster_ids[/*npolys*/])
 {
 #define WARNMAX                 0
 
@@ -245,7 +276,7 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
   polygon *rasterizer_and_poly[2];
   char snapped_polys[2];
   static polygon *polyint = 0x0;
-
+  
   if(!sliceordice){
     /* make sure weights are all zero for rasterizer pixels */
     for (i = 0; i < nhealpix_poly; i++) {
@@ -262,6 +293,9 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
   
   /* initialize rasterizer areas array to 0 */
   for (i = 0; i < nweights; i++) areas[i] = 0.;
+
+  /* initialize rasterizer ids array to 0 */
+  for (i = 0; i < npolys; i++) raster_ids[i] = 0;
 
   /* allow error messages from garea */
   verb = 1;
@@ -403,6 +437,8 @@ int rasterize(int nhealpix_poly, int npoly, polygon *poly[/*npoly*/], int npolys
 	  
 	    /* copy intersection into poly1 */
 	    copy_poly(polyint, polys[j]);
+	    /* set raster_id for new polygon equal to id of current rasterizer polygon */ 
+	    raster_ids[j]=poly[i]->id;
 	  /* if output id number option = p, set id number equal to id number of rasterizer polygon*/
 	    if (fmt.newid == 'p') {
 	      polys[j]->id = poly[i]->id;
