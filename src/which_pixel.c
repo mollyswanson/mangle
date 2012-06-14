@@ -26,6 +26,9 @@ int which_pixel(long double az, long double el, int res, char scheme)
   if(az<0){
     az+=TWOPI;
   }
+  if(az>TWOPI){
+    az-=TWOPI;
+  }
   
   if(az>TWOPI || az<0){
     fprintf(stderr, "error in which_pixel: az must lie between 0 and 2*PI.\n");

@@ -63,7 +63,7 @@ $MANGLEBINDIR/weight -zjw $mask $holes
 echo "$MANGLEBINDIR/snap -S $quiet $fields $holes jfhs"
 $MANGLEBINDIR/snap -S $quiet $fields $holes jfhs || exit
 echo "$MANGLEBINDIR/pixelize $quiet $old $pix jfhs jfhp"
-$MANGLEBINDIR/pixelize $quiet $old $pix jfhs jfhp || exit
+$MANGLEBINDIR/pixelize -Ps0,7 $quiet $old $pix jfhs jfhp || exit
 echo "$MANGLEBINDIR/snap $quiet $old jfhp jfh"
 $MANGLEBINDIR/snap $quiet $old jfhp jfh || exit
 echo "$MANGLEBINDIR/balkanize $quiet $old jfh jb"

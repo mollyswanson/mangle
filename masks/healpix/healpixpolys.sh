@@ -29,33 +29,48 @@ if [ $# -lt 4 ] ; then
 fi
 
 if [ "$1" != 0 ]; then
- for ((  I = 1 ;  I < 8192 ;  I = `expr 2 \* $I`  ))
- do
-  if [ "$1" = "$I" ]; then
-   FLAG=1
-  fi
- done
+    lognside=0
+    for ((  I = 1 ;  I < 8192 ;  I = `expr 2 \* $I`  ))
+    do
+	if [ "$1" = "$I" ]; then
+	    FLAG=1
+	    break
+	fi
+	((lognside++))
+    done
 
- if [ "$FLAG" != 1 ]; then
-     echo >&2 "ERROR: <Nside> must be a power of 2."
-     echo >&2 "USAGE: healpixpolys.sh <Nside> <scheme> <p> <r> <polygon_outfile>"
-     echo >&2 "EXAMPLE: healpixpolys.sh 16 s 0 3" 
-     echo >&2 "EXAMPLE: healpixpolys.sh 16 s 0 3 nside16p3s.pol"
-     exit 1
- fi
+    if [ "$FLAG" != 1 ]; then
+	echo >&2 "ERROR: <Nside> must be a power of 2."
+	echo >&2 "USAGE: healpixpolys.sh <Nside> <scheme> <p> <r> <polygon_outfile>"
+	echo >&2 "EXAMPLE: healpixpolys.sh 16 s 0 3" 
+	echo >&2 "EXAMPLE: healpixpolys.sh 16 s 0 3 nside16p3s.pol"
+	exit 1
+    fi
 fi
 
 if [ "$1" = 0 ]; then
- POLYS=1
+    POLYS=1
 else
- POLYS=`expr 12 \* $1 \* $1`
+    POLYS=`expr 12 \* $1 \* $1`
 fi
 
-echo healpix_weight $POLYS >> jhw
-for ((  I = 0 ;  I < POLYS;  I++  ))
-do
-  echo 0 >> jhw
+#write 12 zeros to jhw1
+exec 6>&1           # Link file descriptor #6 with stdout.
+exec &> jhw1
+for i in {1..12}
+do 
+    echo 0
 done
+exec 1>&6 6>&-      # Restore stdout and close file descriptor #6.
+
+#generate file with 12*nside^2 zeros by repeatedly catting 4 copies of jhw1 to itself
+if [ "$lognside" != 0 ]; then
+    for i in $(eval echo "{1..$lognside}"); do cat jhw1 jhw1 jhw1 jhw1 > jhw2 && mv jhw2 jhw1; done
+fi
+
+#prepend jhw1 with healpix_weight line
+echo healpix_weight $POLYS | cat - jhw1 > jhw
+rm jhw1
 
 $MANGLEBINDIR/poly2poly jhw jp || exit
 rm jhw
