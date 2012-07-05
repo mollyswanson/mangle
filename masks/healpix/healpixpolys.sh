@@ -76,8 +76,7 @@ $MANGLEBINDIR/poly2poly jhw jp || exit
 rm jhw
 #note that -vo switch is needed in order to keep the correct id numbers (the HEALPix NESTED pixel numbers)
 
-$MANGLEBINDIR/pixelize -P$2$3,$4 -vo jp jpx || exit
-rm jp
+
 
 if [ "$5" = "" ]; then
     if [ ! -d "$MANGLEDATADIR/healpix/healpix_polys" ] ; then
@@ -96,7 +95,18 @@ else
     outfile=$5
 fi
 
-$MANGLEBINDIR/snap -vo -os jpx $outfile || exit
-rm jpx
+if [ $1 -ge 512 ]; then
+    $MANGLEBINDIR/pixelize -P$2$3,$4 -vo -odp jp jpx.dpol || exit
+    rm jp
+    mkdir $outfile || exit
+    newname=`basename $outfile .dpol`
+    ls jpx.dpol/*.* | awk -F'.' "{print \"$MANGLEBINDIR/snap -vo -os\", \$0, \"${outfile}/${newname}.\" \$(NF-1) \".\" \$(NF)}" | sh
+    rm -r jpx.dpol
+else
+    $MANGLEBINDIR/pixelize -P$2$3,$4 -vo jp jpx || exit
+    rm jp
+    $MANGLEBINDIR/snap -vo -os jpx $outfile || exit
+    rm jpx
+fi
 
 echo "HEALPix pixels at Nside=$1 written to $outfile."
