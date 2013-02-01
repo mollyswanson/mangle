@@ -17,7 +17,7 @@
       implicit none
       integer   polar_type, nmap, nside, npix, nnpix
       integer   nlheader, i, j
-      parameter(nnpix=12*1024**2, nlheader=80)
+      parameter(nnpix=12*2048**2, nlheader=80)
       real      map(0:nnpix,4) 
       character*80 header(nlheader), infile, outfile, card
 
@@ -29,7 +29,7 @@ c     ----------------------------------------------------------------
       close(2)  						        
       npix = 12*nside**2
       if (npix.gt.nnpix) then
-         write(0,*) 'ERROR: dat2fits_binary.f only supports resolution up to nside 1024.'
+         write(0,*) 'ERROR: dat2fits_binary.f only supports resolution up to nside 2048.'
          write(0,*) 'If you need a higher resolution, edit nnpix in dat2fits_binary.f and recompile.'
          call usage
          STOP
