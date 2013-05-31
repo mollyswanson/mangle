@@ -32,7 +32,7 @@ int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, long double mto
     static polygon *poly = 0x0, *poly4 = 0x0;
 
     int ier, ip, iprune, np, np1, verb;
-    long double area, area_tot, cm, tol;
+    long double area, area_tot, cm, tol,area1,area3,area4;
 
     /* poly2 is whole sphere, therefore contains poly1 */
     if (poly2->np == 0){
@@ -61,6 +61,12 @@ int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, long double mto
 
     /* poly1 and poly2 have zero intersection */
     if (area_tot == 0.) return(0);
+
+    /* area of poly1 */
+    tol = mtol;
+    verb = 1;
+    ier = garea(*poly1, &tol, verb, &area1);
+    if (ier) goto error;
 
     /* number of caps of poly1 */
     np1 = (*poly1)->np; 
@@ -97,6 +103,15 @@ int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, long double mto
 	  /* poly3 may be null because of roundoff: skip to next cap */
 	  if (iprune >= 2) continue;
 	  
+	  /* area of poly3 */
+	  tol = mtol;
+	  verb = 1;
+	  ier = garea(*poly3, &tol, verb, &area3);
+	  if (ier) goto error;
+
+	  /* check to make sure area of poly3 is less than poly1; if not, skip to next cap*/
+	  if(area3>=area1) continue;
+
 	  /* make sure poly4 contains enough space */
 	  ier = room_poly(&poly4, np, DNP, 1);
 	  if (ier == -1) goto out_of_memory;
@@ -110,6 +125,15 @@ int split_poly(polygon **poly1, polygon *poly2, polygon **poly3, long double mto
 	  /* poly4 may be null because of roundoff: skip to next cap */
 	  if (iprune >= 2) continue;
 	  
+	   /* area of poly4 */
+	  tol = mtol;
+	  verb = 1;
+	  ier = garea(poly4, &tol, verb, &area4);
+	  if (ier) goto error;
+
+	  /* check to make sure area of poly3 is less than poly1; if not, skip to next cap*/
+	  if(area4>=area1) continue;
+
 	  /* make sure poly1 contains enough space */
 	  np = poly4->np;
 	  ier = room_poly(poly1, np, DNP, 0);
