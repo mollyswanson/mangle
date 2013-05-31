@@ -220,7 +220,7 @@ int partition_poly(polygon **poly, int npolys, polygon *polys[/*npolys*/], long 
 				*npoly = kpoly + 1;
 				return(0);
 			    }
-			    np = polys[ipoly]->np + gpoly->np;
+			    np = polys[ipoly]->np + polys[jpoly]->np;
 			    ier = room_poly(&polys[kpoly], np, dnp, 0);
 			    if (ier == -1) goto out_of_memory;
 			    poly_poly(polys[ipoly], polys[jpoly], polys[kpoly]);
