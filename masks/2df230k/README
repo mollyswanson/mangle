@@ -1,0 +1,28 @@
+At the command line, type
+2df230k.sh
+and find out what happens.
+
+N.B. An improved version of the final 2dFGRS mask and the corresponding
+list of galaxies produced by Andrew Hamilton is available online:
+http://space.mit.edu/home/tegmark/mangle/download/data.html
+
+You should be aware that Intel and Sun chips have different endianness.
+If your system is having a problem reading unformatted fortran files
+maglim.ngp.dat
+maglim.ran.dat
+maglim.sgp.dat
+mask.ngp.dat
+mask.ran.dat
+mask.sgp.dat
+it's probably an endianness problem.
+Read HELP.unformatted in the mangle directory.
+
+Alternatively, you can use the formatted versions of these files
+maglim.ngp.dat.fmt
+maglim.ran.dat.fmt
+maglim.sgp.dat.fmt
+mask.ngp.dat.fmt
+mask.ran.dat.fmt
+mask.sgp.dat.fmt
+which are available online at
+http://space.mit.edu/home/tegmark/mangle/download/data.html

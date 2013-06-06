@@ -1,0 +1,17 @@
+At the command line, type
+2qz.sh
+and find out what happens.
+
+You should be aware that Intel and Sun chips have different endianness.
+If your system is having a problem reading unformatted fortran files
+ngc_obscomp.dat
+sgc_obscomp.dat
+it's probably an endianness problem.
+Read HELP.unformatted in the mangle directory.
+
+Alternatively, you can use the formatted versions of these files
+ngc_obscomp.txt
+sgc_obscomp.txt
+
+These will be used automatically if there is an error reading 
+the unformatted files.

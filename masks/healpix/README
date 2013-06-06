@@ -1,0 +1,14 @@
+To make a discrete approximation to a mask using approximate
+HEALPix pixels, do
+healpixrast.sh <polygon_infile> <Nside> <polygon_outfile>
+where Nside is the desired HEALPix resolution.
+
+To generate an output file in FITS format that can later be read
+by the HEALPix software, do
+healpixrast2fits.sh <polygon_infile> <Nside> <fits_outfile>
+
+
+Polygon files of the approximate HEALPix pixels are located in
+the healpix_polys directory for resolutions up to Nside=32. 
+Files for higher resolutions are available at
+http://space.mit.edu/home/tegmark/mangle/download/data.html

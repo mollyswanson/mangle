@@ -1,0 +1,8 @@
+CfA1 South mask in equatorial B1950 frame.
+
+Specify degrees:
+unit d
+
+South: Dec(B1950) > -2.5 deg, b2 < -30 deg
+circle 1 2
+0 90 92.5  192.25 27.4 -120
