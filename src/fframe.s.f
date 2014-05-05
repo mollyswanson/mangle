@@ -17,6 +17,7 @@ c        data variables
 c        saved local variables
       real*10 azg,elg,elp,l2z
       save azg,elg,elp,l2z
+!$omp threadprivate(azg,elg,elp,l2z)
 c        local (automatic) variables
       integer iaz
       real*10 date,dd,dec2k,dr,ra2k

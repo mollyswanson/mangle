@@ -96,10 +96,10 @@ cat <<EOF >> Makefile
 # Gnu
 
 CC = gcc
-CFLAGS = -g -O3 -Wall -DLINUX -DGCC $MFLAG -D_FILE_OFFSET_BITS=64
+CFLAGS = -g -O3 -Wall -DLINUX -DGCC $MFLAG -D_FILE_OFFSET_BITS=64 -fopenmp
 
 F77 = gfortran
-FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c $MFLAG -D_FILE_OFFSET_BITS=64
+FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c $MFLAG -D_FILE_OFFSET_BITS=64 -fopenmp
 STATICFLAGS:= -static
 
 #MAKE=gmake
@@ -115,10 +115,10 @@ cat <<EOF >> Makefile
 # Gnu
 
 CC = gcc
-CFLAGS = -g -O3 -Wall -DMACOSX -DGCC $MFLAG -D_FILE_OFFSET_BITS=64
+CFLAGS = -g -O3 -Wall -DMACOSX -DGCC $MFLAG -D_FILE_OFFSET_BITS=64 -fopenmp
 
 F77 = gfortran
-FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c $MFLAG -D_FILE_OFFSET_BITS=64
+FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c $MFLAG -D_FILE_OFFSET_BITS=64 -fopenmp
 #STATICFLAGS:= -static-libgfortran
 STATICFLAGS:= -nodefaultlibs -lSystem -lgcc -lm -lgfortran_static
 # static linking of gfortran library to compile for distribution.
@@ -147,10 +147,10 @@ cat <<EOF >> Makefile
 # Gnu
 
 CC = gcc
-CFLAGS = -g -O3 -Wall -DMACOSX -DGCC -D_FILE_OFFSET_BITS=64
+CFLAGS = -g -O3 -Wall -DMACOSX -DGCC -D_FILE_OFFSET_BITS=64 -fopenmp
 
 F77 = gfortran
-FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c -D_FILE_OFFSET_BITS=64
+FFLAGS:= -Wall -g -O3 -DGFORTRAN -ff2c -D_FILE_OFFSET_BITS=64 -fopenmp
 #STATICFLAGS:= -static-libgfortran
 STATICFLAGS:= -nodefaultlibs -lSystem -lgcc -lm -lgfortran_static
 # static linking of gfortran library to compile for distribution.
@@ -205,7 +205,7 @@ cat <<EOF >> Makefile
 # Gnu
 
 CC = gcc
-CFLAGS = -g -O3 -Wall -DLINUX -DGCC $MFLAG -D_FILE_OFFSET_BITS=64
+CFLAGS = -g -O3 -Wall -DLINUX -DGCC $MFLAG -D_FILE_OFFSET_BITS=64 -fopenmp
 
 ## f2c
 #F77 = fort77
@@ -215,7 +215,7 @@ CFLAGS = -g -O3 -Wall -DLINUX -DGCC $MFLAG -D_FILE_OFFSET_BITS=64
 
 # gnu g77 (which assumes no SAVE)
 F77 = g77
-FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 $MFLAG -D_FILE_OFFSET_BITS=64
+FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 $MFLAG -D_FILE_OFFSET_BITS=64 -fopenmp
 
 #MAKE=gmake
 
@@ -250,11 +250,11 @@ cat <<EOF >> Makefile
 # Gnu
 
 CC = gcc
-CFLAGS = -g -O3 -Wall -DMACOSX -DGCC -D_FILE_OFFSET_BITS=64
+CFLAGS = -g -O3 -Wall -DMACOSX -DGCC -D_FILE_OFFSET_BITS=64 -fopenmp
 
 # gnu g77 (which assumes no SAVE)
 F77 = g77
-FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 -D_FILE_OFFSET_BITS=64
+FFLAGS = -Wimplicit -fbounds-check -g -O3 -DG77 -D_FILE_OFFSET_BITS=64 -fopenmp
 
 #MAKE=gmake
 

@@ -18,6 +18,7 @@ c        data variables
 c        saved variables
       real*10 cl,cu,dth,sl,su
       save cl,cu,dth,sl,su
+!$omp threadprivate(cl,cu,dth,sl,su)
 c        local (automatic) variables
       integer i,l,m,lm,lmax,mmax
       real*10 azmx,cmph,d,dph,ph,smph,thmin,thmax
