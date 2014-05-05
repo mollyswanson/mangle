@@ -237,9 +237,9 @@ int	touch_poly(polygon *);
 int	rdangle(char *, char **, char, long double *);
 
 #ifdef	GCC
-int	rdmask(char *, format *, int npolys, polygon *[npolys]);
+int	rdmask(char *, format *, int npolys, polygon *[npolys], int usepix);
 #else
-int	rdmask(char *, format *, int npolys, polygon *[/*npolys*/]);
+int	rdmask(char *, format *, int npolys, polygon *[/*npolys*/], int usepix);
 #endif
 
 void	rdmask_(void);

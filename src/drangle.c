@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 
 
     /* read polygons */
-    npoly = rdmask(argv[optind], &fmt, NPOLYSMAX, poly);
+    npoly = rdmask(argv[optind], &fmt, NPOLYSMAX, poly, 1);
     if (npoly == -1) exit(1);
     if (npoly == 0) {
 	msg("STOP\n");
