@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
      in the NESTED scheme */
   nhealpix_poly = 0;
   ifile = optind;
-  nhealpix_polys = rdmask(argv[ifile], &fmt, NPOLYSMAX - nhealpix_poly, &polys[nhealpix_poly]);
+  nhealpix_polys = rdmask(argv[ifile], &fmt, NPOLYSMAX - nhealpix_poly, &polys[nhealpix_poly], 1);
   if (nhealpix_polys == -1) exit(1);
   nhealpix_poly += nhealpix_polys;
 
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
   npoly = nhealpix_poly;
   nfiles = argc - 2 - optind;
   for (ifile = optind + 1; ifile < optind + 1 + nfiles; ifile++) {
-      npolys = rdmask(argv[ifile], &fmt, NPOLYSMAX - npoly, &polys[npoly]);
+      npolys = rdmask(argv[ifile], &fmt, NPOLYSMAX - npoly, &polys[npoly], 1);
       if (npolys == -1) exit(1);
       npoly += npolys;      
   }

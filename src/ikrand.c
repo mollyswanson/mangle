@@ -17,6 +17,9 @@ void ikrand_(int *ik, double *ikran)
     unsigned long *likran;
     unsigned long long *llikran;
 
+#pragma omp critical(ikrand)
+    {
+
     /* seed random number generator with *ik */
     srandom((unsigned int) *ik);
 
@@ -31,6 +34,9 @@ void ikrand_(int *ik, double *ikran)
 	*llikran <<= (8 * sizeof(unsigned int));
 	*llikran |= (unsigned int)random();
     }
+
+    }
+
 }
 
 /*------------------------------------------------------------------------------

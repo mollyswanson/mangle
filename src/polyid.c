@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     npoly = 0;
     nfiles = argc - 2 - optind;
     for (ifile = optind; ifile < optind + nfiles; ifile++) {
-	npolys = rdmask(argv[ifile], &fmt, NPOLYSMAX - npoly, &poly[npoly]);
+        npolys = rdmask(argv[ifile], &fmt, NPOLYSMAX - npoly, &poly[npoly], 1);
 	if (npolys == -1) exit(1);
 	npoly += npolys;
     }

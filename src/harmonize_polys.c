@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <omp.h>
 #include "manglefn.h"
 #include "pi.h"
 
@@ -24,20 +25,15 @@
 */
 int harmonize_polys(int npoly, polygon *poly[/*npoly*/], long double mtol, int lmax, harmonic w[/*NW*/])
 {
-    int accelerate, i, ier, ip, ipoly, iq, ir, isrect, iw, naccelerate, ndone, ner, nrect;
-    long double azmin, azmax, elmin, elmax, azmn, azmx, elmn, elmx, tol;
-    /* work array contains harmonics of single polygon */
+  int accelerate, i, ier, ger, ip, ipoly, iq, ir, isrect, iw, naccelerate, ndone, ner, nrect;
+  long double azmin, azmax, elmin, elmax, azmn, azmx, elmn, elmx, tol;
+  /* work array contains harmonics of single polygon */
     harmonic *dw;
     /* work arrays to deal with possible acceleration */
     int *iord, *ir_to_ip;
     long double *elord;
 
     /* work arrays */
-    dw = (harmonic *) malloc(sizeof(harmonic) * NW);
-    if (!dw) {
-	fprintf(stderr, "harmonize_polys: failed to allocate memory for %d harmonics\n", NW);
-	return(-1);
-    }
     iord = (int *) malloc(sizeof(int) * npoly);
     if (!iord) {
 	fprintf(stderr, "harmonize_polys: failed to allocate memory for %d ints\n", npoly);
@@ -85,14 +81,29 @@ int harmonize_polys(int npoly, polygon *poly[/*npoly*/], long double mtol, int l
     ndone = 0;
     naccelerate = 0;
     ner = 0;
-    if (lmax >= LMAX_ADVICE) msg("doing polygon number (of %d):\n", npoly);
-    for (ip = 0; ip < npoly; ip++) {
+    ger = 0;
+   if (lmax >= LMAX_ADVICE) msg("doing polygon number (of %d):\n", npoly);
+#pragma omp parallel private(dw,i,ip,iq,ir,iw,ier,ipoly,azmin,azmax,elmin,elmax,azmn,azmx,elmn,elmx,accelerate,tol)
+    {
+      /* work arrays */
+    dw = (harmonic *) malloc(sizeof(harmonic) * NW);
+    if (!dw) {
+	fprintf(stderr, "harmonize_polys: failed to allocate memory for %d harmonics\n", NW);
+#pragma omp critical(globalError)
+	ger = -1;
+      }
+#pragma omp barrier
+      if ( ger == 0 ) {
+#pragma omp for
+      for (ip = 0; ip < npoly; ip++) {
+	if (ger != -1) {
 	if (lmax >= LMAX_ADVICE) msg(" %d", ip);
 	accelerate = 0;
 	/* rectangle */
 	if (ip < nrect) {
 	    ir = iord[ip];
 	    ipoly = ir_to_ip[ir];
+	  if ( !omp_in_parallel() ) {
 	    poly_to_rect(poly[ipoly], &azmin, &azmax, &elmin, &elmax);
 	    /* does previous rectangle have same elevation limits? */
 	    if (ip > 0) {
@@ -110,46 +121,69 @@ int harmonize_polys(int npoly, polygon *poly[/*npoly*/], long double mtol, int l
 		/* if so, worth accelerating */
 		if (elmn == elmin && elmx == elmax) accelerate = 1;
 	    }
+	  }
 	    /* accelerated computation */
 	    if (accelerate) {
 		ier = gsphra(azmin, azmax, elmin, elmax, lmax, dw);
-		if (ier == -1) return(-1);
+		if (ier == -1) {
+#pragma omp critical(globalError)
+		  ger = -1;
+		  continue;
+		}
 	    /* standard computation */
 	    } else {
 		tol = mtol;
 		ier = gsphr(poly[ipoly], lmax, &tol, dw);
-		if (ier == -1) return(-1);
+		if (ier == -1) {
+#pragma omp critical(globalError)
+		  ger = -1;
+		  continue;
+		}
 	    }
 	/* non-rectangle */
 	} else {
 	    ipoly = ir_to_ip[ip];
 	    /* zero weight polygon requires no computation */
 	    if (poly[ipoly]->weight == 0.) {
+#pragma omp atomic
 		ndone++;
 		continue;
 	    } else {
 		tol = mtol;
 		ier = gsphr(poly[ipoly], lmax, &tol, dw);
-		if (ier == -1) return(-1);
+		if (ier == -1) {
+#pragma omp critical(globalError)
+		  ger = -1;
+		  continue;
+		}
 	    }
 	}
 	/* computation failed */
 	if (ier) {
+#pragma omp atomic
 	    ner++;
 	    if (lmax >= LMAX_ADVICE) msg("\n");
 	    fprintf(stderr, "harmonize_polys: computation failed for polygon %d; discard it\n", ipoly);
 	/* success */
 	} else {
+#pragma omp atomic
 	    naccelerate += accelerate;
+#pragma omp atomic
 	    ndone++;
 	    /* increment harmonics of region */
 	    for (iw = 0; iw < NW; iw++) {
 		for (i = 0; i < IM; i++) {
+#pragma omp atomic
 		    w[iw][i] += dw[iw][i] * poly[ipoly]->weight;
 		}
 	    }
 	}
+	}
+      }
+      }
+    free(dw);
     }
+    if (ger == -1) return(-1);
     if (lmax >= LMAX_ADVICE) msg("\n");
 
     /* number of computations that were accelerated */
@@ -161,7 +195,6 @@ int harmonize_polys(int npoly, polygon *poly[/*npoly*/], long double mtol, int l
     msg("spherical harmonics of %d weighted polygons accumulated\n", ndone);
 
     /* free work arrays */
-    free(dw);
     free(iord);
     free(ir_to_ip);
     free(elord);

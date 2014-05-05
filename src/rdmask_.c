@@ -20,6 +20,6 @@ void rdmask_(void)
 
     printf(" enter INPUT polygon file:\n");
     scanf("%256s", name);
-    npolys = rdmask(name, &fmt, NPOLYSMAX, polys);
+    npolys = rdmask(name, &fmt, NPOLYSMAX, polys, 1);
     if (npolys == -1) exit(1);
 }

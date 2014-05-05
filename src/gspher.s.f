@@ -202,6 +202,8 @@ c        number of intersecting arc segments bounding area
 c        number of non-intersecting circles bounding area
       nbd0m=0
       nbd0p=0
+c     number of multiple intersections
+      nmult=0
 c        error check on evaluation of vertex terms
       ikchk=0._10
 c        area=sqrt(4pi)*monopole

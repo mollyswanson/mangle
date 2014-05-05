@@ -109,7 +109,7 @@ extern int infiles;
 
 /* local functions */
 char	*get_keyword(char *, char **, format *);
-int	new_fmt(char *, char **, format *);
+int	new_fmt(char *, char **, format *, int);
 char	*get_word(char *, const char *, int, size_t *);
 int	get_n(format *, char *);
 int	get_nang(format *fmt, char *, int);
@@ -137,7 +137,7 @@ polygon	*rd_rect(format *);
   Return value: number of polygons read,
 		or -1 if error occurred.
 */
-int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
+int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/], int usepix)
 {
     char *input = "input";
     char *line_rest, *word;
@@ -176,7 +176,7 @@ int rdmask(char *name, format *fmt, int npolys, polygon *polys[/*npolys*/])
 	/* look for keyword as first word in line */
 	word = get_keyword(file.line, &line_rest, fmt);
 	/* initialize to new format */
-	if (word) ird = new_fmt(word, &line_rest, fmt);
+	if (word) ird = new_fmt(word, &line_rest, fmt, usepix);
 	if (ird == -1) goto error;
 	
 	/* read polygon */
@@ -318,7 +318,7 @@ char *get_keyword(char *str, char **str_rest, format *fmt)
   Return value: 0 = ok;
 		-1 = error.
 */
-int new_fmt(char *keyword, char **line_rest, format *fmt)
+int new_fmt(char *keyword, char **line_rest, format *fmt, int usepix)
 {
     /* const char *Region_fmt = "%d ( %d caps, %d holes):"; */
     const char *Region_fmt = "%d%*[^0-9]%d%*[^0-9]%d";
@@ -331,6 +331,7 @@ int new_fmt(char *keyword, char **line_rest, format *fmt)
     const char *unit_fmt = " %c";
     const char *pix_fmt = "%d%c";
     const char *real_fmt = " %d";
+    const char *pix_warn = "\0      ";
     char *word;
     char *blank = " \t\n\r";
     int ird, iscan, nholes, i, flag;
@@ -571,16 +572,19 @@ int new_fmt(char *keyword, char **line_rest, format *fmt)
 	    fprintf(stderr, " scheme %c must be one of %s\n", scheme_temp, SCHEMES);
 	    return(-1);
 	}
+
+	/* are pixelization problems warnings or fatal */
+	if (usepix==0) pix_warn="WARNING";
 	
 	/* if previously read file has already provided pixelization info, check for compatibility */
 	if(pixelized>0){
 	  if(scheme_temp!=scheme || res_max!=res_max_temp){
-	    fprintf(stderr, " Pixelization %d%c incompatible with pixelization %d%c of previous file.  Pixelize files to be combined later using the same resolution and scheme.\n", res_max_temp, scheme_temp,res_max,scheme);
-	    return(-1);
+	    fprintf(stderr, "%s Pixelization %d%c incompatible with pixelization %d%c of previous file.  Pixelize files to be combined later using the same resolution and scheme.\n", pix_warn, res_max_temp, scheme_temp,res_max,scheme);
+	    if (usepix==1) return(-1);
 	  }
 	  if(res_max==-1 || res_max_temp==-1){
-	    fprintf(stderr, " Files pixelized adaptively cannot be combined later.  To use the adaptive pixelization feature, combine files before pixelization.\n");
-	    return(-1);
+	    fprintf(stderr, "%s Files pixelized adaptively cannot be combined later.  To use the adaptive pixelization feature, combine files before pixelization.\n",pix_warn);
+	    if (usepix==1) return(-1);
 	  }
 	}
 	/* if this is the first set of pixelization info encountered, set scheme and res_max to provided values */

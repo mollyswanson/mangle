@@ -336,7 +336,10 @@ c        local (automatic) variables
       real*10 bik,cmik,cmk,d,psi,psim(2),dphc,si
 c        local variables to be saved
       integer jl,ju
+      data jl /0/
+      data ju /0/
       save jl,ju
+!$omp threadprivate(jl,ju)
 c *
 c * Determine whether next segment of i circle
 c * is an edge of the polygon.
